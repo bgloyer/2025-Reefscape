@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import frc.robot.commands.RunIntake;
+import frc.robot.commands.RunOuttake;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -58,8 +63,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.b().whileTrue(m_Intake.runMotor(0.3));
-    m_driverController.a().whileTrue(m_Intake.runMotor(-0.3));
+    m_driverController.b().whileTrue(new RunOuttake(m_Intake));
+    m_driverController.leftTrigger(0.4).whileTrue(new RunIntake(m_Intake));
+
+    m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
   }
 
   /**
@@ -69,6 +76,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Commands.none();
+    return new PathPlannerAuto("Auto");
   }
 }

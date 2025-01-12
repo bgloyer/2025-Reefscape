@@ -19,12 +19,22 @@ public class AlgaeIntake extends SubsystemBase {
     m_motor = new SparkFlex(11, MotorType.kBrushless);
   }
 
+  /** @speed negative is intake */
+  public void runMotor(double speed) {
+    m_motor.set(speed);
+  }
+
+  public void stopMotor() {
+    m_motor.set(0);
+  }
+
+
   /**
    * Example command factory method.
    *
    * @return a command
    */
-  public Command runMotor(double speed) {
+  public Command exCommand(double speed) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return startEnd(() -> m_motor.set(speed), () -> m_motor.set(0));

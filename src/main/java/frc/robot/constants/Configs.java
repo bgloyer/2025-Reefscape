@@ -1,10 +1,8 @@
-package frc.robot;
+package frc.robot.constants;
 
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
-import frc.robot.constants.ModuleConstants;
 
 public final class Configs {
     public static final class MAXSwerveModule {
