@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.constants.DriveConstants;
+import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final AlgaeIntake m_Intake = new AlgaeIntake();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(0);
@@ -56,7 +58,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
+    m_driverController.b().whileTrue(m_Intake.runMotor(0.3));
+    m_driverController.a().whileTrue(m_Intake.runMotor(-0.3));
   }
 
   /**
