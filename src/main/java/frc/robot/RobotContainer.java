@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
+import frc.robot.commands.Drive.PointAtAngle;
+import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
@@ -44,6 +46,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
+
+    m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
+    m_driverController.b().whileTrue(new PointAtAngle(m_robotDrive, 60));
+    m_driverController.a().whileTrue(new PointAtAngle(m_robotDrive, 120));
   }
 
   /**

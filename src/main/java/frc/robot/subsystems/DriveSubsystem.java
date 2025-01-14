@@ -27,6 +27,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -130,7 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    SmartDashboard.putNumber("Angle To Reef", getAngleToReef());
     // Update the odometry in the periodic block
     m_odometry.update(
       Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
@@ -329,5 +330,10 @@ public class DriveSubsystem extends SubsystemBase {
         pose,
         constraints,
         edu.wpi.first.units.Units.MetersPerSecond.of(0));
+  }
+
+  public double getAngleToReef() {
+    double angle = Constants.centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
+    return Math.round(angle / 60.0) * 60;
   }
 }

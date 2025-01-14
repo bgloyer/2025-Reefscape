@@ -4,14 +4,25 @@
 
 package frc.robot.commands.Drive;
 
+import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
+
+import java.lang.annotation.Target;
+import java.util.function.DoubleSupplier;
+
+import org.opencv.core.Point;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class PointAtReef extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_robotDrive;
+  private double targetAngle;
+  private PIDController turnPID = new PIDController(0.02, 0, 0.0012);
 
   /**
    * Creates a new ExampleCommand.
@@ -23,16 +34,20 @@ public class PointAtReef extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
-
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
+    targetAngle = m_robotDrive.getAngleToReef();
+    turnPID.enableContinuousInput(0, 360);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double output = turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), targetAngle);
+    m_robotDrive.driveWithController(output, true);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -42,5 +57,9 @@ public class PointAtReef extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  private double betterModulus(double x, double y) {
+    return (x % y + y) % y;
   }
 }

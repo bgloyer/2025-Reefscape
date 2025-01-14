@@ -6,6 +6,7 @@ package frc.robot.constants;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,5 +20,6 @@ public final class Constants {
     public static final double kNeoFreeSpeedRpm = 5676;
     public static final double kVortexFreeSpeedRpm = 6784;
 
-    public static final AprilTagFieldLayout aprilTags =  AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
+    public static final AprilTagFieldLayout aprilTags =  AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+    public static final Translation2d centerOfReef = new Translation2d(4.49,4.03);
 }
