@@ -5,18 +5,10 @@
 package frc.robot.commands.Drive;
 
 import frc.robot.constants.DriveConstants;
-import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
-
-import java.util.function.DoubleSupplier;
-
-import org.opencv.core.Point;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
 public class PointAtAngle extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_subsystem;
@@ -24,13 +16,14 @@ public class PointAtAngle extends Command {
   private double targetAngle;
 
   /**
-   * Creates a new ExampleCommand.
+   * 
    *
    * @param subsystem The subsystem used by this command.
+   * @param angle direction on field
    */
-  public PointAtAngle(DriveSubsystem subsystem, double targetvalue) {
+  public PointAtAngle(DriveSubsystem subsystem, double angle) {
     m_subsystem = subsystem;
-    targetAngle = targetvalue;
+    targetAngle = angle;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }

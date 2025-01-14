@@ -5,15 +5,7 @@
 package frc.robot.commands.Drive;
 
 import frc.robot.constants.DriveConstants;
-import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
-
-import java.lang.annotation.Target;
-import java.util.function.DoubleSupplier;
-
-import org.opencv.core.Point;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -25,9 +17,9 @@ public class PointAtReef extends Command {
   private PIDController turnPID = new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
 
   /**
-   * Creates a new ExampleCommand.
+   *  Points the robot to be flush with the nearest edge of the reef
    *
-   * @param subsystem The subsystem used by this command.
+   * 
    */
   public PointAtReef(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
