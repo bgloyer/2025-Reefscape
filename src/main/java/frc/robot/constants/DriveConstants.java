@@ -42,6 +42,10 @@ public final class DriveConstants {
 
     public static final double kDriveDeadband = 0.05;
 
+    public static final double kP = 0.02;
+    public static final double kI = 0;
+    public static final double kD = 0.0012;
+
   }
 
   

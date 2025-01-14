@@ -20,9 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class PointAtAngle extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_subsystem;
-  private PIDController turnPID = new PIDController(0.02, 0, 0.0012);
+  private PIDController turnPID = new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
   private double targetAngle;
-  private DoubleSupplier m_angleSupplier;
 
   /**
    * Creates a new ExampleCommand.
@@ -32,14 +31,6 @@ public class PointAtAngle extends Command {
   public PointAtAngle(DriveSubsystem subsystem, double targetvalue) {
     m_subsystem = subsystem;
     targetAngle = targetvalue;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
-  }
-
-  public PointAtAngle(DriveSubsystem subsystem, DoubleSupplier supplier) {
-    m_subsystem = subsystem;
-    m_angleSupplier = supplier;
-    targetAngle = supplier.getAsDouble();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }

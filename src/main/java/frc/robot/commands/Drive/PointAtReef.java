@@ -20,9 +20,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class PointAtReef extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+
   private final DriveSubsystem m_robotDrive;
-  private double targetAngle;
-  private PIDController turnPID = new PIDController(0.02, 0, 0.0012);
+  private PIDController turnPID = new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
 
   /**
    * Creates a new ExampleCommand.
@@ -38,14 +38,13 @@ public class PointAtReef extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetAngle = m_robotDrive.getAngleToReef();
     turnPID.enableContinuousInput(0, 360);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), targetAngle);
+    double output = turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), m_robotDrive.getAngleToReef());
     m_robotDrive.driveWithController(output, true);
   }
 

@@ -48,8 +48,6 @@ public class RobotContainer {
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
     m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
-    m_driverController.b().whileTrue(new PointAtAngle(m_robotDrive, 60));
-    m_driverController.a().whileTrue(new PointAtAngle(m_robotDrive, 120));
   }
 
   /**
