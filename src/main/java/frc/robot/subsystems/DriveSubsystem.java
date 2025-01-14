@@ -12,9 +12,12 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.revrobotics.spark.config.SmartMotionConfigAccessor;
 
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -31,7 +34,9 @@ import frc.robot.constants.AutoConstants;
 import frc.robot.constants.Configs;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -69,6 +74,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
 
+  public CommandXboxController m_driverController;
+
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -81,7 +88,11 @@ public class DriveSubsystem extends SubsystemBase {
       });
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public DriveSubsystem(CommandXboxController controller) {
+    
+    resetOdometry(new Pose2d(5,5, new Rotation2d()));
+
+    m_driverController = controller;
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
@@ -130,7 +141,9 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()});
 
     m_field2d.setRobotPose(m_odometry.getPoseMeters());
+    
     SmartDashboard.putData("Robot Field", m_field2d);
+    SmartDashboard.putNumber("Speed", getSpeeds().vxMetersPerSecond);
     SmartDashboard.putNumber("Odometry X", m_odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odometry Y", m_odometry.getPoseMeters().getY());
     SmartDashboard.putNumber("Front Left", m_frontLeft.getPosition().distanceMeters);
@@ -163,6 +176,35 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         },
         pose);
+  }
+
+  /**
+   * Method to drive the robot using joystick info.
+   *
+   * @param fieldRelative Whether the provided x and y speeds are relative to the
+   *                      field.
+   */
+  public void driveWithController(boolean fieldRelative) {
+    drive(
+      -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(m_driverController.getRightX(), DriveConstants.kDriveDeadband),
+      true);
+  }
+
+  /**
+   * Method to drive the robot using joystick info and given rotation output.
+   *
+   * @param rot           Angular rate of the robot.
+   * @param fieldRelative Whether the provided x and y speeds are relative to the
+   *                      field.
+   */
+  public void driveWithController(double rot, boolean fieldRelative) {
+    drive(
+      -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband),
+      -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband), 
+      rot, 
+      true);
   }
 
   /**
@@ -273,5 +315,19 @@ public class DriveSubsystem extends SubsystemBase {
 
     SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
     setStates(targetStates);
+  }
+
+  public Command driveToPose(Pose2d pose) {
+// Create the constraints to use while pathfinding
+    PathConstraints constraints = new PathConstraints(
+        AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared,
+        AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
+
+// Since AutoBuilder is configured, we can use it to build pathfinding commands
+
+    return AutoBuilder.pathfindToPose(
+        pose,
+        constraints,
+        edu.wpi.first.units.Units.MetersPerSecond.of(0));
   }
 }
