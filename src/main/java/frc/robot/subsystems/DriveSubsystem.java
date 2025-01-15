@@ -13,17 +13,21 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.FlippingUtil;
 
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.AutoConstants;
@@ -70,7 +74,6 @@ public class DriveSubsystem extends SubsystemBase {
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
 
   public CommandXboxController m_driverController;
-
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -85,7 +88,6 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
     
-    resetOdometry(new Pose2d(5,5, new Rotation2d()));
 
     m_driverController = controller;
     // Usage reporting for MAXSwerve template
@@ -326,8 +328,12 @@ public class DriveSubsystem extends SubsystemBase {
         edu.wpi.first.units.Units.MetersPerSecond.of(0));
   }
 
+  private Translation2d centerOfReef = Constants.blueCenterOfReef;
   public double getAngleToReef() {
-    double angle = Constants.centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
+    }
+    double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
     return Math.round(angle / 60.0) * 60;
   }
 }

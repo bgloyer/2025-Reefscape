@@ -4,9 +4,13 @@
 
 package frc.robot.constants;
 
+import com.fasterxml.jackson.core.TreeNode;
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.util.AprilTag;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -21,5 +25,5 @@ public final class Constants {
     public static final double kVortexFreeSpeedRpm = 6784;
 
     public static final AprilTagFieldLayout aprilTags =  AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
-    public static final Translation2d centerOfReef = new Translation2d(4.49,4.03);
+    public static Translation2d blueCenterOfReef = new Translation2d(4.49,4.03); //blue
 }
