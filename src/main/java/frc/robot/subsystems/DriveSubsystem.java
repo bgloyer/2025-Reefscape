@@ -18,6 +18,10 @@ import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator3d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,6 +30,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -68,14 +73,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final Pigeon2 m_gyro = new Pigeon2(1);
-
   private Field2d m_field2d = new Field2d();
-
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
-
+  private Vision m_vision;
   public CommandXboxController m_driverController;
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
+  SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
       new SwerveModulePosition[] {
@@ -83,7 +86,10 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      });
+      }, 
+      new Pose2d(),
+      VecBuilder.fill(0.05,0.05, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.01,0.01, Units.degreesToRadians(30)));
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
@@ -123,26 +129,28 @@ public class DriveSubsystem extends SubsystemBase {
       // Handle exception as needed
       e.printStackTrace();
      }
+
+     m_vision = new Vision();
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Angle To Reef", getAngleToReef());
     // Update the odometry in the periodic block
+    
     m_odometry.update(
       Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
-        new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()});
+      new SwerveModulePosition[] {
+        m_frontLeft.getPosition(),
+        m_frontRight.getPosition(),
+        m_rearLeft.getPosition(),
+        m_rearRight.getPosition()});
 
-    m_field2d.setRobotPose(m_odometry.getPoseMeters());
-    
-    SmartDashboard.putData("Robot Field", m_field2d);
-    SmartDashboard.putNumber("Speed", getSpeeds().vxMetersPerSecond);
-    SmartDashboard.putNumber("Odometry X", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Odometry Y", m_odometry.getPoseMeters().getY());
+        m_field2d.setRobotPose(m_odometry.getEstimatedPosition());
+        
+        SmartDashboard.putData("Robot Field", m_field2d);
+        SmartDashboard.putNumber("Angle To Reef", getAngleToReef());
+    SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Odometry Y", m_odometry.getEstimatedPosition().getY());
     SmartDashboard.putNumber("Front Left", m_frontLeft.getPosition().distanceMeters);
     SmartDashboard.putNumber("Front Right", m_frontRight.getPosition().distanceMeters);
     SmartDashboard.putNumber("Rear Right", m_rearRight.getPosition().distanceMeters);
@@ -155,7 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return m_odometry.getEstimatedPosition();
   }
 
   /**
