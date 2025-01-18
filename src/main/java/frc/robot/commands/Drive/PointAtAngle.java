@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class PointAtAngle extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_subsystem;
-  private PIDController turnPID = new PIDController(DriveConstants.kP, DriveConstants.kI, DriveConstants.kD);
+  private PIDController turnPID = new PIDController(DriveConstants.turnkP, DriveConstants.turnkI, DriveConstants.turnkD);
   private double targetAngle;
 
   /**

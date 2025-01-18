@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
@@ -48,6 +49,7 @@ public class RobotContainer {
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
     m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
+    m_driverController.b().whileTrue(new AlignToTag(m_robotDrive));
   }
 
   /**
@@ -55,6 +57,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return (Command) autoChooser.getSelected();
+    return autoChooser.getSelected();
   }
 }

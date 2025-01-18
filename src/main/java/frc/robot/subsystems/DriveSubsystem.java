@@ -135,8 +135,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // Update the odometry in the periodic block
-    
     m_odometry.update(
       Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
       new SwerveModulePosition[] {
@@ -217,6 +215,10 @@ public class DriveSubsystem extends SubsystemBase {
       -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband), 
       rot, 
       true);
+  }
+
+  public void driveSideWays(double speed) {
+    drive(0,speed,0,true);
   }
 
   /**
