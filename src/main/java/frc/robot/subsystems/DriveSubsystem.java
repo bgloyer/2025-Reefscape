@@ -77,8 +77,10 @@ public class DriveSubsystem extends SubsystemBase {
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
   private Vision m_vision;
   public CommandXboxController m_driverController;
+
+  private boolean useVision = true;
   // Odometry class for tracking robot pose
-  SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
+  private SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
       new SwerveModulePosition[] {
@@ -93,8 +95,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
-    
-
     m_driverController = controller;
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
@@ -130,7 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
       e.printStackTrace();
      }
 
-     m_vision = new Vision();
+     m_vision = new Vision(m_odometry);
   }
 
   @Override
@@ -147,8 +147,16 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_field2d.setRobotPose(m_odometry.getEstimatedPosition());
         
-        SmartDashboard.putData("Robot Field", m_field2d);
-        SmartDashboard.putNumber("Angle To Reef", getAngleToReef());
+    if(useVision) {
+      m_vision.updatePoseEstimation(m_gyro);
+    }
+
+    smartDashboardPrints();
+  }
+
+  private void smartDashboardPrints() {
+    SmartDashboard.putData("Robot Field", m_field2d);
+    SmartDashboard.putNumber("Angle To Reef", getAngleToReef());
     SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());
     SmartDashboard.putNumber("Odometry Y", m_odometry.getEstimatedPosition().getY());
     SmartDashboard.putNumber("Front Left", m_frontLeft.getPosition().distanceMeters);
@@ -156,7 +164,6 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Rear Right", m_rearRight.getPosition().distanceMeters);
     SmartDashboard.putNumber("Rear Left", m_rearLeft.getPosition().distanceMeters);
   }
-
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -337,6 +344,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private Translation2d centerOfReef = Constants.blueCenterOfReef;
+
   public double getAngleToReef() {
     if (DriverStation.getAlliance().get() == Alliance.Red) {
       centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
