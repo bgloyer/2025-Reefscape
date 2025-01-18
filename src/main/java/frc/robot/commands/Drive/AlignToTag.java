@@ -17,17 +17,16 @@ public class AlignToTag extends Command {
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_pidController;
   private final String limelightName = "limelight-threeg";
-  private double tolerance = 0.05;
-  private int pipeline;
+  private int dir;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AlignToTag(DriveSubsystem subsystem, int pipeline) {
+  public AlignToTag(DriveSubsystem subsystem, int dir) {
     m_robotDrive = subsystem;
-    this.pipeline = pipeline;
+    this.dir = dir;
     m_pidController = new PIDController(DriveConstants.translationkP, DriveConstants.translationkI, DriveConstants.translationkD);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -36,16 +35,19 @@ public class AlignToTag extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    LimelightHelpers.setPipelineIndex(limelightName, pipeline);
-    // m_pidController.setP(SmartDashboard.getNumber("kP", 0));
-    m_pidController.setSetpoint(0);
+    if (dir == -1)
+      m_pidController.setSetpoint(17.9);
+    else
+      m_pidController.setSetpoint(-14.9);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = m_pidController.calculate(-LimelightHelpers.getTY(limelightName));
-    m_robotDrive.driveSideWays(output);
+    if(LimelightHelpers.getTV(limelightName)) {
+      double output = m_pidController.calculate(-LimelightHelpers.getTY(limelightName));
+      m_robotDrive.driveSideWays(output);
+    }
   }
 
   // Called once the command ends or is interrupted.

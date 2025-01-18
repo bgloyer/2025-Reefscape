@@ -8,6 +8,7 @@ import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.util.LimelightHelpers;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -31,6 +32,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    LimelightHelpers.setPipelineIndex("limelight-threeg", 2);
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -49,7 +51,7 @@ public class RobotContainer {
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
     m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
-    m_driverController.x().whileTrue(new AlignToTag(m_robotDrive,0));
+    m_driverController.x().whileTrue(new AlignToTag(m_robotDrive,-1));
     m_driverController.b().whileTrue(new AlignToTag(m_robotDrive,1));
   }
 
