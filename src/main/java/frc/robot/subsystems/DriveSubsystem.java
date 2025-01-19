@@ -150,14 +150,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   private void smartDashboardPrints() {
     SmartDashboard.putData("Robot Field", m_field2d);
-    SmartDashboard.putNumber("Angle To Reef", getAngleToReef());
     SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());
     SmartDashboard.putNumber("Odometry Y", m_odometry.getEstimatedPosition().getY());
-    SmartDashboard.putNumber("Front Left", m_frontLeft.getPosition().distanceMeters);
-    SmartDashboard.putNumber("Front Right", m_frontRight.getPosition().distanceMeters);
-    SmartDashboard.putNumber("Rear Right", m_rearRight.getPosition().distanceMeters);
-    SmartDashboard.putNumber("Rear Left", m_rearLeft.getPosition().distanceMeters);
   }
+
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -213,7 +209,7 @@ public class DriveSubsystem extends SubsystemBase {
       true);
   }
 
-  public void driveSideWays(double speed) {
+  public void driveSideways(double speed) {
     drive(0,speed,0,false);
   }
 

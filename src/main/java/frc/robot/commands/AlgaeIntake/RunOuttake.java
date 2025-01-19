@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AlgaeIntake;
 
+import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.AlgaeIntake;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -13,7 +14,7 @@ public class RunOuttake extends Command {
   private final AlgaeIntake m_intake;
 
   /**
-   * Creates a new ExampleCommand.
+   * 
    *
    * @param subsystem The subsystem used by this command.
    */
@@ -26,7 +27,7 @@ public class RunOuttake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.runMotor(0.3);
+    m_intake.runMotor(IntakeConstants.IntakeSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
