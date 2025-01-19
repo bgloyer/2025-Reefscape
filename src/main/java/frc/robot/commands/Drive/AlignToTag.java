@@ -53,14 +53,14 @@ public class AlignToTag extends Command {
   public void execute() {
     if(LimelightHelpers.getTV(limelightName)) {
       double output = m_pidController.calculate(-LimelightHelpers.getTY(limelightName));
-      m_robotDrive.driveSideWays(output);
+      m_robotDrive.driveSideways(output);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_robotDrive.driveSideWays(0);
+    m_robotDrive.driveSideways(0);
   }
 
   // Returns true when the command should end.

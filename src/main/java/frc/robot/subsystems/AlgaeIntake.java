@@ -8,13 +8,14 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.IntakeConstants;
 
 public class AlgaeIntake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private SparkFlex m_motor;
 
   public AlgaeIntake() {
-    m_motor = new SparkFlex(11, MotorType.kBrushless);
+    // m_motor = new SparkFlex(IntakeConstants.motorId, MotorType.kBrushless);
   }
 
   /** @speed negative is intake */
@@ -27,7 +28,5 @@ public class AlgaeIntake extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+  public void periodic() {}
 }
