@@ -17,28 +17,35 @@ public class AlignToTag extends Command {
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_pidController;
   private final String limelightName = "limelight-threeg";
-  private int dir;
+  private Direction dir;
 
+  public enum Direction {
+    LEFT, RIGHT
+  }
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AlignToTag(DriveSubsystem subsystem, int dir) {
+  public AlignToTag(DriveSubsystem subsystem, Direction dir) {
     m_robotDrive = subsystem;
     this.dir = dir;
     m_pidController = new PIDController(DriveConstants.translationkP, DriveConstants.translationkI, DriveConstants.translationkD);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
-  
+   
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (dir == -1)
-      m_pidController.setSetpoint(17.9);
-    else
-      m_pidController.setSetpoint(-14.9);
+    switch (dir) {
+      case LEFT:
+        m_pidController.setSetpoint(17.9);
+        break;
+      case RIGHT:
+        m_pidController.setSetpoint(-14.9);
+        break;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

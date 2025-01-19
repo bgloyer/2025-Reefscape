@@ -51,8 +51,8 @@ public class RobotContainer {
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
     m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
-    m_driverController.x().whileTrue(new AlignToTag(m_robotDrive,-1));
-    m_driverController.b().whileTrue(new AlignToTag(m_robotDrive,1));
+    m_driverController.x().whileTrue(new AlignToTag(m_robotDrive, AlignToTag.Direction.LEFT));
+    m_driverController.b().whileTrue(new AlignToTag(m_robotDrive, AlignToTag.Direction.RIGHT));
   }
 
   /**
