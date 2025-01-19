@@ -8,7 +8,6 @@ import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.LimelightHelpers;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
@@ -23,9 +22,10 @@ public class AlignToTag extends Command {
     LEFT, RIGHT
   }
   /**
-   * Creates a new ExampleCommand.
+   * Aligns robot to the reef for scoring
    *
    * @param subsystem The subsystem used by this command.
+   * @param dir the left or right section of the reef
    */
   public AlignToTag(DriveSubsystem subsystem, Direction dir) {
     m_robotDrive = subsystem;
