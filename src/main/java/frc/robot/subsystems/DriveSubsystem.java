@@ -74,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Vision m_vision;
   public CommandXboxController m_driverController;
 
-  private boolean useVision = false;
+  private boolean useVision = true;
   // Odometry class for tracking robot pose
   private SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
