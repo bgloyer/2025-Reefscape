@@ -14,8 +14,7 @@ public class PointAtReef extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   private final DriveSubsystem m_robotDrive;
-  private PIDController turnPID = new PIDController(DriveConstants.turnkP, DriveConstants.turnkI, DriveConstants.turnkD);
-
+  private PIDController turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
   /**
    *  Points the robot to be flush with the nearest edge of the reef
    *

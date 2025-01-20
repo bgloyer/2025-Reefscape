@@ -30,7 +30,7 @@ public class AlignToTag extends Command {
   public AlignToTag(DriveSubsystem subsystem, Direction dir) {
     m_robotDrive = subsystem;
     this.dir = dir;
-    m_pidController = new PIDController(DriveConstants.translationkP, DriveConstants.translationkI, DriveConstants.translationkD);
+    m_pidController = new PIDController(DriveConstants.TranslationkP, DriveConstants.TranslationkI, DriveConstants.TranslationkD);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
