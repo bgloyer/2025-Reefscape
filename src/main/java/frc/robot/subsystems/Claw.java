@@ -32,7 +32,7 @@ public class Claw extends SubsystemBase {
         m_intakeMotor.stopMotor();
     }
 
-    public void setAngle(double angle) {
+    public void setTargetAngle(double angle) {
         m_wristController.setReference(angle, ControlType.kPosition);
     }
 }
