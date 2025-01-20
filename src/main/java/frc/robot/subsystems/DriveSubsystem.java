@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
+import frc.robot.util.utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -61,10 +62,10 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   private MAXSwerveModule[] modules = new MAXSwerveModule[] {
-    m_frontLeft,
-    m_frontRight,
-    m_rearLeft,
-    m_rearRight
+      m_frontLeft,
+      m_frontRight,
+      m_rearLeft,
+      m_rearRight
   };
 
   // The gyro sensor
@@ -84,10 +85,10 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      }, 
+      },
       new Pose2d(),
-      VecBuilder.fill(0.05,0.05, Units.degreesToRadians(5)),
-      VecBuilder.fill(0.01,0.01, Units.degreesToRadians(30)));
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(30)));
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
@@ -96,52 +97,56 @@ public class DriveSubsystem extends SubsystemBase {
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
     RobotConfig config;
-    try{
+    try {
       config = RobotConfig.fromGUISettings();
-       // Configure AutoBuilder last
+      // Configure AutoBuilder last
       AutoBuilder.configure(
-        this::getPose, // Robot pose supplier
-        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-        this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-        new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-        ),
-        config, // The robot configuration
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+          this::getPose, // Robot pose supplier
+          this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+          this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+          (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE
+                                                                // ChassisSpeeds. Also optionally outputs individual
+                                                                // module feedforwards
+          new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
+                                          // holonomic drive trains
+              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+          ),
+          config, // The robot configuration
+          () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red
+            // alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        },
-        this); 
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+          },
+          this);
     } catch (Exception e) {
       // Handle exception as needed
       e.printStackTrace();
-     }
+    }
 
-     m_vision = new Vision(m_odometry);
+    m_vision = new Vision(m_odometry);
   }
 
   @Override
   public void periodic() {
     m_odometry.update(
-      Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
-      new SwerveModulePosition[] {
-        m_frontLeft.getPosition(),
-        m_frontRight.getPosition(),
-        m_rearLeft.getPosition(),
-        m_rearRight.getPosition()});
+        Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
+        new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition() });
 
-        m_field2d.setRobotPose(m_odometry.getEstimatedPosition());
-        
-    if(useVision) {
+    m_field2d.setRobotPose(m_odometry.getEstimatedPosition());
+
+    if (useVision) {
       m_vision.updatePoseEstimation(m_gyro);
     }
 
@@ -188,10 +193,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void driveWithController(boolean fieldRelative) {
     drive(
-      -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_driverController.getRightX(), DriveConstants.kDriveDeadband),
-      true);
+        -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_driverController.getRightX(), DriveConstants.kDriveDeadband),
+        true);
   }
 
   /**
@@ -203,14 +208,14 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void driveWithController(double rot, boolean fieldRelative) {
     drive(
-      -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband), 
-      rot, 
-      true);
+        -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband),
+        rot,
+        true);
   }
 
   public void driveSideways(double speed) {
-    drive(0,speed,0,false);
+    drive(0, speed, 0, false);
   }
 
   /**
@@ -324,12 +329,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public Command driveToPose(Pose2d pose) {
-// Create the constraints to use while pathfinding
+    // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
         AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared,
         AutoConstants.kMaxAngularSpeedRadiansPerSecond, AutoConstants.kMaxAngularSpeedRadiansPerSecondSquared);
 
-// Since AutoBuilder is configured, we can use it to build pathfinding commands
+    // Since AutoBuilder is configured, we can use it to build pathfinding commands
 
     return AutoBuilder.pathfindToPose(
         pose,
@@ -337,10 +342,9 @@ public class DriveSubsystem extends SubsystemBase {
         edu.wpi.first.units.Units.MetersPerSecond.of(0));
   }
 
-  private Translation2d centerOfReef = Constants.blueCenterOfReef;
-
   public double getAngleToReef() {
-    if (DriverStation.getAlliance().get() == Alliance.Red) {
+    Translation2d centerOfReef = Constants.blueCenterOfReef;
+    if (utils.getAlliance() == Alliance.Red) {
       centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
     }
     double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
