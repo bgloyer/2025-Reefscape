@@ -7,6 +7,8 @@ package frc.robot;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.AlgaeIntake;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.LimelightHelpers;
 
@@ -26,6 +28,8 @@ public class RobotContainer {
   
   // The robot's subsystems and commands are defined here...
   private final AlgaeIntake m_intake = new AlgaeIntake();
+  private final Claw m_claw = new Claw();
+  private final Arm m_arm = new Arm();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
 
   private final SendableChooser<Command> autoChooser;
