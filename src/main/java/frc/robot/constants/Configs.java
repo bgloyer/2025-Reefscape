@@ -67,4 +67,16 @@ public final class Configs {
                 rightMotorConfig.follow(ElevatorConstants.leftMotorId,true);
         }
     }
+
+    public static final class Claw {
+        public static final SparkMaxConfig wristMotorConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+
+        static {
+                wristMotorConfig.closedLoop
+                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                        .pid(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
+                wristMotorConfig.idleMode(IdleMode.kBrake);
+        }
+    }
 }
