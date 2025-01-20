@@ -2,6 +2,7 @@ package frc.robot.constants;
 
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 public final class Configs {
@@ -49,6 +50,21 @@ public final class Configs {
                     // longer route.
                     .positionWrappingEnabled(true)
                     .positionWrappingInputRange(0, turningFactor);
+        }
+    }
+
+    public static final class Elevator {
+        public static final SparkFlexConfig leftMotorConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig rightMotorConfig = new SparkFlexConfig();
+
+        static {
+                leftMotorConfig.idleMode(IdleMode.kBrake);
+                leftMotorConfig.closedLoop
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
+
+                rightMotorConfig.apply(leftMotorConfig);
+                rightMotorConfig.follow(ElevatorConstants.leftMotorId,true);
         }
     }
 }
