@@ -5,20 +5,23 @@ import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
-    private SparkFlex m_motor;
+    private SparkFlex m_leftMotor;
+    private SparkFlex m_rightMotor;
     private SparkClosedLoopController m_controller;
     private AbsoluteEncoder m_Encoder;
 
     public Arm() {
-        m_motor = new SparkFlex(ArmConstants.MotorId, null);
-        m_controller = m_motor.getClosedLoopController();
-        m_Encoder = m_motor.getAbsoluteEncoder();
+        m_leftMotor = new SparkFlex(ArmConstants.LeftMotorId, MotorType.kBrushless);
+        m_rightMotor = new SparkFlex(ArmConstants.RightMotorId, MotorType.kBrushless);
+        m_controller = m_leftMotor.getClosedLoopController();
+        m_Encoder = m_leftMotor.getAbsoluteEncoder();
     }
 
     public void setTarget(double angle) {

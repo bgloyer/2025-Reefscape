@@ -7,7 +7,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 public final class Configs {
     public static final class MAXSwerveModule {
-        public static final SparkMaxConfig drivingConfig = new SparkMaxConfig();
+        public static final SparkFlexConfig drivingConfig = new SparkFlexConfig();
         public static final SparkMaxConfig turningConfig = new SparkMaxConfig();
 
         static {
@@ -53,7 +53,7 @@ public final class Configs {
         }
     }
 
-    public static final class Elevator {
+    public static final class ElevatorConfig {
         public static final SparkFlexConfig leftMotorConfig = new SparkFlexConfig();
         public static final SparkFlexConfig rightMotorConfig = new SparkFlexConfig();
 
@@ -68,7 +68,7 @@ public final class Configs {
         }
     }
 
-    public static final class Claw {
+    public static final class ClawConfig {
         public static final SparkMaxConfig wristMotorConfig = new SparkMaxConfig();
         public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
 
@@ -77,6 +77,21 @@ public final class Configs {
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                         .pid(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
                 wristMotorConfig.idleMode(IdleMode.kBrake);
+        }
+    }
+
+    public static final class ArmConfig {
+        public static final SparkFlexConfig leftMotorConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig rightMotorConfig = new SparkFlexConfig();
+
+        static {
+                leftMotorConfig.idleMode(IdleMode.kBrake);
+                leftMotorConfig.closedLoop
+                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                        .pid(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+
+                rightMotorConfig.apply(leftMotorConfig);
+                rightMotorConfig.follow(ArmConstants.LeftMotorId);
         }
     }
 }
