@@ -15,4 +15,6 @@ public final class ElevatorConstants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kG = 0;
+    public static final double MinHeight = 0;
+    public static final double MaxHeight = 0;
 }
