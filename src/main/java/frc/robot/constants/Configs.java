@@ -69,14 +69,16 @@ public final class Configs {
     }
 
     public static final class ClawConfig {
-        public static final SparkMaxConfig wristMotorConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
+        public static final SparkFlexConfig wristMotorConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
         static {
                 wristMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                        .pid(ClawConstants.kP, ClawConstants.kI, ClawConstants.kD);
+                        .pid(ClawConstants.WristkP, ClawConstants.WristkI, ClawConstants.WristkD);
                 wristMotorConfig.idleMode(IdleMode.kBrake);
+
+                intakeMotorConfig.closedLoop.pidf(ClawConstants.IntakekD, ClawConstants.IntakekI, ClawConstants.IntakekD, ClawConstants.IntakeVelocityFF);
         }
     }
 
