@@ -78,7 +78,10 @@ public final class Configs {
                         .pid(ClawConstants.WristkP, ClawConstants.WristkI, ClawConstants.WristkD);
                 wristMotorConfig.idleMode(IdleMode.kBrake);
 
-                intakeMotorConfig.closedLoop.pidf(ClawConstants.IntakekD, ClawConstants.IntakekI, ClawConstants.IntakekD, ClawConstants.IntakeVelocityFF);
+                intakeMotorConfig.closedLoop
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        .pidf(ClawConstants.IntakekD, ClawConstants.IntakekI, ClawConstants.IntakekD, ClawConstants.IntakeVelocityFF);
+                intakeMotorConfig.idleMode(IdleMode.kBrake);
         }
     }
 

@@ -26,7 +26,7 @@ public class Elevator extends SubsystemBase {
     }
     
     public void setTarget(double height) {
-        m_controller.setReference(height, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+        m_controller.setReference(height, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
     }
 
     public double getPosition() {

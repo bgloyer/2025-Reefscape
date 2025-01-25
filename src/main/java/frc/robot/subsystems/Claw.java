@@ -35,7 +35,7 @@ public class Claw extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        m_wristController.setReference(angle, ControlType.kPosition);
+        m_wristController.setReference(angle, ControlType.kMAXMotionPositionControl);
     }
 
     private void setTargetVelocity(double velocity) {

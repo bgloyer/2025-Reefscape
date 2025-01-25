@@ -15,21 +15,21 @@ public class Arm extends SubsystemBase {
     private SparkFlex m_leftMotor;
     private SparkFlex m_rightMotor;
     private SparkClosedLoopController m_controller;
-    private AbsoluteEncoder m_Encoder;
+    private AbsoluteEncoder m_encoder;
 
     public Arm() {
         m_leftMotor = new SparkFlex(ArmConstants.LeftMotorId, MotorType.kBrushless);
         m_rightMotor = new SparkFlex(ArmConstants.RightMotorId, MotorType.kBrushless);
         m_controller = m_leftMotor.getClosedLoopController();
-        m_Encoder = m_leftMotor.getAbsoluteEncoder();
+        m_encoder = m_leftMotor.getAbsoluteEncoder();
     }
 
     public void setTarget(double angle) {
         double clampedAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
-        m_controller.setReference(clampedAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0 , calculateFeedForward()); // may need to run in periodic
+        m_controller.setReference(clampedAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0 , calculateFeedForward()); // may need to run in periodic
     }
 
     private double calculateFeedForward() {
-        return ArmConstants.kG * Math.cos(m_Encoder.getPosition() * 2 * Math.PI);
+        return ArmConstants.kG * Math.cos(m_encoder.getPosition() * 2 * Math.PI);
     }
 }
