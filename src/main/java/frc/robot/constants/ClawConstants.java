@@ -2,8 +2,8 @@ package frc.robot.constants;
 
 public class ClawConstants {
 
-    public static final int WristId = 12;
-    public static final int IntakeId = 13;
+    public static final int WristId = 14;
+    public static final int IntakeId = 15;
     public static final double WristkP = 0;
     public static final double WristkI = 0;
     public static final double WristkD = 0;
@@ -13,5 +13,7 @@ public class ClawConstants {
     public static final double IntakeVelocity = 0;
     public static final double OuttakeVelocity = 0;
     public static final double IntakeVelocityFF = 1.0 / Constants.kNeoVortexkV;
+    public static final double MinAngle = 0;
+    public static final double MaxAngle = 0;
 
 }

@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClawConstants;
 
@@ -35,7 +36,8 @@ public class Claw extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        m_wristController.setReference(angle, ControlType.kMAXMotionPositionControl);
+        double clampedAngle = MathUtil.clamp(angle, ClawConstants.MinAngle, ClawConstants.MaxAngle); 
+        m_wristController.setReference(clampedAngle, ControlType.kMAXMotionPositionControl);
     }
 
     private void setTargetVelocity(double velocity) {
