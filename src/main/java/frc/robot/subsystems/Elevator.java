@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
@@ -16,14 +17,13 @@ public class Elevator extends SubsystemBase {
     private SparkFlex m_leftMotor;
     private SparkFlex m_rightMotor; // follower motor
     private SparkClosedLoopController m_controller;
-    private AbsoluteEncoder m_encoder;
+    private RelativeEncoder m_encoder;
 
     public Elevator() {
         m_leftMotor = new SparkFlex(ElevatorConstants.leftMotorId, MotorType.kBrushless);
         m_rightMotor = new SparkFlex(ElevatorConstants.rightMotorId, MotorType.kBrushless);
         m_controller = m_leftMotor.getClosedLoopController();
-        m_encoder = m_leftMotor.getAbsoluteEncoder();
-        setTarget(ElevatorConstants.Store);
+        m_encoder.setPosition(0);
     }
     
     public void setTarget(double height) {

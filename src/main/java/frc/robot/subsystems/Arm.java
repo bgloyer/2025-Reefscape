@@ -13,7 +13,7 @@ import frc.robot.constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
     private SparkFlex m_leftMotor;
-    private SparkFlex m_rightMotor;
+    private SparkFlex m_rightMotor; // follower moter
     private SparkClosedLoopController m_controller;
     private AbsoluteEncoder m_encoder;
 
