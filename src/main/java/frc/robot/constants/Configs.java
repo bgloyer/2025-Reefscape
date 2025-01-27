@@ -2,6 +2,8 @@ package frc.robot.constants;
 
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -33,13 +35,13 @@ public final class Configs {
             turningConfig
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(20);
-            turningConfig.absoluteEncoder
+                    turningConfig.absoluteEncoder
                     // Invert the turning encoder, since the output shaft rotates in the opposite
                     // direction of the steering motor in the MAXSwerve Module.
                     .inverted(true)
                     .positionConversionFactor(turningFactor) // radians
                     .velocityConversionFactor(turningFactor / 60.0); // radians per second
-            turningConfig.closedLoop
+                    turningConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                     // These are example gains you may need to them for your own robot!
                     .pid(1, 0, 0)
@@ -50,15 +52,30 @@ public final class Configs {
                     // longer route.
                     .positionWrappingEnabled(true)
                     .positionWrappingInputRange(0, turningFactor);
+                }
         }
-    }
 
-    public static final class ElevatorConfig {
-        public static final SparkFlexConfig leftMotorConfig = new SparkFlexConfig();
-        public static final SparkFlexConfig rightMotorConfig = new SparkFlexConfig();
+        public static final class DrivingTalonConfig {
+            public static TalonFXConfiguration talonConfig = new TalonFXConfiguration();
+            
+            static {
+                    talonConfig.Slot0.kP = 0.04;
+                    talonConfig.Slot0.kI = 0;
+                    talonConfig.Slot0.kD = 0;
+                    talonConfig.Slot0.kV = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
+    
+                    talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+                    talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
+                    talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            }
+        } 
 
-        static {
-                leftMotorConfig.idleMode(IdleMode.kBrake);
+        public static final class ElevatorConfig {
+                public static final SparkFlexConfig leftMotorConfig = new SparkFlexConfig();
+                public static final SparkFlexConfig rightMotorConfig = new SparkFlexConfig();
+                
+                static {
+                        leftMotorConfig.idleMode(IdleMode.kBrake);
                 leftMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                         .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
@@ -99,4 +116,5 @@ public final class Configs {
                 rightMotorConfig.follow(ArmConstants.LeftMotorId);
         }
     }
+
 }
