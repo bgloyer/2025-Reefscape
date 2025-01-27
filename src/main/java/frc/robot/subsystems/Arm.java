@@ -30,6 +30,6 @@ public class Arm extends SubsystemBase {
     }
 
     private double calculateFeedForward() {
-        return ArmConstants.kG * Math.cos(m_encoder.getPosition() * 2 * Math.PI);
+        return ArmConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
     }
 }

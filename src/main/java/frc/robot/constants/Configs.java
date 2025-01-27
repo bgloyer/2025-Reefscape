@@ -7,6 +7,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import frc.robot.constants.ClawConstants.CoralIntakeConstants;
+import frc.robot.constants.ClawConstants.WristConstants;
+
 public final class Configs {
     public static final class MAXSwerveModule {
         public static final SparkFlexConfig drivingConfig = new SparkFlexConfig();
@@ -81,12 +84,15 @@ public final class Configs {
                 
                 static {
                         leftMotorConfig.idleMode(IdleMode.kBrake);
-                leftMotorConfig.closedLoop
-                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
 
-                rightMotorConfig.apply(leftMotorConfig);
-                rightMotorConfig.follow(ElevatorConstants.leftMotorId,true);
+                        double positionFactor = ElevatorConstants.MotorReduction * ElevatorConstants.RadiusMeters * 2 * Math.PI;; 
+                        leftMotorConfig.encoder.positionConversionFactor(positionFactor); // meters
+                        leftMotorConfig.encoder.positionConversionFactor(positionFactor / 60); // meters per sec
+                        leftMotorConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
+                        rightMotorConfig.apply(leftMotorConfig);
+                        rightMotorConfig.follow(ElevatorConstants.leftMotorId,true);
         }
     }
 
@@ -97,12 +103,13 @@ public final class Configs {
         static {
                 wristMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                        .pid(ClawConstants.WristkP, ClawConstants.WristkI, ClawConstants.WristkD);
+                        .pid(WristConstants.kP, WristConstants.kI, WristConstants.kD);
                 wristMotorConfig.idleMode(IdleMode.kBrake);
+                wristMotorConfig.encoder.positionConversionFactor(WristConstants.MotorGearReduction * 360); // degrees
 
                 intakeMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        .pidf(ClawConstants.IntakekD, ClawConstants.IntakekI, ClawConstants.IntakekD, ClawConstants.IntakeVelocityFF);
+                        .pidf(CoralIntakeConstants.kP, CoralIntakeConstants.kI, CoralIntakeConstants.kD, CoralIntakeConstants.IntakeVelocityFF);
                 intakeMotorConfig.idleMode(IdleMode.kBrake);
         }
     }
@@ -116,7 +123,7 @@ public final class Configs {
                 leftMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                         .pid(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
-
+                leftMotorConfig.externalEncoder.positionConversionFactor(ArmConstants.EncoderReduction * 360);
                 rightMotorConfig.apply(leftMotorConfig);
                 rightMotorConfig.follow(ArmConstants.LeftMotorId);
         }
