@@ -67,6 +67,11 @@ public final class Configs {
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
                     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+                    double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
+                    / ModuleConstants.kDrivingMotorReduction;
+
+                    talonConfig.Feedback.SensorToMechanismRatio = drivingFactor; // meters
             }
         } 
 
