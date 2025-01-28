@@ -25,6 +25,7 @@ public class Claw extends SubsystemBase {
     private final SparkClosedLoopController m_wristController;
     private final SparkClosedLoopController m_intakeController;
     private final RelativeEncoder m_encoder; 
+    private double targetAngle;
 
     public Claw() {
         m_wristMotor = new SparkFlex(WristConstants.MotarCanId, MotorType.kBrushless);
@@ -51,8 +52,8 @@ public class Claw extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        double clampedAngle = MathUtil.clamp(angle, WristConstants.MinAngle, WristConstants.MaxAngle); 
-        m_wristController.setReference(clampedAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, calculateFeedForward());
+        targetAngle = MathUtil.clamp(angle, WristConstants.MinAngle, WristConstants.MaxAngle); 
+        m_wristController.setReference(targetAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, calculateFeedForward());
     }
 
     private double calculateFeedForward() {
@@ -61,5 +62,9 @@ public class Claw extends SubsystemBase {
 
     private void setTargetVelocity(double velocity) {
         m_intakeController.setReference(velocity, ControlType.kVelocity);
+    }
+
+    public boolean onTarget() {
+        return Math.abs(m_encoder.getPosition() - targetAngle) < WristConstants.Tolerance;
     }
 }

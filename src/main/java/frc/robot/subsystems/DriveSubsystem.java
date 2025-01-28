@@ -74,22 +74,24 @@ public class DriveSubsystem extends SubsystemBase {
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
   private Vision m_vision;
   public CommandXboxController m_driverController;
-
+  
   private boolean useVision = true;
+  private boolean alignedToReef = false;
   // Odometry class for tracking robot pose
   private SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
-      DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
-      new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      },
-      new Pose2d(),
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-      VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(30)));
-
+    DriveConstants.kDriveKinematics,
+    Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
+    new SwerveModulePosition[] {
+        m_frontLeft.getPosition(),
+        m_frontRight.getPosition(),
+        m_rearLeft.getPosition(),
+        m_rearRight.getPosition()
+    },
+    new Pose2d(),
+    VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+    VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(30)));
+      
+      
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
     m_driverController = controller;
@@ -133,7 +135,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_vision = new Vision(m_odometry);
   }
-
+      
   @Override
   public void periodic() {
     m_odometry.update(
@@ -349,5 +351,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
     double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
     return Math.round(angle / 60.0) * 60;
+  }
+
+  public void setAlignedToReef(boolean tf) {
+    alignedToReef = tf;
+  }
+
+  public boolean alignedToReef() {
+    return alignedToReef;
   }
 }

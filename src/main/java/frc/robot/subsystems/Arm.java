@@ -16,6 +16,7 @@ public class Arm extends SubsystemBase {
     private SparkFlex m_rightMotor; // follower moter
     private SparkClosedLoopController m_controller;
     private AbsoluteEncoder m_encoder;
+    private double targetAngle;
 
     public Arm() {
         m_leftMotor = new SparkFlex(ArmConstants.LeftMotorId, MotorType.kBrushless);
@@ -24,12 +25,17 @@ public class Arm extends SubsystemBase {
         m_encoder = m_leftMotor.getAbsoluteEncoder();
     }
 
-    public void setTarget(double angle) {
-        double clampedAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
-        m_controller.setReference(clampedAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0 , calculateFeedForward()); // may need to run in periodic
+    public void setTargetAngle(double angle) {
+        
+        targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
+        m_controller.setReference(targetAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0 , calculateFeedForward()); // may need to run in periodic
     }
 
     private double calculateFeedForward() {
         return ArmConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
+    }
+
+    public boolean onTarget() {
+        return Math.abs(m_encoder.getPosition() - targetAngle) < ArmConstants.Tolerance;
     }
 }

@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Configs.ElevatorConfig;
 
 public class Elevator extends SubsystemBase {
@@ -21,6 +22,7 @@ public class Elevator extends SubsystemBase {
     private SparkFlex m_rightMotor; // follower motor
     private SparkClosedLoopController m_controller;
     private RelativeEncoder m_encoder;
+    private double targetPosition;
 
     public Elevator() {
         m_leftMotor = new SparkFlex(ElevatorConstants.leftMotorId, MotorType.kBrushless);
@@ -32,11 +34,15 @@ public class Elevator extends SubsystemBase {
     }
     
     public void setTarget(double height) {
-        double clampedPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
-        m_controller.setReference(clampedPosition, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+        targetPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
+        m_controller.setReference(targetPosition, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
     }
 
     public double getPosition() {
         return m_encoder.getPosition();
     }
+
+    public boolean onTarget() {
+        return Math.abs(m_encoder.getPosition() - targetPosition) < ElevatorConstants.Tolerance;
+    }    
 }

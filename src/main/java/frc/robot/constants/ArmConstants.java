@@ -20,5 +20,6 @@ public class ArmConstants {
     public static final double kD = 0;
     public static final double kG = 0;
     public static final double EncoderReduction = 1.0 / 4.0;
+    public static final double Tolerance = 1;
 
 }

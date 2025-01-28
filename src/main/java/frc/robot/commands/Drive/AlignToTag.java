@@ -31,6 +31,7 @@ public class AlignToTag extends Command {
     m_robotDrive = subsystem;
     this.dir = dir;
     m_pidController = new PIDController(DriveConstants.TranslationkP, DriveConstants.TranslationkI, DriveConstants.TranslationkD);
+    m_pidController.setTolerance(2);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -55,12 +56,14 @@ public class AlignToTag extends Command {
       double output = m_pidController.calculate(-LimelightHelpers.getTY(limelightName));
       m_robotDrive.driveSideways(output);
     }
+    m_robotDrive.setAlignedToReef(m_pidController.atSetpoint());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_robotDrive.driveSideways(0);
+
   }
 
   // Returns true when the command should end.

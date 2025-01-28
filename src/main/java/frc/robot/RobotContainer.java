@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import frc.robot.commands.CoralMaster.IntakeCoral;
+import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Elevator;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -18,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
@@ -29,31 +34,45 @@ public class RobotContainer {
   private final AlgaeIntake m_intake = new AlgaeIntake();
   private final Claw m_claw = new Claw();
   private final Arm m_arm = new Arm();
+  private final Elevator m_elevator = new Elevator();
+  private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
 
+  private Trigger coralMechOnTarget = new Trigger(m_coralMaster::onTarget);
+  private Trigger linedUpToScore = new Trigger(m_robotDrive::alignedToReef);
   private final SendableChooser<Command> autoChooser;
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    // Configure the trigger bindings
-    configureBindings();
   
-    // drive with controller
-    m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
-  }
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public RobotContainer() {
+      // Build an auto chooser. This will use Commands.none() as the default option.
+      autoChooser = AutoBuilder.buildAutoChooser();
+      SmartDashboard.putData("Auto Chooser", autoChooser);
+  
+      // Configure the trigger bindings
+      configureBindings();
+    
+      // drive with controller
+      m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
+    }
+  
+    /**
+     * Use this method to define your trigger->command mappings
+     */
+    private void configureBindings() {
 
-  /**
-   * Use this method to define your trigger->command mappings
-   */
-  private void configureBindings() {
-    m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
-    m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
-    m_driverController.x().whileTrue(new AlignToTag(m_robotDrive, AlignToTag.Direction.LEFT));
-    m_driverController.b().whileTrue(new AlignToTag(m_robotDrive, AlignToTag.Direction.RIGHT));
+      // ------------------ Aidan ----------------------------
+      m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster));
+      m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
+      m_driverController.leftBumper().and(coralMechOnTarget).and(linedUpToScore).whileTrue(new Score(m_coralMaster));
+      
+      
+      m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
+      
+      // ------------------- James ----------------------------
+      m_mechController.povDown().onTrue(Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster));
+      m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster));
+      m_mechController.povRight().onTrue(Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster));
+      m_mechController.povUp().onTrue(Commands.runOnce(() -> m_coralMaster.setL4(), m_coralMaster));
   }
 
   /**

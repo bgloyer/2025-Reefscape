@@ -8,6 +8,7 @@ public class ClawConstants {
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
+        public static final double Tolerance = 1;
 
         // from block cad - degrees
         public static final double Initial = 10;
