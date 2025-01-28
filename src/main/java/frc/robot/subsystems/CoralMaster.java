@@ -72,9 +72,16 @@ public class CoralMaster extends SubsystemBase {
         return m_arm.onTarget() && m_claw.onTarget() && m_elevator.onTarget();
     }
 
+    public double getDistance() {
+        if (m_laser.getMeasurement() == null)
+            return 0;
+        else
+            return m_laser.getMeasurement().distance_mm;
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Laser Can Measurement", m_laser.getMeasurement().distance_mm);
+        SmartDashboard.putNumber("Laser Can Measurement", getDistance());
         SmartDashboard.putBoolean("Game Piece stored", coralStored());
     }
 }

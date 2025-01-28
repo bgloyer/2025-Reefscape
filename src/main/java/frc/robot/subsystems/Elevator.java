@@ -30,6 +30,7 @@ public class Elevator extends SubsystemBase {
         m_rightMotor = new SparkFlex(ElevatorConstants.rightMotorId, MotorType.kBrushless);
         m_rightMotor.configure(ElevatorConfig.rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_controller = m_leftMotor.getClosedLoopController();
+        m_encoder = m_leftMotor.getEncoder();
         m_encoder.setPosition(0);
     }
     
