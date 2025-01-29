@@ -9,6 +9,7 @@ public final class ElevatorConstants {
     public static final double MinHeight = 25;
     public static final double MaxHeight = 0;
     public static final double Tolerance = 1;
+    public static final double ApproachingTargetThreshold = 0.9;
 
     // from block cad
     public static final double Store = Units.inchesToMeters(0);

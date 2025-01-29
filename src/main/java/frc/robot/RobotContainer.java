@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.Drive.AlignToTag;
+import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
@@ -38,8 +39,6 @@ public class RobotContainer {
   private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
 
-  private Trigger coralMechOnTarget = new Trigger(m_coralMaster::onTarget);
-  private Trigger linedUpToScore = new Trigger(m_robotDrive::alignedToReef);
   private final SendableChooser<Command> autoChooser;
   
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -63,9 +62,17 @@ public class RobotContainer {
       // ------------------ Aidan ----------------------------
       m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster));
       m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
-      m_driverController.leftBumper().and(coralMechOnTarget).and(linedUpToScore).whileTrue(new Score(m_coralMaster));
       
-      
+      // Score right
+      m_driverController.rightBumper().whileTrue(Commands.sequence(
+        new AlignToTag(m_robotDrive, Direction.RIGHT),
+        new Score(m_coralMaster, m_driverController)));
+
+      // Score left
+      m_driverController.leftBumper().whileTrue(Commands.sequence(
+        new AlignToTag(m_robotDrive, Direction.LEFT),
+        new Score(m_coralMaster, m_driverController)));
+        
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
       
       // ------------------- James ----------------------------

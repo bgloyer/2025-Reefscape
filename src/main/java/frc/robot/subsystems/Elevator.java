@@ -46,4 +46,8 @@ public class Elevator extends SubsystemBase {
     public boolean onTarget() {
         return Math.abs(m_encoder.getPosition() - targetPosition) < ElevatorConstants.Tolerance;
     }    
+
+    public boolean almostOnTarget() {
+        return m_encoder.getPosition() > targetPosition * ElevatorConstants.ApproachingTargetThreshold;
+    }
 }
