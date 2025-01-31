@@ -40,28 +40,28 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class DriveSubsystem extends SubsystemBase {
-  // Create MAXSwerveModules
-  private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
+  // Create KrakenSwerveModules
+  private final KrakenSwerveModule m_frontLeft = new KrakenSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
       DriveConstants.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
-  private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
+  private final KrakenSwerveModule m_frontRight = new KrakenSwerveModule(
       DriveConstants.kFrontRightDrivingCanId,
       DriveConstants.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset);
 
-  private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
+  private final KrakenSwerveModule m_rearLeft = new KrakenSwerveModule(
       DriveConstants.kRearLeftDrivingCanId,
       DriveConstants.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset);
 
-  private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
+  private final KrakenSwerveModule m_rearRight = new KrakenSwerveModule(
       DriveConstants.kRearRightDrivingCanId,
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
-  private MAXSwerveModule[] modules = new MAXSwerveModule[] {
+  private KrakenSwerveModule[] modules = new KrakenSwerveModule[] {
       m_frontLeft,
       m_frontRight,
       m_rearLeft,
