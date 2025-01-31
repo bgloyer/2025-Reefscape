@@ -9,7 +9,6 @@ import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.commands.Drive.PointAtReef;
-import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.CoralMaster;
@@ -32,7 +31,6 @@ public class RobotContainer {
   private final CommandXboxController m_mechController = new CommandXboxController(1);
   
   // The robot's subsystems and commands are defined here...
-  private final AlgaeIntake m_intake = new AlgaeIntake();
   private final Claw m_claw = new Claw();
   private final Arm m_arm = new Arm();
   private final Elevator m_elevator = new Elevator();

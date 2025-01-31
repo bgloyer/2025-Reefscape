@@ -4,10 +4,6 @@
 
 package frc.robot.commands.CoralMaster;
 
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ClawConstants.WristConstants;
-import frc.robot.constants.ElevatorConstants;
-import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.CoralMaster;
 import edu.wpi.first.wpilibj2.command.Command;
 

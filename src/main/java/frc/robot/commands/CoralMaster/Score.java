@@ -4,7 +4,6 @@
 
 package frc.robot.commands.CoralMaster;
 
-import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.CoralMaster;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
