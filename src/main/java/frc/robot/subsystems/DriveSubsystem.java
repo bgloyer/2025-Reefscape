@@ -17,7 +17,6 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,7 +25,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -34,6 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.util.Utils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -76,7 +75,6 @@ public class DriveSubsystem extends SubsystemBase {
   public CommandXboxController m_driverController;
   
   private boolean useVision = true;
-  private boolean alignedToReef = false;
   // Odometry class for tracking robot pose
   private SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
     DriveConstants.kDriveKinematics,
@@ -88,8 +86,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearRight.getPosition()
     },
     new Pose2d(),
-    VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-    VecBuilder.fill(0.01, 0.01, Units.degreesToRadians(30)));
+    VisionConstants.StateStdDev,
+    VisionConstants.VisionStdDev);
       
       
   /** Creates a new DriveSubsystem. */
@@ -351,13 +349,5 @@ public class DriveSubsystem extends SubsystemBase {
     }
     double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
     return Math.round(angle / 60.0) * 60;
-  }
-
-  public void setAlignedToReef(boolean tf) {
-    alignedToReef = tf;
-  }
-
-  public boolean alignedToReef() {
-    return alignedToReef;
   }
 }

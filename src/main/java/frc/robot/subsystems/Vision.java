@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import frc.robot.constants.VisionConstants;
 import frc.robot.util.LimelightHelpers;
 
 public class Vision {
@@ -27,7 +28,7 @@ public class Vision {
             doRejectUpdate = true;
         }
         if (!doRejectUpdate) {
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+            m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.VisionStdDev);
             m_poseEstimator.addVisionMeasurement(
                     mt2.pose,
                     mt2.timestampSeconds);

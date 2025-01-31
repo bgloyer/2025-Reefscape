@@ -5,6 +5,7 @@
 package frc.robot.commands.Drive;
 
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.LimelightHelpers;
 import edu.wpi.first.math.controller.PIDController;
@@ -15,7 +16,7 @@ public class AlignToTag extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_pidController;
-  private final String limelightName = "limelight-threeg";
+  private final String limelightName = VisionConstants.LightLightName;
   private Direction dir;
 
   public enum Direction {
@@ -56,7 +57,6 @@ public class AlignToTag extends Command {
       double output = m_pidController.calculate(-LimelightHelpers.getTY(limelightName));
       m_robotDrive.driveSideways(output);
     }
-    m_robotDrive.setAlignedToReef(m_pidController.atSetpoint());
   }
 
   // Called once the command ends or is interrupted.
