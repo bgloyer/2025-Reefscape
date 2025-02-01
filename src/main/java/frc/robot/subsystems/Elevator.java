@@ -10,7 +10,10 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Configs;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.Configs.ElevatorConfig;
 
@@ -30,6 +33,9 @@ public class Elevator extends SubsystemBase {
         m_controller = m_leftMotor.getClosedLoopController();
         m_encoder = m_leftMotor.getEncoder();
         m_encoder.setPosition(0);
+        SmartDashboard.putNumber("Elevator kP", ElevatorConstants.kP);
+        SmartDashboard.putNumber("Elevator kI", ElevatorConstants.kI);
+        SmartDashboard.putNumber("Elevator kD", ElevatorConstants.kD);
     }
     
     public void setTarget(double height) {
@@ -47,5 +53,23 @@ public class Elevator extends SubsystemBase {
 
     public boolean almostOnTarget() {
         return m_encoder.getPosition() > targetPosition * ElevatorConstants.ApproachingTargetThreshold;
+    }
+
+    public Command updateFromDashboard() {
+        return runOnce(() -> {
+            Configs.ElevatorConfig.leftMotorConfig.closedLoop.p(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kP));
+            Configs.ElevatorConfig.leftMotorConfig.closedLoop.i(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kI));
+            Configs.ElevatorConfig.leftMotorConfig.closedLoop.d(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kD));
+            Configs.ElevatorConfig.rightMotorConfig.closedLoop.p(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kP));
+            Configs.ElevatorConfig.rightMotorConfig.closedLoop.i(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kI));
+            Configs.ElevatorConfig.rightMotorConfig.closedLoop.d(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kD));
+            m_leftMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            m_rightMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        });
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Elevator Encoder", m_encoder.getPosition());
     }
 }

@@ -72,6 +72,7 @@ public class RobotContainer {
         new Score(m_coralMaster, m_driverController)));
         
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
+      m_driverController.b().onTrue(m_elevator.updateFromDashboard());
       
       // ------------------- James ----------------------------
       m_mechController.povDown().onTrue(Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster));
