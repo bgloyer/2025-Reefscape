@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Configs;
 import frc.robot.constants.ElevatorConstants;
@@ -33,9 +34,11 @@ public class Elevator extends SubsystemBase {
         m_controller = m_leftMotor.getClosedLoopController();
         m_encoder = m_leftMotor.getEncoder();
         m_encoder.setPosition(0);
+        SmartDashboard.putNumber("Elevator kG", ElevatorConstants.kG);
         SmartDashboard.putNumber("Elevator kP", ElevatorConstants.kP);
         SmartDashboard.putNumber("Elevator kI", ElevatorConstants.kI);
         SmartDashboard.putNumber("Elevator kD", ElevatorConstants.kD);
+        SmartDashboard.putNumber("Elevator Target Position", ElevatorConstants.kD);
     }
     
     public void setTarget(double height) {
@@ -43,16 +46,23 @@ public class Elevator extends SubsystemBase {
         m_controller.setReference(targetPosition, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
     }
 
+    
     public double getPosition() {
         return m_encoder.getPosition();
     }
-
+    
     public boolean onTarget() {
         return Math.abs(m_encoder.getPosition() - targetPosition) < ElevatorConstants.Tolerance;
     }    
-
+    
     public boolean almostOnTarget() {
         return m_encoder.getPosition() > targetPosition * ElevatorConstants.ApproachingTargetThreshold;
+    }
+
+    public Command testKg() {
+        return startEnd(
+            () -> m_controller.setReference(SmartDashboard.getNumber("Elevator kG", ElevatorConstants.kG), ControlType.kVoltage),
+            () -> m_controller.setReference(0, ControlType.kVoltage));
     }
 
     public Command updateFromDashboard() {
@@ -65,6 +75,7 @@ public class Elevator extends SubsystemBase {
             Configs.ElevatorConfig.rightMotorConfig.closedLoop.d(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kD));
             m_leftMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
             m_rightMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            m_controller.setReference(SmartDashboard.getNumber("Elevator Target Position", targetPosition), ControlType.kMAXMotionPositionControl);
         });
     }
 
