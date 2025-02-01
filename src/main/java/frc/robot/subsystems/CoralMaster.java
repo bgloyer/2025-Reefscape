@@ -9,10 +9,11 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
 
 public class CoralMaster extends SubsystemBase {
-    private Arm m_arm;
-    private Elevator m_elevator;
-    private Claw m_claw;
-    private LaserCan m_laser;
+    private final Arm m_arm;
+    private final Elevator m_elevator;
+    private final Claw m_claw;
+    private final LaserCan m_laser;
+    
     public CoralMaster(Arm arm, Elevator elevator, Claw claw ){
         m_arm = arm;
         m_elevator = elevator;

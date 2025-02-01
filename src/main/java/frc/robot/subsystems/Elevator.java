@@ -16,10 +16,10 @@ import frc.robot.constants.Configs.ElevatorConfig;
 
 public class Elevator extends SubsystemBase {
     
-    private SparkFlex m_leftMotor;
-    private SparkFlex m_rightMotor; // follower motor
-    private SparkClosedLoopController m_controller;
-    private RelativeEncoder m_encoder;
+    private final SparkFlex m_leftMotor;
+    private final SparkFlex m_rightMotor; // follower motor
+    private final SparkClosedLoopController m_controller;
+    private final RelativeEncoder m_encoder;
     private double targetPosition;
 
     public Elevator() {

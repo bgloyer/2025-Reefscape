@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
-    private SparkFlex m_leftMotor;
-    private SparkFlex m_rightMotor; // follower moter
-    private SparkClosedLoopController m_controller;
-    private AbsoluteEncoder m_encoder;
+    private final SparkFlex m_leftMotor;
+    private final SparkFlex m_rightMotor; // follower moter
+    private final SparkClosedLoopController m_controller;
+    private final AbsoluteEncoder m_encoder;
     private double targetAngle;
 
     public Arm() {

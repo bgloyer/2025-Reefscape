@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.constants.Constants;
 
-public class Utils {
+public class Helpers {
     public static Pose3d get(int id) {
         return Constants.aprilTags.getTagPose(id).get();
     }

@@ -33,7 +33,7 @@ import frc.robot.constants.AutoConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
-import frc.robot.util.Utils;
+import frc.robot.util.Helpers;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -344,7 +344,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getAngleToReef() {
     Translation2d centerOfReef = Constants.blueCenterOfReef;
-    if (Utils.getAlliance() == Alliance.Red) {
+    if (Helpers.getAlliance() == Alliance.Red) {
       centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
     }
     double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
