@@ -19,6 +19,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 public final class Constants {
     public static final double kNeoFreeSpeedRpm = 5676;
     public static final double kVortexFreeSpeedRpm = 6784;
+    public static final double kKrakenFieldOrientedFreeSpeedRpm = 5800;
+
 
     public static final AprilTagFieldLayout aprilTags =  AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     public static Translation2d blueCenterOfReef = new Translation2d(4.49,4.03); //blue

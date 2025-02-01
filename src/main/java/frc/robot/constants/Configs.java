@@ -65,7 +65,7 @@ public final class Configs {
                     talonConfig.Slot0.kP = 0.04;
                     talonConfig.Slot0.kI = 0;
                     talonConfig.Slot0.kD = 0;
-                    talonConfig.Slot0.kV = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
+                    talonConfig.Slot0.kV = 1 / ModuleConstants.kKrakenDriveFreeSpeedRps;
     
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
