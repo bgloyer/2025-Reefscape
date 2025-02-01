@@ -8,19 +8,23 @@ public class ClawConstants {
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
+        public static final double kG = 0;
         public static final double Tolerance = 1;
 
         // from block cad - degrees
-        public static final double Initial = 10;
+        public static final double Initial = 0;
         public static final double Store = 90;
-        public static final double Station = 21.99;
-        public static final double L1 = 180;
+        public static final double Station = 30;
+        public static final double L1 = 90;
         public static final double L2 = 90;
         public static final double L3 = L2;
         public static final double L4 = 45;
-        public static final double MaxAngle = 10;
-        public static final double MinAngle = 180;
-        public static final double kG = 0;
+        public static final double DeAlgaeL3 = 60;
+        public static final double Net = 150;
+        
+
+        public static final double MaxAngle = 0;
+        public static final double MinAngle = 150;
     }
 
     public final class CoralIntakeConstants {

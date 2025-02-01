@@ -9,11 +9,13 @@ public class ArmConstants {
 
     // from block cad - degrees
     public static final double Store = 0;
-    public static final double Station = 48.002;
+    public static final double Station = 35;
     public static final double L1 = -105.702;
-    public static final double L2 = -28.634;
+    public static final double L2 = -35;
     public static final double L3 = L2;
-    public static final double L4 = -31.187;
+    public static final double L4 = -37;
+    public static final double DeAlgaeL3 = -28;
+    public static final double Net = 0;
 
     public static final double kP = 0;
     public static final double kI = 0;
