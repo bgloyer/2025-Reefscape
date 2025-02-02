@@ -62,7 +62,7 @@ public final class Configs {
             public static TalonFXConfiguration talonConfig = new TalonFXConfiguration();
             
             static {
-                    talonConfig.Slot0.kP = 0.04;
+                    talonConfig.Slot0.kP = 0.0004;
                     talonConfig.Slot0.kI = 0;
                     talonConfig.Slot0.kD = 0;
                     talonConfig.Slot0.kV = 1 / ModuleConstants.kKrakenDriveFreeSpeedRps;
@@ -74,7 +74,7 @@ public final class Configs {
                     double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
                     / ModuleConstants.kDrivingMotorReduction;
 
-                    talonConfig.Feedback.SensorToMechanismRatio = drivingFactor; // meters
+                    talonConfig.Feedback.SensorToMechanismRatio = 1 / drivingFactor; // meters
             }
         } 
 
@@ -83,8 +83,8 @@ public final class Configs {
                 public static final SparkFlexConfig rightMotorConfig = new SparkFlexConfig();
                 
                 static {
-                        leftMotorConfig.idleMode(IdleMode.kBrake);
-
+                        leftMotorConfig.idleMode(IdleMode.kCoast);
+                        leftMotorConfig.secondaryCurrentLimit(30);
                         double positionFactor = ElevatorConstants.MotorReduction * ElevatorConstants.RadiusMeters * 2 * Math.PI;; 
                         leftMotorConfig.encoder.positionConversionFactor(positionFactor); // meters
                         leftMotorConfig.encoder.positionConversionFactor(positionFactor / 60); // meters per sec
@@ -92,7 +92,7 @@ public final class Configs {
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
                         rightMotorConfig.apply(leftMotorConfig);
-                        rightMotorConfig.follow(ElevatorConstants.leftMotorId,true);
+                        rightMotorConfig.follow(ElevatorConstants.leftMotorId,false);
         }
     }
 

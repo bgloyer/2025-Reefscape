@@ -42,10 +42,10 @@ public class AlignToTag extends Command {
   public void initialize() {
     switch (dir) {
       case LEFT:
-        m_pidController.setSetpoint(17.9);
+        m_pidController.setSetpoint(7.6);
         break;
       case RIGHT:
-        m_pidController.setSetpoint(-14.9);
+        m_pidController.setSetpoint(-12.2);
         break;
     }
   }
@@ -54,7 +54,7 @@ public class AlignToTag extends Command {
   @Override
   public void execute() {
     if(LimelightHelpers.getTV(limelightName)) {
-      double output = m_pidController.calculate(-LimelightHelpers.getTY(limelightName));
+      double output = m_pidController.calculate(LimelightHelpers.getTX(limelightName));
       m_robotDrive.driveSideways(output);
     }
   }

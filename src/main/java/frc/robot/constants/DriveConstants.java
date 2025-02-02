@@ -29,14 +29,14 @@ public final class DriveConstants {
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
-    public static final int kRearLeftDrivingCanId = 5;
     public static final int kFrontRightDrivingCanId = 3;
     public static final int kRearRightDrivingCanId = 4;
+    public static final int kRearLeftDrivingCanId = 5;
 
     public static final int kFrontLeftTurningCanId = 6;
-    public static final int kRearLeftTurningCanId = 9;
     public static final int kFrontRightTurningCanId = 7;
     public static final int kRearRightTurningCanId = 8;
+    public static final int kRearLeftTurningCanId = 9;
 
     public static final boolean kGyroReversed = false;
 
@@ -46,7 +46,7 @@ public final class DriveConstants {
     public static final double TurnkI = 0;
     public static final double TurnkD = 0.0012;
 
-    public static double TranslationkP = 0.01;
+    public static double TranslationkP = 0.003;
     public static double TranslationkI = 0;
     public static double TranslationkD = 0;
 

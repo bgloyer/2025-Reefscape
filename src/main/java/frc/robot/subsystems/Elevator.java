@@ -12,7 +12,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Configs;
 import frc.robot.constants.ElevatorConstants;
@@ -25,6 +24,7 @@ public class Elevator extends SubsystemBase {
     private final SparkClosedLoopController m_controller;
     private final RelativeEncoder m_encoder;
     private double targetPosition;
+    private double voltage;
 
     public Elevator() {
         m_leftMotor = new SparkFlex(ElevatorConstants.leftMotorId, MotorType.kBrushless);
@@ -39,6 +39,7 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator kI", ElevatorConstants.kI);
         SmartDashboard.putNumber("Elevator kD", ElevatorConstants.kD);
         SmartDashboard.putNumber("Elevator Target Position", ElevatorConstants.kD);
+        voltage = 3;
     }
     
     public void setTarget(double height) {
@@ -61,7 +62,7 @@ public class Elevator extends SubsystemBase {
 
     public Command testKg() {
         return startEnd(
-            () -> m_controller.setReference(SmartDashboard.getNumber("Elevator kG", ElevatorConstants.kG), ControlType.kVoltage),
+            () -> m_controller.setReference(3, ControlType.kVoltage),
             () -> m_controller.setReference(0, ControlType.kVoltage));
     }
 
@@ -76,11 +77,14 @@ public class Elevator extends SubsystemBase {
             m_leftMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
             m_rightMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
             m_controller.setReference(SmartDashboard.getNumber("Elevator Target Position", targetPosition), ControlType.kMAXMotionPositionControl);
+            voltage = SmartDashboard.getNumber("Elevator kG", voltage);
+
         });
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Elevator Encoder", m_encoder.getPosition());
+        SmartDashboard.putNumber("Elevator Current", m_leftMotor.getOutputCurrent());
     }
 }
