@@ -4,6 +4,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -84,13 +85,18 @@ public final class Configs {
                 
                 static {
                         leftMotorConfig.idleMode(IdleMode.kCoast);
-                        leftMotorConfig.secondaryCurrentLimit(30);
-                        double positionFactor = ElevatorConstants.MotorReduction * ElevatorConstants.RadiusMeters * 2 * Math.PI;; 
+                        leftMotorConfig.secondaryCurrentLimit(60);
+                        leftMotorConfig.smartCurrentLimit(50);
+                        double positionFactor = ElevatorConstants.MotorReduction * ElevatorConstants.DiameterMeters * Math.PI * 2; // times 2 because cascade
                         leftMotorConfig.encoder.positionConversionFactor(positionFactor); // meters
                         leftMotorConfig.encoder.positionConversionFactor(positionFactor / 60); // meters per sec
                         leftMotorConfig.closedLoop
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
+                        leftMotorConfig.closedLoop.maxMotion
+                                .maxVelocity(ElevatorConstants.MaxVelocity)
+                                .maxAcceleration(ElevatorConstants.MaxAcceleration);
+
                         rightMotorConfig.apply(leftMotorConfig);
                         rightMotorConfig.follow(ElevatorConstants.leftMotorId,false);
         }

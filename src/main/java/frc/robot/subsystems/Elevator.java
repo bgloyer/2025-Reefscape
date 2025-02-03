@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Configs;
 import frc.robot.constants.ElevatorConstants;
@@ -34,10 +35,10 @@ public class Elevator extends SubsystemBase {
         m_controller = m_leftMotor.getClosedLoopController();
         m_encoder = m_leftMotor.getEncoder();
         m_encoder.setPosition(0);
-        SmartDashboard.putNumber("Elevator kG", ElevatorConstants.kG);
         SmartDashboard.putNumber("Elevator kP", ElevatorConstants.kP);
-        SmartDashboard.putNumber("Elevator kI", ElevatorConstants.kI);
-        SmartDashboard.putNumber("Elevator kD", ElevatorConstants.kD);
+        SmartDashboard.putNumber("Elevator Max Velocity", ElevatorConstants.MaxVelocity);
+        SmartDashboard.putNumber("Elevator Max Acceleration", ElevatorConstants.MaxVelocity);
+        SmartDashboard.putNumber("Elevator kG", ElevatorConstants.kD);
         SmartDashboard.putNumber("Elevator Target Position", ElevatorConstants.kD);
         voltage = 3;
     }
@@ -60,26 +61,32 @@ public class Elevator extends SubsystemBase {
         return m_encoder.getPosition() > targetPosition * ElevatorConstants.ApproachingTargetThreshold;
     }
 
-    public Command testKg() {
-        return startEnd(
-            () -> m_controller.setReference(3, ControlType.kVoltage),
-            () -> m_controller.setReference(0, ControlType.kVoltage));
-    }
-
     public Command updateFromDashboard() {
         return runOnce(() -> {
             Configs.ElevatorConfig.leftMotorConfig.closedLoop.p(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kP));
-            Configs.ElevatorConfig.leftMotorConfig.closedLoop.i(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kI));
-            Configs.ElevatorConfig.leftMotorConfig.closedLoop.d(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kD));
             Configs.ElevatorConfig.rightMotorConfig.closedLoop.p(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kP));
-            Configs.ElevatorConfig.rightMotorConfig.closedLoop.i(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kI));
-            Configs.ElevatorConfig.rightMotorConfig.closedLoop.d(SmartDashboard.getNumber("Elevator kP", ElevatorConstants.kD));
+            Configs.ElevatorConfig.leftMotorConfig.closedLoop.maxMotion.maxVelocity(SmartDashboard.getNumber("Elevator Max Velocity", ElevatorConstants.MaxVelocity));
+            Configs.ElevatorConfig.rightMotorConfig.closedLoop.maxMotion.maxVelocity(SmartDashboard.getNumber("Elevator Max Velocity", ElevatorConstants.MaxVelocity));
+            Configs.ElevatorConfig.leftMotorConfig.closedLoop.maxMotion.maxAcceleration(SmartDashboard.getNumber("Elevator Max Acceleration", ElevatorConstants.MaxAcceleration));
+            Configs.ElevatorConfig.rightMotorConfig.closedLoop.maxMotion.maxAcceleration(SmartDashboard.getNumber("Elevator Max Acceleration", ElevatorConstants.MaxAcceleration));
             m_leftMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-            m_rightMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-            m_controller.setReference(SmartDashboard.getNumber("Elevator Target Position", targetPosition), ControlType.kMAXMotionPositionControl);
-            voltage = SmartDashboard.getNumber("Elevator kG", voltage);
-
+            m_rightMotor.configure(Configs.ElevatorConfig.rightMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            m_controller.setReference(SmartDashboard.getNumber("Elevator Target Position", targetPosition), ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
         });
+    }
+
+    public Command testKg() {
+        return startEnd(
+            () -> setKg(), 
+            () -> stop());
+    }
+
+    private void setKg() {
+        m_controller.setReference(SmartDashboard.getNumber("Elevator kG", ElevatorConstants.kG), ControlType.kVoltage);
+    }
+
+    private void stop() {
+        m_controller.setReference(0, ControlType.kVoltage);
     }
 
     @Override

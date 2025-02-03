@@ -75,9 +75,11 @@ public class RobotContainer {
 
       
       m_driverController.b().onTrue(m_elevator.updateFromDashboard());
+      // m_driverController.y().whileTrue(m_elevator.testKg());
+
+
 
       // grab a kG value from smartdashboard and apply the voltage to the elevator motors
-      m_driverController.y().whileTrue(m_elevator.testKg());
       
       // ------------------- James ----------------------------
       // m_mechController.povDown().onTrue(Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster));
