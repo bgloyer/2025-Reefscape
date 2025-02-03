@@ -66,7 +66,7 @@ public final class Configs {
                     talonConfig.Slot0.kP = 0.0004;
                     talonConfig.Slot0.kI = 0;
                     talonConfig.Slot0.kD = 0;
-                    talonConfig.Slot0.kV = 1 / ModuleConstants.kKrakenDriveFreeSpeedRps;
+                    talonConfig.Slot0.kV = 1 / ModuleConstants.kKrakenDriveFreeSpeedRps; // may need to be 12 not 1
     
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
@@ -87,9 +87,9 @@ public final class Configs {
                         leftMotorConfig.idleMode(IdleMode.kCoast);
                         leftMotorConfig.secondaryCurrentLimit(60);
                         leftMotorConfig.smartCurrentLimit(50);
-                        double positionFactor = ElevatorConstants.MotorReduction * ElevatorConstants.DiameterMeters * Math.PI * 2; // times 2 because cascade
+                        double positionFactor = ElevatorConstants.DiameterMeters / ElevatorConstants.MotorReduction * Math.PI * 2; // times 2 because cascade
                         leftMotorConfig.encoder.positionConversionFactor(positionFactor); // meters
-                        leftMotorConfig.encoder.positionConversionFactor(positionFactor / 60); // meters per sec
+                        leftMotorConfig.encoder.velocityConversionFactor(positionFactor / 60); // meters per sec
                         leftMotorConfig.closedLoop
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
