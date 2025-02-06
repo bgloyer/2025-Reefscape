@@ -99,7 +99,7 @@ public class KrakenSwerveModule {
     correctedDesiredState.optimize(new Rotation2d(m_turningEncoder.getPosition()));
 
     // Command driving and turning SPARKS towards their respective setpoints. correctedDesiredState.speedMetersPerSecond
-    m_drivingTalon.setControl(new VelocityVoltage(correctedDesiredState.speedMetersPerSecond * 60));
+    m_drivingTalon.setControl(new VelocityVoltage(correctedDesiredState.speedMetersPerSecond));
     m_turningClosedLoopController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
 
     m_desiredState = desiredState;

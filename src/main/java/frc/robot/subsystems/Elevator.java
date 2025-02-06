@@ -44,8 +44,8 @@ public class Elevator extends SubsystemBase {
     }
     
     public void setTarget(double height) {
-        targetPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
-        m_controller.setReference(targetPosition, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+        // targetPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
+        m_controller.setReference(height, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
     }
 
     
@@ -71,7 +71,7 @@ public class Elevator extends SubsystemBase {
             Configs.ElevatorConfig.rightMotorConfig.closedLoop.maxMotion.maxAcceleration(SmartDashboard.getNumber("Elevator Max Acceleration", ElevatorConstants.MaxAcceleration));
             m_leftMotor.configure(Configs.ElevatorConfig.leftMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
             m_rightMotor.configure(Configs.ElevatorConfig.rightMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-            m_controller.setReference(SmartDashboard.getNumber("Elevator Target Position", targetPosition), ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+            m_controller.setReference(SmartDashboard.getNumber("Elevator Target Position", targetPosition), ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
         });
     }
 

@@ -63,10 +63,10 @@ public final class Configs {
             public static TalonFXConfiguration talonConfig = new TalonFXConfiguration();
             
             static {
-                    talonConfig.Slot0.kP = 0.0004;
+                    talonConfig.Slot0.kP = 0.0001;
                     talonConfig.Slot0.kI = 0;
                     talonConfig.Slot0.kD = 0;
-                    talonConfig.Slot0.kV = 1 / ModuleConstants.kKrakenDriveFreeSpeedRps; // may need to be 12 not 1
+                    talonConfig.Slot0.kV = 12 / ModuleConstants.kKrakenDriveFreeSpeedRps; // may need to be 12 not 1
     
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
@@ -127,9 +127,16 @@ public final class Configs {
         static {
                 leftMotorConfig.idleMode(IdleMode.kBrake);
                 leftMotorConfig.closedLoop
-                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                        .pid(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
-                leftMotorConfig.externalEncoder.positionConversionFactor(ArmConstants.EncoderReduction * 360);
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        .pid(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD)
+                        .positionWrappingEnabled(true);
+                leftMotorConfig.absoluteEncoder.positionConversionFactor(0.25 * 360);
+                leftMotorConfig.encoder.positionConversionFactor(ArmConstants.MotorReduction);
+                leftMotorConfig.softLimit
+                        .forwardSoftLimit(90)
+                        .reverseSoftLimit(-90)
+                        .forwardSoftLimitEnabled(true)
+                        .reverseSoftLimitEnabled(true);
                 rightMotorConfig.apply(leftMotorConfig);
                 rightMotorConfig.follow(ArmConstants.LeftMotorId);
         }

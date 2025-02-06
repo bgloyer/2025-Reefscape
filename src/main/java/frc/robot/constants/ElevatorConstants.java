@@ -6,12 +6,12 @@ public final class ElevatorConstants {
     public static final int leftMotorId = 10;
     public static final int rightMotorId = 11;
     
-    public static final double kP = 8;
+    public static final double kP = 4.5;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kG = 0.14;
-    public static final double MaxVelocity = 0.1;
-    public static final double MaxAcceleration = 0.2;
+    public static final double MaxVelocity = 100;
+    public static final double MaxAcceleration = 100;
 
 
     public static final double MinHeight = 0;
@@ -30,6 +30,6 @@ public final class ElevatorConstants {
     public static final double Net = Units.inchesToMeters(25);
     
 
-    public static final double DiameterMeters = Units.inchesToMeters(1.533); // ask alex what this should be
+    public static final double DiameterMeters = Units.inchesToMeters(1.751); // ask alex what this should be
     public static final double MotorReduction = 58.0 / 7.0; 
 }

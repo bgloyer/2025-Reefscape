@@ -32,7 +32,7 @@ public class AlignToTag extends Command {
     m_robotDrive = subsystem;
     this.dir = dir;
     m_pidController = new PIDController(DriveConstants.TranslationkP, DriveConstants.TranslationkI, DriveConstants.TranslationkD);
-    m_pidController.setTolerance(2);
+    m_pidController.setTolerance(0.1);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -42,10 +42,10 @@ public class AlignToTag extends Command {
   public void initialize() {
     switch (dir) {
       case LEFT:
-        m_pidController.setSetpoint(7.6);
+        m_pidController.setSetpoint(20.03);
         break;
       case RIGHT:
-        m_pidController.setSetpoint(-12.2);
+        m_pidController.setSetpoint(-14.08);
         break;
     }
   }

@@ -109,8 +109,8 @@ public class DriveSubsystem extends SubsystemBase {
                                                                 // module feedforwards
           new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                           // holonomic drive trains
-              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+              new PIDConstants(24, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(10.0, 0.0, 0.0) // Rotation PID constants
           ),
           config, // The robot configuration
           () -> {
@@ -131,6 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
       e.printStackTrace();
     }
 
+    m_gyro.setYaw(0);
     m_vision = new Vision(m_odometry);
   }
       
@@ -157,6 +158,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Robot Field", m_field2d);
     SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());
     SmartDashboard.putNumber("Odometry Y", m_odometry.getEstimatedPosition().getY());
+    SmartDashboard.putNumber("Robot Yaw", getHeading());
   }
 
   /**

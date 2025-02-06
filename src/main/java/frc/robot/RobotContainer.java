@@ -32,7 +32,7 @@ public class RobotContainer {
   
   // The robot's subsystems and commands are defined here...
   // private final Claw m_claw = new Claw();
-  // private final Arm m_arm = new Arm();
+  private final Arm m_arm = new Arm();
   private final Elevator m_elevator = new Elevator();
   // private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
@@ -73,8 +73,15 @@ public class RobotContainer {
         
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
-      
-      m_driverController.b().onTrue(m_elevator.updateFromDashboard());
+      m_driverController.y().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(0)));
+      m_driverController.x().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(-90)));
+      m_driverController.b().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(90)));
+
+      // m_driverController.b().onTrue(m_elevator.updateFromDashboard());
+      // m_driverController.a().onTrue(Commands.runOnce(() -> m_elevator.setTarget(0)));
+      // m_driverController.x().onTrue(Commands.runOnce(() -> m_elevator.setTarget(0.6)));
+      // m_driverController.y().onTrue(Commands.runOnce(() -> m_elevator.setTarget(1.27)));
+
       // m_driverController.y().whileTrue(m_elevator.testKg());
 
 
@@ -100,5 +107,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+
+  public void setVortexArmEncoder() {
+    m_arm.resetVortexEncoder();
   }
 }
