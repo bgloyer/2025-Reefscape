@@ -74,8 +74,8 @@ public class RobotContainer {
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
       m_driverController.y().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(0)));
-      m_driverController.x().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(-90)));
-      m_driverController.b().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(90)));
+      m_driverController.x().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(-45)));
+      m_driverController.b().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(45)));
 
       // m_driverController.b().onTrue(m_elevator.updateFromDashboard());
       // m_driverController.a().onTrue(Commands.runOnce(() -> m_elevator.setTarget(0)));
@@ -111,5 +111,13 @@ public class RobotContainer {
 
   public void setVortexArmEncoder() {
     m_arm.resetVortexEncoder();
+  }
+
+  public void autoInit() {
+      m_arm.resetSetpoint();
+  }
+
+  public void teleopInit() {
+    m_arm.resetSetpoint();
   }
 }

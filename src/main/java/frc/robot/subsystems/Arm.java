@@ -22,6 +22,7 @@ public class Arm extends SubsystemBase {
     private final SparkFlex m_rightMotor; // follower moter
     private final SparkClosedLoopController m_controller;
     private final RelativeEncoder m_encoder;
+    private double currentSetpoint;
     private double targetAngle;
 
     public Arm() {
@@ -32,11 +33,17 @@ public class Arm extends SubsystemBase {
         m_controller = m_leftMotor.getClosedLoopController();
         m_encoder = m_leftMotor.getEncoder();
         resetVortexEncoder();
+        resetSetpoint();
+    }
+
+    public void resetSetpoint() {
+        currentSetpoint = getAngle();
+        targetAngle = currentSetpoint;
     }
 
     public void setTargetAngle(double angle) {
         targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
-        m_controller.setReference(targetAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0 , calculateFeedForward()); // may need to run in periodic
+        currentSetpoint = getAngle();
     }
 
     private double calculateFeedForward() {
@@ -52,12 +59,22 @@ public class Arm extends SubsystemBase {
         if (m_leftMotor.getAbsoluteEncoder().getPosition() <= 45)
             m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition());
         else 
-            m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition() - 90);
-        
+            m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition() - 90);   
+    }
+
+    public double getAngle() {
+        return m_encoder.getPosition();
     }
     
+    private void positionSlewRateLimiting() {
+        double error = targetAngle - currentSetpoint;
+        currentSetpoint += Math.min(Math.abs(error), ArmConstants.SlewRate) * Math.signum(error);
+        m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
+    }
+
     @Override
     public void periodic() {
+        positionSlewRateLimiting();
         SmartDashboard.putNumber("Vortex Encoder", m_encoder.getPosition());
         SmartDashboard.putNumber("Absolute Encoder", m_leftMotor.getAbsoluteEncoder().getPosition());
     }

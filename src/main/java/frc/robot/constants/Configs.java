@@ -126,12 +126,12 @@ public final class Configs {
 
         static {
                 leftMotorConfig.idleMode(IdleMode.kBrake);
+                leftMotorConfig.absoluteEncoder.positionConversionFactor(0.25 * 360);
+                leftMotorConfig.encoder.positionConversionFactor(ArmConstants.MotorReduction);
                 leftMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                         .pid(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD)
                         .positionWrappingEnabled(true);
-                leftMotorConfig.absoluteEncoder.positionConversionFactor(0.25 * 360);
-                leftMotorConfig.encoder.positionConversionFactor(ArmConstants.MotorReduction);
                 leftMotorConfig.softLimit
                         .forwardSoftLimit(90)
                         .reverseSoftLimit(-90)

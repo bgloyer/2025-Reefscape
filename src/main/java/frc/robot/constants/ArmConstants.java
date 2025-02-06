@@ -23,5 +23,6 @@ public class ArmConstants {
     public static final double kG = 0;
     public static final double MotorReduction = (7.0 / 68.0) / 4.0 * 360.0;
     public static final double Tolerance = 1;
+    public static final double SlewRate = 5;
 
 }
