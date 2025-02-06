@@ -115,9 +115,11 @@ public class RobotContainer {
 
   public void autoInit() {
       m_arm.resetSetpoint();
+      m_elevator.resetSetpoint();
   }
 
   public void teleopInit() {
     m_arm.resetSetpoint();
+    m_elevator.resetSetpoint();
   }
 }

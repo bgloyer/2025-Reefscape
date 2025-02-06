@@ -93,31 +93,28 @@ public final class Configs {
                         leftMotorConfig.closedLoop
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(ElevatorConstants.kP, ElevatorConstants.kI,ElevatorConstants.kD);
-                        leftMotorConfig.closedLoop.maxMotion
-                                .maxVelocity(ElevatorConstants.MaxVelocity)
-                                .maxAcceleration(ElevatorConstants.MaxAcceleration);
 
                         rightMotorConfig.apply(leftMotorConfig);
                         rightMotorConfig.follow(ElevatorConstants.leftMotorId,false);
         }
     }
 
-    public static final class ClawConfig {
-        public static final SparkFlexConfig wristMotorConfig = new SparkFlexConfig();
-        public static final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
+        public static final class ClawConfig {
+                public static final SparkFlexConfig wristMotorConfig = new SparkFlexConfig();
+                public static final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
-        static {
-                wristMotorConfig.closedLoop
-                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                        .pid(WristConstants.kP, WristConstants.kI, WristConstants.kD);
-                wristMotorConfig.idleMode(IdleMode.kBrake);
-                wristMotorConfig.encoder.positionConversionFactor(WristConstants.MotorGearReduction * 360); // degrees
+                static {
+                        wristMotorConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                                .pid(WristConstants.kP, WristConstants.kI, WristConstants.kD);
+                        wristMotorConfig.idleMode(IdleMode.kBrake);
+                        wristMotorConfig.encoder.positionConversionFactor(WristConstants.MotorGearReduction * 360); // degrees
 
-                intakeMotorConfig.closedLoop
-                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        .pidf(CoralIntakeConstants.kP, CoralIntakeConstants.kI, CoralIntakeConstants.kD, CoralIntakeConstants.IntakeVelocityFF);
-                intakeMotorConfig.idleMode(IdleMode.kBrake);
-        }
+                        intakeMotorConfig.closedLoop
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                                .pidf(CoralIntakeConstants.kP, CoralIntakeConstants.kI, CoralIntakeConstants.kD, CoralIntakeConstants.IntakeVelocityFF);
+                        intakeMotorConfig.idleMode(IdleMode.kBrake);
+                }
     }
 
     public static final class ArmConfig {

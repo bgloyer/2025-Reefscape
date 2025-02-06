@@ -9,13 +9,12 @@ public final class ElevatorConstants {
     public static final double kP = 4.5;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double kG = 0.14;
-    public static final double MaxVelocity = 100;
-    public static final double MaxAcceleration = 100;
+    public static final double kG = 0.38;
+    public static final double SlewRate = 0.02;
 
 
     public static final double MinHeight = 0;
-    public static final double MaxHeight = Units.inchesToMeters(25);
+    public static final double MaxHeight = Units.inchesToMeters(50);
     public static final double Tolerance = 1;
     public static final double ApproachingTargetThreshold = 0.9;
 
