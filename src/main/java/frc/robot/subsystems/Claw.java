@@ -10,7 +10,12 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.ClawConstants;
+import frc.robot.constants.Configs;
 import frc.robot.constants.ClawConstants.CoralIntakeConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
 import frc.robot.constants.Configs.ClawConfig;
@@ -23,6 +28,7 @@ public class Claw extends SubsystemBase {
     private final SparkClosedLoopController m_intakeController;
     private final RelativeEncoder m_encoder; 
     private double targetAngle;
+    private double currentSetpoint;
 
     public Claw() {
         m_wristMotor = new SparkFlex(WristConstants.MotarCanId, MotorType.kBrushless);
@@ -30,10 +36,21 @@ public class Claw extends SubsystemBase {
         m_wristController = m_wristMotor.getClosedLoopController();
         m_encoder = m_wristMotor.getEncoder();
         m_encoder.setPosition(WristConstants.Initial);
+        m_wristMotor.configure(ClawConfig.wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         m_intakeMotor = new SparkFlex(CoralIntakeConstants.MotorCanId, MotorType.kBrushless);
-        m_wristMotor.configure(ClawConfig.intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_intakeMotor.configure(ClawConfig.intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_intakeController = m_intakeMotor.getClosedLoopController();
+        resetSetpoint();
+    }
+
+    public void resetSetpoint() {
+        currentSetpoint = getAngle();
+        targetAngle = currentSetpoint;
+    }
+
+    public double getAngle() {
+        return m_encoder.getPosition();
     }
 
     public void runIntake() {
@@ -44,17 +61,23 @@ public class Claw extends SubsystemBase {
         setTargetVelocity(CoralIntakeConstants.OuttakeVelocity);
     }
 
+    public void runVoltage(double volts) {
+        m_intakeController.setReference(volts, ControlType.kVoltage);
+    }
+
     public void stopIntake() {
         m_intakeMotor.stopMotor();
     }
 
     public void setTargetAngle(double angle) {
         targetAngle = MathUtil.clamp(angle, WristConstants.MinAngle, WristConstants.MaxAngle); 
-        m_wristController.setReference(targetAngle, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, calculateFeedForward());
+        currentSetpoint = getAngle();
     }
 
-    private double calculateFeedForward() {
-        return WristConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
+    private void positionSlewRateLimiting() {
+        double error = targetAngle - currentSetpoint;
+        currentSetpoint += Math.min(Math.abs(error), WristConstants.SlewRate) * Math.signum(error);
+        m_wristController.setReference(currentSetpoint, ControlType.kPosition);
     }
 
     private void setTargetVelocity(double velocity) {
@@ -63,5 +86,11 @@ public class Claw extends SubsystemBase {
 
     public boolean onTarget() {
         return Math.abs(m_encoder.getPosition() - targetAngle) < WristConstants.Tolerance;
+    }
+
+    @Override
+    public void periodic() {
+        positionSlewRateLimiting();
+        SmartDashboard.putNumber("Wrist Angle", getAngle());
     }
 }

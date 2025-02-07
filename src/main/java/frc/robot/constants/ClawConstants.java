@@ -4,12 +4,13 @@ public class ClawConstants {
 
     public final class WristConstants {
         public static final int MotarCanId = 14;
-        public static final double MotorGearReduction = 64.0 / 12.0;
-        public static final double kP = 0;
+        public static final double MotorGearReduction = 12.0 / 64.0;
+        public static final double kP = 0.03;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kG = 0;
         public static final double Tolerance = 1;
+        public static final double SlewRate = 4;
 
         // from block cad - degrees
         public static final double Initial = 0;
@@ -23,8 +24,8 @@ public class ClawConstants {
         public static final double Net = 150;
         
 
-        public static final double MaxAngle = 0;
-        public static final double MinAngle = 150;
+        public static final double MaxAngle = 150;
+        public static final double MinAngle = 0;
     }
 
     public final class CoralIntakeConstants {
@@ -36,5 +37,4 @@ public class ClawConstants {
         public static final double OuttakeVelocity = 0;
         public static final double IntakeVelocityFF = 1.0 / Constants.kNeoVortexkV;
     }
-
 }

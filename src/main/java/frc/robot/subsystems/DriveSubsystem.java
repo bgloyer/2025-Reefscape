@@ -73,23 +73,22 @@ public class DriveSubsystem extends SubsystemBase {
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
   private Vision m_vision;
   public CommandXboxController m_driverController;
-  
+
   private boolean useVision = true;
   // Odometry class for tracking robot pose
   private SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
-    DriveConstants.kDriveKinematics,
-    Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
-    new SwerveModulePosition[] {
-        m_frontLeft.getPosition(),
-        m_frontRight.getPosition(),
-        m_rearLeft.getPosition(),
-        m_rearRight.getPosition()
-    },
-    new Pose2d(),
-    VisionConstants.StateStdDev,
-    VisionConstants.VisionStdDev);
-      
-      
+      DriveConstants.kDriveKinematics,
+      Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
+      new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+      },
+      new Pose2d(),
+      VisionConstants.StateStdDev,
+      VisionConstants.VisionStdDev);
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
     m_driverController = controller;
@@ -134,7 +133,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.setYaw(0);
     m_vision = new Vision(m_odometry);
   }
-      
+
   @Override
   public void periodic() {
     m_odometry.update(

@@ -104,8 +104,9 @@ public final class Configs {
                 public static final SparkFlexConfig intakeMotorConfig = new SparkFlexConfig();
 
                 static {
+                        wristMotorConfig.idleMode(IdleMode.kBrake);
                         wristMotorConfig.closedLoop
-                                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(WristConstants.kP, WristConstants.kI, WristConstants.kD);
                         wristMotorConfig.idleMode(IdleMode.kBrake);
                         wristMotorConfig.encoder.positionConversionFactor(WristConstants.MotorGearReduction * 360); // degrees

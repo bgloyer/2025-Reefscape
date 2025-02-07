@@ -75,7 +75,6 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         positionSlewRateLimiting();
-        SmartDashboard.putNumber("Vortex Encoder", m_encoder.getPosition());
-        SmartDashboard.putNumber("Absolute Encoder", m_leftMotor.getAbsoluteEncoder().getPosition());
+        SmartDashboard.putNumber("Arm Angle", m_encoder.getPosition());
     }
 }

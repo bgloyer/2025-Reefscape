@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class AlignToTag extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_pidController;
   private final String limelightName = VisionConstants.LightLightName;
@@ -22,30 +22,32 @@ public class AlignToTag extends Command {
   public enum Direction {
     LEFT, RIGHT
   }
+
   /**
    * Aligns robot to the reef for scoring
    *
    * @param subsystem The subsystem used by this command.
-   * @param dir the left or right section of the reef
+   * @param dir       the left or right section of the reef
    */
   public AlignToTag(DriveSubsystem subsystem, Direction dir) {
     m_robotDrive = subsystem;
     this.dir = dir;
-    m_pidController = new PIDController(DriveConstants.TranslationkP, DriveConstants.TranslationkI, DriveConstants.TranslationkD);
+    m_pidController = new PIDController(DriveConstants.TranslationkP, DriveConstants.TranslationkI,
+        DriveConstants.TranslationkD);
     m_pidController.setTolerance(0.1);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
-   
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     switch (dir) {
       case LEFT:
-        m_pidController.setSetpoint(20.03);
+        m_pidController.setSetpoint(20.39);
         break;
       case RIGHT:
-        m_pidController.setSetpoint(-14.08);
+        m_pidController.setSetpoint(-14.05);
         break;
     }
   }
@@ -53,7 +55,7 @@ public class AlignToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(LimelightHelpers.getTV(limelightName)) {
+    if (LimelightHelpers.getTV(limelightName)) {
       double output = m_pidController.calculate(LimelightHelpers.getTX(limelightName));
       m_robotDrive.driveSideways(output);
     }

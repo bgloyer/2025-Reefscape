@@ -8,6 +8,10 @@ import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.ClawConstants;
+import frc.robot.constants.ClawConstants.WristConstants;
+import frc.robot.constants.Configs.ArmConfig;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -31,7 +35,7 @@ public class RobotContainer {
   private final CommandXboxController m_mechController = new CommandXboxController(1);
   
   // The robot's subsystems and commands are defined here...
-  // private final Claw m_claw = new Claw();
+  private final Claw m_claw = new Claw();
   private final Arm m_arm = new Arm();
   private final Elevator m_elevator = new Elevator();
   // private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
@@ -63,28 +67,40 @@ public class RobotContainer {
       
       // Score right
       m_driverController.rightBumper().whileTrue(Commands.sequence(
-        new AlignToTag(m_robotDrive, Direction.RIGHT)));
+        new AlignToTag(m_robotDrive, Direction.RIGHT),
+        Commands.runOnce(() -> m_claw.runVoltage(-5.5))));
         // new Score(m_coralMaster, m_driverController)));
 
       // Score left
       m_driverController.leftBumper().whileTrue(Commands.sequence(
-        new AlignToTag(m_robotDrive, Direction.LEFT)));
+        new AlignToTag(m_robotDrive, Direction.LEFT),
+        Commands.runOnce(() -> m_claw.runVoltage(-5.5))));
         // new Score(m_coralMaster, m_driverController)));
         
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
+      
+      m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(4), () -> m_claw.runVoltage(0)));
+      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-5.5), () -> m_claw.runVoltage(0)));
+
+      
+      m_driverController.x().onTrue(Commands.parallel(
+        Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.L2)),
+        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.L2))));
+      
+      
       m_driverController.y().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(0)));
-      m_driverController.x().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(-45)));
-      m_driverController.b().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(45)));
 
-      // m_driverController.b().onTrue(m_elevator.updateFromDashboard());
-      // m_driverController.a().onTrue(Commands.runOnce(() -> m_elevator.setTarget(0)));
-      // m_driverController.x().onTrue(Commands.runOnce(() -> m_elevator.setTarget(0.6)));
-      // m_driverController.y().onTrue(Commands.runOnce(() -> m_elevator.setTarget(1.27)));
+      m_driverController.rightTrigger(0.4).onTrue(Commands.parallel(
+        Commands.runOnce(() -> m_arm.setTargetAngle(-92.5)),
+        Commands.runOnce(() -> m_claw.setTargetAngle(11))));
 
-      // m_driverController.y().whileTrue(m_elevator.testKg());
+      
 
-
+      
+      m_mechController.x().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(0)));
+      m_mechController.y().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(90)));
+      m_mechController.b().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(120)));
 
       // grab a kG value from smartdashboard and apply the voltage to the elevator motors
       
@@ -116,10 +132,13 @@ public class RobotContainer {
   public void autoInit() {
       m_arm.resetSetpoint();
       m_elevator.resetSetpoint();
+      m_claw.resetSetpoint();
   }
 
   public void teleopInit() {
     m_arm.resetSetpoint();
+    m_arm.setTargetAngle(0);
     m_elevator.resetSetpoint();
+    m_claw.resetSetpoint();
   }
 }
