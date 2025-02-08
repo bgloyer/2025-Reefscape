@@ -92,8 +92,8 @@ public class RobotContainer {
       m_driverController.y().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(0)));
 
       m_driverController.rightTrigger(0.4).onTrue(Commands.parallel(
-        Commands.runOnce(() -> m_arm.setTargetAngle(-92.5)),
-        Commands.runOnce(() -> m_claw.setTargetAngle(11))));
+        Commands.runOnce(() -> m_arm.setTargetAngle(37.6)),
+        Commands.runOnce(() -> m_claw.setTargetAngle(21.27))));
 
       
 

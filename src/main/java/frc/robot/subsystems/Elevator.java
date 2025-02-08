@@ -61,9 +61,10 @@ public class Elevator extends SubsystemBase {
 
 
     private void positionSlewRateLimiting() {
-        double error = targetPosition - currentSetpoint;
-        currentSetpoint += Math.min(Math.abs(error), ElevatorConstants.SlewRate) * Math.signum(error);
-        m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+        m_controller.setReference(0, ControlType.kDutyCycle);
+        // double error = targetPosition - currentSetpoint;
+        // currentSetpoint += Math.min(Math.abs(error), ElevatorConstants.SlewRate) * Math.signum(error);
+        // m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
     }
 
     @Override

@@ -18,7 +18,7 @@ public final class ElevatorConstants {
     public static final double Tolerance = 1;
     public static final double ApproachingTargetThreshold = 0.9;
 
-    // from block cad
+    // from block cad 37.6 arm 21.27 wrist
     public static final double Store = Units.inchesToMeters(0);
     public static final double Station = Units.inchesToMeters(1);
     public static final double L1 = Units.inchesToMeters(3.559);
