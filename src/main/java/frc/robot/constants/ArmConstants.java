@@ -16,6 +16,7 @@ public class ArmConstants {
     public static final double L4 = -37;
     public static final double DeAlgaeL3 = -28;
     public static final double Net = 0;
+    public static final double GroundIntake = 21.27; 
 
     public static final double kP = 0.07;
     public static final double kI = 0;
