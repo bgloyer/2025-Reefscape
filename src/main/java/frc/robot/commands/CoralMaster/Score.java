@@ -30,13 +30,13 @@ public class Score extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.runOuttake();
+    m_subsystem.runIntake();
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(!m_subsystem.coralStored()) {
-      m_controller.setRumble(RumbleType.kBothRumble, 0.1);
+      m_controller.setRumble(RumbleType.kBothRumble, 0.5);
     }
   }
 
@@ -44,7 +44,6 @@ public class Score extends Command {
   @Override
   public void end(boolean interrupted) {
     m_subsystem.stopIntake();
-    m_subsystem.setStore();
     m_controller.setRumble(RumbleType.kBothRumble, 0);
   }
 

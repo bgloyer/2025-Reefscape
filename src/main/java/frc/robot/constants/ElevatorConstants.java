@@ -6,11 +6,11 @@ public final class ElevatorConstants {
     public static final int leftMotorId = 10;
     public static final int rightMotorId = 11;
     
-    public static final double kP = 4.5;
+    public static final double kP = 3.8;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double kG = 0.38;
-    public static final double SlewRate = 0.02;
+    public static final double kG = 0.37;
+    public static final double SlewRate = 0.04;
 
 
     public static final double MinHeight = 0;
@@ -19,7 +19,7 @@ public final class ElevatorConstants {
     public static final double ApproachingTargetThreshold = 0.9;
 
     // from block cad
-    public static final double Store = Units.inchesToMeters(0);
+    public static final double Store = 0.005;
     public static final double Station = Units.inchesToMeters(1) * 2;
     public static final double L1 = Units.inchesToMeters(3.559) * 2;
     public static final double L2 = Units.inchesToMeters(0.4) * 2;

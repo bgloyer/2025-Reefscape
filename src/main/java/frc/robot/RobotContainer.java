@@ -64,14 +64,16 @@ public class RobotContainer {
     private void configureBindings() {
 
       // ------------------ Aidan ----------------------------
-      // m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster));
+      m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster));
+      m_driverController.rightTrigger(0.4).onFalse(Commands.runOnce(() -> m_coralMaster.setStore()));
+
+
       m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
       
       // Score right
       m_driverController.rightBumper().whileTrue(Commands.sequence(
         new AlignToTag(m_robotDrive, Direction.RIGHT),
-        Commands.runOnce(() -> m_claw.runVoltage(-5.5))));
-        // new Score(m_coralMaster, m_driverController)));
+        new Score(m_coralMaster, m_driverController)));
 
       // Score left
       m_driverController.leftBumper().whileTrue(Commands.sequence(
@@ -83,33 +85,28 @@ public class RobotContainer {
 
       
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(4), () -> m_claw.runVoltage(0)));
-      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)).until(gamePieceStored));
+      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)));
 
       
       m_driverController.x().onTrue(Commands.parallel(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.L2)),
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.L2))));
+
       m_driverController.start().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)));
       
       m_driverController.y().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(0)));
-
-      m_driverController.rightTrigger(0.4).onTrue(Commands.parallel(
-        Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.GroundIntake)),
-        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.GroundIntake))));
-
-    
-
       
       m_mechController.x().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(0)));
       m_mechController.y().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(90)));
-      m_mechController.b().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(120)));
+
+      m_mechController.b().onTrue(Commands.runOnce(() -> m_elevator.setTarget(0.04)));
 
       // grab a kG value from smartdashboard and apply the voltage to the elevator motors
       
       // ------------------- James ----------------------------
       // m_mechController.povDown().onTrue(Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster));
       // m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster));
-      // m_mechController.povRight().onTrue(Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster));
+      m_mechController.povRight().onTrue(Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster));
       // m_mechController.povUp().onTrue(Commands.runOnce(() -> m_coralMaster.setL4(), m_coralMaster));
   }
 

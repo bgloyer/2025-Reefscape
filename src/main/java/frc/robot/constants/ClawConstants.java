@@ -17,7 +17,7 @@ public class ClawConstants {
         public static final double Store = 90;
         public static final double Station = 30;
         public static final double L1 = 90;
-        public static final double L2 = 90;
+        public static final double L2 = 83.19;
         public static final double L3 = L2;
         public static final double L4 = 45;
         public static final double DeAlgaeL3 = 60;
@@ -30,11 +30,11 @@ public class ClawConstants {
 
     public final class CoralIntakeConstants {
         public static final int MotorCanId = 15;
-        public static final double kP = 0;
+        public static final double kP = 0.0007;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double IntakeVelocity = 0;
-        public static final double OuttakeVelocity = 0;
-        public static final double IntakeVelocityFF = 1.0 / Constants.kNeoVortexkV;
+        public static final double IntakeVoltage = -3;
+        public static final double OuttakeVoltage = 3;
+        public static final double IntakeVelocityFF = 1.0 / Constants.kNeoVortexkV / 12.0;
     }
 }

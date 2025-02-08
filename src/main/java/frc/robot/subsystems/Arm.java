@@ -12,7 +12,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Configs;
@@ -47,8 +46,7 @@ public class Arm extends SubsystemBase {
     }
 
     private double calculateFeedForward() {
-        return 0;
-        // return ArmConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
+        return ArmConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
     }
 
     public boolean onTarget() {

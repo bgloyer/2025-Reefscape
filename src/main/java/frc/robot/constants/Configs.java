@@ -113,7 +113,7 @@ public final class Configs {
 
                         intakeMotorConfig.closedLoop
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                                .pidf(CoralIntakeConstants.kP, CoralIntakeConstants.kI, CoralIntakeConstants.kD, CoralIntakeConstants.IntakeVelocityFF);
+                                .pid(CoralIntakeConstants.kP, CoralIntakeConstants.kI, CoralIntakeConstants.kD);
                         intakeMotorConfig.idleMode(IdleMode.kBrake);
                 }
     }

@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
@@ -14,11 +16,16 @@ public class CoralMaster extends SubsystemBase {
     private final Claw m_claw;
     private final LaserCan m_laser;
     
-    public CoralMaster(Arm arm, Elevator elevator, Claw claw ){
+    public CoralMaster(Arm arm, Elevator elevator, Claw claw ) {
         m_arm = arm;
         m_elevator = elevator;
         m_claw = claw;
         m_laser = new LaserCan(Constants.CoralLaserCanID);
+        try {
+            m_laser.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
+        } catch (Exception e) {
+            System.out.println("laser can is the worst");
+        }
     }
 
     public void setState(double elevatorPosition, double armAngle, double clawangle) {
@@ -53,7 +60,7 @@ public class CoralMaster extends SubsystemBase {
     }
 
     public boolean coralStored() {
-        return (m_laser.getMeasurement() != null) && (m_laser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) ;
+        return (m_laser.getMeasurement() != null) && (m_laser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
     }
 
     public void runIntake() {

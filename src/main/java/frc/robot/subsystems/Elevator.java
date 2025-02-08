@@ -61,16 +61,16 @@ public class Elevator extends SubsystemBase {
 
 
     private void positionSlewRateLimiting() {
-        m_controller.setReference(0, ControlType.kDutyCycle);
-        // double error = targetPosition - currentSetpoint;
-        // currentSetpoint += Math.min(Math.abs(error), ElevatorConstants.SlewRate) * Math.signum(error);
-        // m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+        double error = targetPosition - currentSetpoint;
+        currentSetpoint += Math.min(Math.abs(error), ElevatorConstants.SlewRate) * Math.signum(error);
+        m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
     }
 
     @Override
     public void periodic() {
         positionSlewRateLimiting();
-        SmartDashboard.putNumber("Elevator Encoder", m_encoder.getPosition());
+        SmartDashboard.putNumber("Left Elevator Encoder", m_encoder.getPosition());
+        SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Elevator Current", m_leftMotor.getOutputCurrent());
     }
 }

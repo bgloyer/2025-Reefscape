@@ -41,7 +41,7 @@ public class IntakeCoral extends Command {
   @Override
   public void end(boolean interrupted) {
     m_subsystem.stopIntake();
-    m_subsystem.setStore();
+    // m_subsystem.setStore();
 
   }
 

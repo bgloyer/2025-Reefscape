@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.io.Console;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.Configs;
+import frc.robot.constants.Constants;
 import frc.robot.constants.ClawConstants.CoralIntakeConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
 import frc.robot.constants.Configs.ClawConfig;
@@ -54,11 +57,11 @@ public class Claw extends SubsystemBase {
     }
 
     public void runIntake() {
-        setTargetVelocity(CoralIntakeConstants.IntakeVelocity);
+        runVoltage(CoralIntakeConstants.IntakeVoltage);
     }
 
     public void runOuttake() {
-        setTargetVelocity(CoralIntakeConstants.OuttakeVelocity);
+        runVoltage(CoralIntakeConstants.OuttakeVoltage);
     }
 
     public void runVoltage(double volts) {
@@ -80,10 +83,6 @@ public class Claw extends SubsystemBase {
         m_wristController.setReference(currentSetpoint, ControlType.kPosition);
     }
 
-    private void setTargetVelocity(double velocity) {
-        m_intakeController.setReference(velocity, ControlType.kVelocity);
-    }
-
     public boolean onTarget() {
         return Math.abs(m_encoder.getPosition() - targetAngle) < WristConstants.Tolerance;
     }
@@ -92,5 +91,6 @@ public class Claw extends SubsystemBase {
     public void periodic() {
         positionSlewRateLimiting();
         SmartDashboard.putNumber("Wrist Angle", getAngle());
+        SmartDashboard.putNumber("Intake Velocity", m_intakeMotor.getEncoder().getVelocity());
     }
 }
