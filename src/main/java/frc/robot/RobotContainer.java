@@ -43,7 +43,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
 
   private final SendableChooser<Command> autoChooser;
-  private final Trigger gamePieceStored = new Trigger(() -> m_coralMaster.coralStored());
+  private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
   
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -83,7 +83,7 @@ public class RobotContainer {
 
       
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(4), () -> m_claw.runVoltage(0)));
-      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)).until(gamePieceStored));
+      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)).until(coralStored));
 
       
       m_driverController.x().onTrue(Commands.parallel(
@@ -96,16 +96,7 @@ public class RobotContainer {
       m_driverController.rightTrigger(0.4).onTrue(Commands.parallel(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.GroundIntake)),
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.GroundIntake))));
-
     
-
-      
-      m_mechController.x().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(0)));
-      m_mechController.y().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(90)));
-      m_mechController.b().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(120)));
-
-      // grab a kG value from smartdashboard and apply the voltage to the elevator motors
-      
       // ------------------- James ----------------------------
       // m_mechController.povDown().onTrue(Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster));
       // m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster));
@@ -114,10 +105,10 @@ public class RobotContainer {
   }
 
   public void registerAutoCommands() {
-    // NamedCommands.registerCommand("Set L4", Commands.runOnce(() -> m_coralMaster.setL4(), m_coralMaster)); 
-    // NamedCommands.registerCommand("Set L3", Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster)); 
-    // NamedCommands.registerCommand("Set L2", Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster)); 
-    // NamedCommands.registerCommand("Set L1", Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster)); 
+    NamedCommands.registerCommand("Set L4", Commands.runOnce(() -> m_coralMaster.setL4(), m_coralMaster)); 
+    NamedCommands.registerCommand("Set L3", Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster)); 
+    NamedCommands.registerCommand("Set L2", Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster)); 
+    NamedCommands.registerCommand("Set L1", Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster)); 
   }
   
   /**
