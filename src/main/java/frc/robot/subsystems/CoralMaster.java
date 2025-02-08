@@ -14,18 +14,11 @@ public class CoralMaster extends SubsystemBase {
     private final Arm m_arm;
     private final Elevator m_elevator;
     private final Claw m_claw;
-    private final LaserCan m_laser;
     
     public CoralMaster(Arm arm, Elevator elevator, Claw claw ) {
         m_arm = arm;
         m_elevator = elevator;
         m_claw = claw;
-        m_laser = new LaserCan(Constants.CoralLaserCanID);
-        try {
-            m_laser.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
-        } catch (Exception e) {
-            System.out.println("laser can is the worst");
-        }
     }
 
     public void setState(double elevatorPosition, double armAngle, double clawangle) {
@@ -59,10 +52,6 @@ public class CoralMaster extends SubsystemBase {
         setState(ElevatorConstants.L4, ArmConstants.L4, WristConstants.L4);
     }
 
-    public boolean coralStored() {
-        return (m_laser.getMeasurement() != null) && (m_laser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
-    }
-
     public void runIntake() {
         m_claw.runIntake();
     }
@@ -79,16 +68,12 @@ public class CoralMaster extends SubsystemBase {
         return m_arm.onTarget() && m_claw.onTarget() && m_elevator.onTarget();
     }
 
-    public double getDistance() {
-        if (m_laser.getMeasurement() == null)
-            return 0;
-        else
-            return m_laser.getMeasurement().distance_mm;
+    public boolean coralStored() {
+        return m_claw.coralStored();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Laser Can Measurement", getDistance());
         SmartDashboard.putBoolean("Game Piece stored", coralStored());
     }
 }

@@ -11,6 +11,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,6 +34,7 @@ public class Claw extends SubsystemBase {
     private final RelativeEncoder m_encoder; 
     private double targetAngle;
     private double currentSetpoint;
+    private final LaserCan m_laser;
 
     public Claw() {
         m_wristMotor = new SparkFlex(WristConstants.MotarCanId, MotorType.kBrushless);
@@ -45,6 +48,13 @@ public class Claw extends SubsystemBase {
         m_intakeMotor.configure(ClawConfig.intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_intakeController = m_intakeMotor.getClosedLoopController();
         resetSetpoint();
+
+        m_laser = new LaserCan(Constants.CoralLaserCanID);
+        try {
+            m_laser.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
+        } catch (Exception e) {
+            System.out.println("laser can is the worst");
+        }
     }
 
     public void resetSetpoint() {
@@ -85,6 +95,17 @@ public class Claw extends SubsystemBase {
 
     public boolean onTarget() {
         return Math.abs(m_encoder.getPosition() - targetAngle) < WristConstants.Tolerance;
+    }
+
+    public double getDistance() {
+        if (m_laser.getMeasurement() == null)
+            return 0;
+        else
+            return m_laser.getMeasurement().distance_mm;
+    }
+
+     public boolean coralStored() {
+        return (m_laser.getMeasurement() != null) && (m_laser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
     }
 
     @Override

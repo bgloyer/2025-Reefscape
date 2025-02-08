@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.CoralIntake.PositionCoral;
 import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.Drive.AlignToTag;
@@ -84,6 +85,8 @@ public class RobotContainer {
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
       
+      m_driverController.x().whileTrue(new PositionCoral(m_claw));
+
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(4), () -> m_claw.runVoltage(0)));
       m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)));
 
@@ -111,7 +114,7 @@ public class RobotContainer {
       
       // ------------------- James ----------------------------
       // m_mechController.povDown().onTrue(Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster));
-      // m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster));
+      m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster));
       m_mechController.povRight().onTrue(Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster));
       // m_mechController.povUp().onTrue(Commands.runOnce(() -> m_coralMaster.setL4(), m_coralMaster));
   }
