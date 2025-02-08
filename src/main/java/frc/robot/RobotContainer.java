@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
 
@@ -38,10 +39,11 @@ public class RobotContainer {
   private final Claw m_claw = new Claw();
   private final Arm m_arm = new Arm();
   private final Elevator m_elevator = new Elevator();
-  // private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
+  private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
 
   private final SendableChooser<Command> autoChooser;
+  private final Trigger gamePieceStored = new Trigger(() -> m_coralMaster.coralStored());
   
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -81,13 +83,13 @@ public class RobotContainer {
 
       
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(4), () -> m_claw.runVoltage(0)));
-      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-5.5), () -> m_claw.runVoltage(0)));
+      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)).until(gamePieceStored));
 
       
       m_driverController.x().onTrue(Commands.parallel(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.L2)),
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.L2))));
-      
+      m_driverController.start().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)));
       
       m_driverController.y().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(0)));
 
@@ -95,7 +97,7 @@ public class RobotContainer {
         Commands.runOnce(() -> m_arm.setTargetAngle(37.6)),
         Commands.runOnce(() -> m_claw.setTargetAngle(21.27))));
 
-      
+    
 
       
       m_mechController.x().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(0)));
