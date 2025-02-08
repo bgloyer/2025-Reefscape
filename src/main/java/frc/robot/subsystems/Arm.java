@@ -68,6 +68,7 @@ public class Arm extends SubsystemBase {
     
     private void positionSlewRateLimiting() {
         double error = targetAngle - currentSetpoint;
+        // velocity error 
         currentSetpoint += Math.min(Math.abs(error), ArmConstants.SlewRate) * Math.signum(error);
         m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
     }
