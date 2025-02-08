@@ -16,6 +16,7 @@ public class ArmConstants {
     public static final double L4 = -37;
     public static final double DeAlgaeL3 = -28;
     public static final double Net = 0;
+    public static final double GroundIntake = 21.27; 
 
     public static final double kP = 0.07;
     public static final double kI = 0;
@@ -23,6 +24,6 @@ public class ArmConstants {
     public static final double kG = 0;
     public static final double MotorReduction = (7.0 / 68.0) / 4.0 * 360.0;
     public static final double Tolerance = 1;
-    public static final double SlewRate = 3;
+    public static final double SlewRate = 3; // degrees per 0.02 
 
 }

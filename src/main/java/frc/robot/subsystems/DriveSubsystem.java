@@ -68,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
   };
 
   // The gyro sensor
-  private final Pigeon2 m_gyro = new Pigeon2(17);
+  private final Pigeon2 m_gyro = new Pigeon2(17, "rio");
   private Field2d m_field2d = new Field2d();
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
   private Vision m_vision;

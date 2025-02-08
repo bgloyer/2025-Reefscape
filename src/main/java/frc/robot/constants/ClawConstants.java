@@ -22,7 +22,7 @@ public class ClawConstants {
         public static final double L4 = 45;
         public static final double DeAlgaeL3 = 60;
         public static final double Net = 150;
-        
+        public static final double GroundIntake = 21.27;
 
         public static final double MaxAngle = 150;
         public static final double MinAngle = 0;
