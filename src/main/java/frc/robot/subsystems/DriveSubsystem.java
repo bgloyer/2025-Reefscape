@@ -9,6 +9,7 @@ import edu.wpi.first.hal.FRCNetComm.tResourceType;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -86,7 +87,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       },
-      new Pose2d(),
+      new Pose2d(1,1, Rotation2d.fromDegrees(1)),
       VisionConstants.StateStdDev,
       VisionConstants.VisionStdDev);
 

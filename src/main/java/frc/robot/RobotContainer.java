@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import frc.robot.commands.CoralMaster.AutoIntakeCoral;
 import frc.robot.commands.CoralIntake.PositionCoral;
+import frc.robot.commands.CoralMaster.AutoIntakeCoral;
 import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
+import frc.robot.commands.Drive.AutoAlignToTag;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
@@ -24,6 +27,7 @@ import frc.robot.util.Level;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,11 +56,13 @@ public class RobotContainer {
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
       // Build an auto chooser. This will use Commands.none() as the default option.
-      autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("Auto Chooser", autoChooser);
-  
+      
       // Configure the trigger bindings
       configureBindings();
+      registerAutoCommands();
+
+      autoChooser = AutoBuilder.buildAutoChooser();
+      SmartDashboard.putData("Auto Chooser", autoChooser);
     
       // drive with controller
       m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
@@ -107,8 +113,14 @@ public class RobotContainer {
       m_mechController.povUp().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
       
   }
-
   public void registerAutoCommands() {
+    NamedCommands.registerCommand("Auto Intake", Commands.sequence(new AutoIntakeCoral(m_coralMaster), new PositionCoral(m_claw)));
+    NamedCommands.registerCommand("Set Store", new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+    NamedCommands.registerCommand("Score L1", new SetLevel(Level.ONE, m_coralMaster, m_driverController));
+    NamedCommands.registerCommand("Score L2", new SetLevel(Level.TWO, m_coralMaster, m_driverController));
+    NamedCommands.registerCommand("Score L3", new SetLevel(Level.THREE, m_coralMaster, m_driverController));
+    NamedCommands.registerCommand("Score L4", new SetLevel(Level.FOUR, m_coralMaster, m_driverController));
+    NamedCommands.registerCommand("Align to Reef", new AutoAlignToTag(m_robotDrive));
   }
   
   /**
