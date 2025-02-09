@@ -104,7 +104,7 @@ public class Claw extends SubsystemBase {
             return m_laser.getMeasurement().distance_mm;
     }
 
-     public boolean coralStored() {
+    public boolean coralStored() {
         return (m_laser.getMeasurement() != null) && (m_laser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
     }
 
@@ -113,5 +113,6 @@ public class Claw extends SubsystemBase {
         positionSlewRateLimiting();
         SmartDashboard.putNumber("Wrist Angle", getAngle());
         SmartDashboard.putNumber("Intake Velocity", m_intakeMotor.getEncoder().getVelocity());
+        SmartDashboard.putBoolean("Coral Stored", coralStored());
     }
 }

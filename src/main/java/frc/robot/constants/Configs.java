@@ -84,7 +84,7 @@ public final class Configs {
                 public static final SparkFlexConfig rightMotorConfig = new SparkFlexConfig();
                 
                 static {
-                        leftMotorConfig.idleMode(IdleMode.kCoast);
+                        leftMotorConfig.idleMode(IdleMode.kBrake);
                         leftMotorConfig.secondaryCurrentLimit(60);
                         leftMotorConfig.smartCurrentLimit(50);
                         double positionFactor = ElevatorConstants.DiameterMeters / ElevatorConstants.MotorReduction * Math.PI * 2; // times 2 because cascade

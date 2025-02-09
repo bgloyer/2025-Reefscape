@@ -5,14 +5,16 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Claw;
 
-public class PositionCoral extends SequentialCommandGroup{
+public class PositionCoral extends SequentialCommandGroup {
     
     public PositionCoral(Claw claw) {
-        addCommands(
-            Commands.runOnce(() -> claw.runVoltage(0.5)),
-            Commands.waitUntil(new Trigger(claw::coralStored).negate()),
-            Commands.runOnce(() -> claw.runVoltage(-0.5)),
-            Commands.waitUntil(claw::coralStored)
-        );
+        Trigger coralStored = new Trigger(claw::coralStored);
+            addCommands(
+                Commands.runOnce(() -> claw.runVoltage(1)),
+                Commands.waitUntil(coralStored.negate()),
+                Commands.runOnce(() -> claw.runVoltage(-1)),
+                Commands.waitUntil(coralStored),
+                Commands.runOnce(() -> claw.runVoltage(0))
+            );
     }
 }

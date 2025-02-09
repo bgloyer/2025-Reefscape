@@ -21,6 +21,10 @@ public class CoralMaster extends SubsystemBase {
         m_claw = claw;
     }
 
+    public Arm getArm() {
+        return m_arm;
+    }
+
     public void setState(double elevatorPosition, double armAngle, double clawangle) {
         m_elevator.setTarget(elevatorPosition);
         m_arm.setTargetAngle(armAngle);
@@ -74,6 +78,5 @@ public class CoralMaster extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Game Piece stored", coralStored());
     }
 }

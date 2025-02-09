@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.commands.CoralIntake.PositionCoral;
 import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.Score;
+import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.constants.ArmConstants;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
+import frc.robot.util.Level;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -66,57 +68,36 @@ public class RobotContainer {
 
       // ------------------ Aidan ----------------------------
       m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster));
-      m_driverController.rightTrigger(0.4).onFalse(Commands.runOnce(() -> m_coralMaster.setStore()));
+      m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
+        Commands.runOnce(() -> m_coralMaster.setStore()),
+        Commands.waitUntil(m_arm::onTarget),
+        new PositionCoral(m_claw).onlyIf(coralStored)));
 
 
-      m_driverController.leftTrigger(0.4).whileTrue(new PointAtReef(m_robotDrive));
+      m_driverController.rightBumper().whileTrue(new PointAtReef(m_robotDrive));
       
-      // Score right
-      m_driverController.rightBumper().whileTrue(Commands.sequence(
-        new AlignToTag(m_robotDrive, Direction.RIGHT),
-        new Score(m_coralMaster, m_driverController)));
-
-      // Score left
+      // Score 
       m_driverController.leftBumper().whileTrue(Commands.sequence(
-        new AlignToTag(m_robotDrive, Direction.LEFT),
-        Commands.runOnce(() -> m_claw.runVoltage(-5.5))));
-        // new Score(m_coralMaster, m_driverController)));
+        new AlignToTag(m_robotDrive),
+        Commands.runOnce(() -> m_claw.runVoltage(-4)),
+        Commands.waitUntil(coralStored.negate()),
+        Commands.runOnce(() -> m_claw.runVoltage(0)),
+        new SetLevel(m_coralMaster, Level.STORE)));
         
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
       
-      m_driverController.x().whileTrue(new PositionCoral(m_claw));
-
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(4), () -> m_claw.runVoltage(0)));
-      m_driverController.b().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)));
-
-      
-      m_driverController.x().onTrue(Commands.parallel(
-        Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.L2)),
-        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.L2))));
-
-      m_driverController.start().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.runVoltage(0)));
-      
-      m_driverController.y().onTrue(Commands.runOnce(() -> m_arm.setTargetAngle(0)));
-
-      m_driverController.rightTrigger(0.4).onTrue(Commands.parallel(
-        Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.GroundIntake)),
-        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.GroundIntake))));
-
-    
-
-      
-      m_mechController.x().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(0)));
-      m_mechController.y().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(90)));
-      m_mechController.b().onTrue(Commands.runOnce(() -> m_claw.setTargetAngle(120)));
-
-      // grab a kG value from smartdashboard and apply the voltage to the elevator motors
-      
+      m_driverController.b().onTrue(new SetLevel(m_coralMaster, Level.STORE));
+            
       // ------------------- James ----------------------------
-      // m_mechController.povDown().onTrue(Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster));
-      m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster));
-      m_mechController.povRight().onTrue(Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster));
-      // m_mechController.povUp().onTrue(Commands.runOnce(() -> m_coralMaster.setL4(), m_coralMaster));
+      m_mechController.leftBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
+      m_mechController.rightBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
+
+      m_mechController.a().onTrue(new SetLevel(m_coralMaster, Level.ONE));
+      m_mechController.x().onTrue(new SetLevel(m_coralMaster, Level.TWO));
+      m_mechController.b().onTrue(new SetLevel(m_coralMaster, Level.THREE));
+      m_mechController.y().onTrue(new SetLevel(m_coralMaster, Level.FOUR));
   }
 
   public void registerAutoCommands() {

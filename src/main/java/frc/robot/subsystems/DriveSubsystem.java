@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
@@ -88,6 +89,8 @@ public class DriveSubsystem extends SubsystemBase {
       new Pose2d(),
       VisionConstants.StateStdDev,
       VisionConstants.VisionStdDev);
+
+public Direction scoringSide = Direction.RIGHT;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
@@ -350,5 +353,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
     double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
     return Math.round(angle / 60.0) * 60;
+  }
+
+  public void setScoringSide(Direction dir) {
+    scoringSide = dir;
   }
 }

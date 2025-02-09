@@ -10,12 +10,12 @@ public final class ElevatorConstants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kG = 0.37;
-    public static final double SlewRate = 0.04;
+    public static final double SlewRate = 0.03;
 
 
     public static final double MinHeight = 0;
     public static final double MaxHeight = Units.inchesToMeters(50);
-    public static final double Tolerance = 1;
+    public static final double Tolerance = 0.02;
     public static final double ApproachingTargetThreshold = 0.9;
 
     // from block cad

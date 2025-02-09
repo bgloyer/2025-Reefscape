@@ -29,9 +29,8 @@ public class AlignToTag extends Command {
    * @param subsystem The subsystem used by this command.
    * @param dir       the left or right section of the reef
    */
-  public AlignToTag(DriveSubsystem subsystem, Direction dir) {
+  public AlignToTag(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
-    this.dir = dir;
     m_pidController = new PIDController(DriveConstants.TranslationkP, DriveConstants.TranslationkI,
         DriveConstants.TranslationkD);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -41,7 +40,7 @@ public class AlignToTag extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    switch (dir) {
+    switch (m_robotDrive.scoringSide) {
       case LEFT:
         m_pidController.setSetpoint(19.875); //L Side: 21.62-18.13
         m_pidController.setTolerance(1.75);
