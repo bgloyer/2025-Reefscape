@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.53,
-        "y": 4.9
+        "x": 7.168948917002877,
+        "y": 5.18
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.529999999999999,
-        "y": 4.9
+        "x": 6.918948917002877,
+        "y": 5.18
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 5.353,
+        "y": 5.014
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 5.603,
+        "y": 5.014
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": "4 Coral Auto",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 0.0,
+    "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

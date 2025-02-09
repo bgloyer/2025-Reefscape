@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4 Coral 1"
+            "pathName": " 4 Coral Auto 1"
           }
         },
         {
@@ -31,7 +31,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Component 5"
+            "pathName": "4 Coral Auto 5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 6"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 7"
           }
         }
       ]

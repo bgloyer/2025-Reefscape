@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8090000000000002,
-        "y": 7.209
+        "x": 1.8680673292154037,
+        "y": 7.271920271904493
       },
       "isLocked": false,
       "linkedName": "CoralStation"
     },
     {
       "anchor": {
-        "x": 3.656,
-        "y": 5.031890902091169
+        "x": 5.058,
+        "y": 5.18
       },
       "prevControl": {
-        "x": 3.492939521337395,
-        "y": 5.2213936205369
+        "x": 4.849804613961585,
+        "y": 5.318400437977326
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": "4 Coral Auto",
