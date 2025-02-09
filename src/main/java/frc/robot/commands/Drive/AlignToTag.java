@@ -18,7 +18,7 @@ public class AlignToTag extends Command {
   private final PIDController m_pidController;
   private final String limelightName = VisionConstants.LightLightName;
   private Direction dir;
-
+  private double tolerance;
   public enum Direction {
     LEFT, RIGHT
   }
@@ -42,12 +42,16 @@ public class AlignToTag extends Command {
   public void initialize() {
     switch (m_robotDrive.scoringSide) {
       case LEFT:
-        m_pidController.setSetpoint(19.875); //L Side: 21.62-18.13
-        m_pidController.setTolerance(1.75);
+        double leftTx1 = 17.2;
+        double leftTx2 = 21.65;
+        m_pidController.setSetpoint((leftTx1 + leftTx2) / 2); 
+        tolerance = Math.abs((leftTx1 - leftTx2) / 2);
         break;
       case RIGHT:
-        m_pidController.setSetpoint(-14.75); //R Side: 12.7-16.8 
-        m_pidController.setTolerance(2.05);
+        double rightTx1 = -13.1;
+        double rightTx2 = -18.98;
+        m_pidController.setSetpoint((rightTx1 + rightTx2) / 2); //R Side: 12.7-16.8  -13.1-18.98
+        tolerance = Math.abs((rightTx1 - rightTx2));
         break;
     }
   }
@@ -59,18 +63,23 @@ public class AlignToTag extends Command {
       double output = m_pidController.calculate(LimelightHelpers.getTX(limelightName));
       m_robotDrive.driveSideways(output);
     }
+
+    m_robotDrive.setAlignedToReef(Math.abs(LimelightHelpers.getTX(limelightName) - m_pidController.getSetpoint()) < tolerance);
+    
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_robotDrive.driveSideways(0);
+    m_robotDrive.setAlignedToReef(false);
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_pidController.atSetpoint();
+    return false;
   }
 }

@@ -20,7 +20,7 @@ public class ClawConstants {
         public static final double L2 = 83.19;
         public static final double L3 = 85;
         public static final double L4 = 47;
-        public static final double DeAlgaeL3 = 60;
+        public static final double DeAlgaeL3 = 55;
         public static final double Net = 150;
         public static final double GroundIntake = 21.27;
 

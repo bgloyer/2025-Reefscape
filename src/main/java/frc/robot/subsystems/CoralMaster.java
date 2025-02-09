@@ -1,19 +1,16 @@
 package frc.robot.subsystems;
 
-import au.grapplerobotics.ConfigurationFailedException;
-import au.grapplerobotics.LaserCan;
-import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
-import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
+import frc.robot.util.Level;
 
 public class CoralMaster extends SubsystemBase {
     private final Arm m_arm;
     private final Elevator m_elevator;
     private final Claw m_claw;
+    private Level level = Level.STORE;
     
     public CoralMaster(Arm arm, Elevator elevator, Claw claw ) {
         m_arm = arm;
@@ -74,6 +71,18 @@ public class CoralMaster extends SubsystemBase {
 
     public boolean coralStored() {
         return m_claw.coralStored();
+    }
+
+    public boolean readyToScore() {
+        return onTarget() && level.isReefScoringPosition;
+    }
+
+    public void setCurrentLevel(Level level) {
+        this.level = level;
+    }
+
+    public boolean isLevelFour() {
+        return level == Level.FOUR;
     }
 
     @Override

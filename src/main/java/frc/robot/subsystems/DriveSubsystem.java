@@ -92,6 +92,8 @@ public class DriveSubsystem extends SubsystemBase {
 
 public Direction scoringSide = Direction.RIGHT;
 
+private boolean aligned = false;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
     m_driverController = controller;
@@ -139,6 +141,7 @@ public Direction scoringSide = Direction.RIGHT;
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
         new SwerveModulePosition[] {
@@ -357,5 +360,13 @@ public Direction scoringSide = Direction.RIGHT;
 
   public void setScoringSide(Direction dir) {
     scoringSide = dir;
+  }
+
+  public void setAlignedToReef(boolean val) {
+    aligned = val;
+  }
+
+  public boolean alignedToReef() {
+    return aligned;
   }
 }

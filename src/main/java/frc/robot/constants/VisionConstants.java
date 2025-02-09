@@ -7,7 +7,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
-    public static String LightLightName = "limelight-threeg";
+    public static String LightLightName = "limelight-four";
 
     /* Standard deviations of the pose estimate (x position 
     * in meters, y position in meters, and heading in radians). 

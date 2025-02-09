@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,7 +48,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
-  
+  private final Trigger isLevelFour = new Trigger(m_coralMaster::isLevelFour);
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
       // Build an auto chooser. This will use Commands.none() as the default option.
@@ -65,7 +66,8 @@ public class RobotContainer {
      * Use this method to define your trigger->command mappings
      */
     private void configureBindings() {
-
+      coralStored.negate().and(isLevelFour).onTrue(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+      
       // ------------------ Aidan ----------------------------
       m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster));
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
@@ -77,34 +79,36 @@ public class RobotContainer {
       m_driverController.rightBumper().whileTrue(new PointAtReef(m_robotDrive));
       
       // Score 
-      m_driverController.leftBumper().whileTrue(Commands.sequence(
-        new AlignToTag(m_robotDrive),
-        Commands.runOnce(() -> m_claw.runVoltage(-4)),
-        Commands.waitUntil(coralStored.negate()),
-        Commands.runOnce(() -> m_claw.runVoltage(0)),
-        new SetLevel(m_coralMaster, Level.STORE)));
+      m_driverController.leftBumper().whileTrue(new AlignToTag(m_robotDrive));
         
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
       
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(4), () -> m_claw.runVoltage(0)));
-      m_driverController.b().onTrue(new SetLevel(m_coralMaster, Level.STORE));
+      m_driverController.b().onTrue(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
             
       // ------------------- James ----------------------------
       m_mechController.leftBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
       m_mechController.rightBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
 
-      m_mechController.a().onTrue(new SetLevel(m_coralMaster, Level.ONE));
-      m_mechController.x().onTrue(new SetLevel(m_coralMaster, Level.TWO));
-      m_mechController.b().onTrue(new SetLevel(m_coralMaster, Level.THREE));
-      m_mechController.y().onTrue(new SetLevel(m_coralMaster, Level.FOUR));
+      m_mechController.a().whileTrue(new SetLevel(Level.ONE, m_coralMaster, m_driverController));
+      m_mechController.a().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+
+      m_mechController.b().whileTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController).onlyIf(m_robotDrive::alignedToReef));
+      m_mechController.b().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+
+      m_mechController.x().whileTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController).onlyIf(m_robotDrive::alignedToReef));
+      m_mechController.x().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+      
+      m_mechController.y().and(m_robotDrive::alignedToReef).onTrue(new SetLevel(Level.FOUR, m_coralMaster, m_driverController));
+      // m_mechController.y().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+      
+      m_mechController.povUp().whileTrue(new SetLevel(Level.TOPALGAE, m_coralMaster, m_driverController));
+      m_mechController.povUp().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+      
   }
 
   public void registerAutoCommands() {
-    NamedCommands.registerCommand("Set L4", Commands.runOnce(() -> m_coralMaster.setL4(), m_coralMaster)); 
-    NamedCommands.registerCommand("Set L3", Commands.runOnce(() -> m_coralMaster.setL3(), m_coralMaster)); 
-    NamedCommands.registerCommand("Set L2", Commands.runOnce(() -> m_coralMaster.setL2(), m_coralMaster)); 
-    NamedCommands.registerCommand("Set L1", Commands.runOnce(() -> m_coralMaster.setL1(), m_coralMaster)); 
   }
   
   /**

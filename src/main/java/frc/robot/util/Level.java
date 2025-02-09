@@ -6,19 +6,22 @@ import frc.robot.constants.ElevatorConstants;
 
 public enum Level {
     
-    STORE(ElevatorConstants.Store, ArmConstants.Store, WristConstants.Store), 
-    ONE(ElevatorConstants.L1, ArmConstants.L1, WristConstants.L1),
-    TWO(ElevatorConstants.L2, ArmConstants.L2, WristConstants.L2),
-    THREE(ElevatorConstants.L3, ArmConstants.L3, WristConstants.L3),
-    FOUR(ElevatorConstants.L4, ArmConstants.L4, WristConstants.L4);
+    STORE(ElevatorConstants.Store, ArmConstants.Store, WristConstants.Store, false), 
+    ONE(ElevatorConstants.L1, ArmConstants.L1, WristConstants.L1, true),
+    TWO(ElevatorConstants.L2, ArmConstants.L2, WristConstants.L2, true),
+    THREE(ElevatorConstants.L3, ArmConstants.L3, WristConstants.L3, true),
+    FOUR(ElevatorConstants.L4, ArmConstants.L4, WristConstants.L4, true),
+    TOPALGAE(ElevatorConstants.DeAlgaeL3, ArmConstants.DeAlgaeL3, WristConstants.DeAlgaeL3, true);
 
     public double elevatorHeight;
     public double armAngle;
     public double wristAngle;
+    public boolean isReefScoringPosition;
 
-    Level(double elevatorHeight, double armAngle, double wristAngle) {
+    Level(double elevatorHeight, double armAngle, double wristAngle, boolean isReefScoringPosition) {
         this.elevatorHeight = elevatorHeight; 
         this.armAngle = armAngle;
         this.wristAngle = wristAngle;
+        this.isReefScoringPosition = isReefScoringPosition;
     }
 }
