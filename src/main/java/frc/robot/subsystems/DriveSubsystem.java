@@ -37,6 +37,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.util.Helpers;
+import static frc.robot.util.Helpers.betterModulus;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -394,9 +395,5 @@ private boolean aligned = false;
     } else {
       return -54.011;
     }
-  }
-
-  private double betterModulus(double x, double y) {
-    return ((x % y + y) % y);
   }
 }

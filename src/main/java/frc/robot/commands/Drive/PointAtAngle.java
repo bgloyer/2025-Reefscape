@@ -6,6 +6,7 @@ package frc.robot.commands.Drive;
 
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import static frc.robot.util.Helpers.betterModulus;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -49,9 +50,5 @@ public class PointAtAngle extends Command {
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  private double betterModulus(double x, double y) {
-    return (x % y + y) % y;
   }
 }

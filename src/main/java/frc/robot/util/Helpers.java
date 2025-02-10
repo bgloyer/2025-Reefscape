@@ -15,4 +15,8 @@ public class Helpers {
             return Alliance.Red;
         return Alliance.Blue;
     }
+
+    public static double betterModulus(double x, double y) {
+        return (x % y + y) % y;
+      }
 }
