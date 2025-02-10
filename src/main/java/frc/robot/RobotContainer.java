@@ -4,16 +4,15 @@
 
 package frc.robot;
 
-import frc.robot.commands.CoralMaster.AutoIntakeCoral;
+import frc.robot.commands.Auto.AutoAlignToTag;
+import frc.robot.commands.Auto.AutoIntakeCoral;
 import frc.robot.commands.CoralIntake.PositionCoral;
-import frc.robot.commands.CoralMaster.AutoIntakeCoral;
 import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.commands.Drive.AlignWheels;
-import frc.robot.commands.Drive.AutoAlignToTag;
 import frc.robot.commands.Drive.PointAtAngle;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants;
