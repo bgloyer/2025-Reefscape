@@ -17,7 +17,6 @@ public class AlignToTag extends Command {
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_pidController;
   private final String limelightName = VisionConstants.LightLightName;
-  private Direction dir;
   private double tolerance;
   public enum Direction {
     LEFT, RIGHT
@@ -27,7 +26,6 @@ public class AlignToTag extends Command {
    * Aligns robot to the reef for scoring
    *
    * @param subsystem The subsystem used by this command.
-   * @param dir       the left or right section of the reef
    */
   public AlignToTag(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;

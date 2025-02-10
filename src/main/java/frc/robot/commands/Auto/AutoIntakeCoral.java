@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Auto;
 
-import frc.robot.commands.CoralIntake.PositionCoral;
 import frc.robot.subsystems.CoralMaster;
 import edu.wpi.first.wpilibj2.command.Command;
 

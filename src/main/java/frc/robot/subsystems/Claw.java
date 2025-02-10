@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
-import java.io.Console;
-
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -14,12 +11,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ClawConstants;
-import frc.robot.constants.Configs;
 import frc.robot.constants.Constants;
 import frc.robot.constants.ClawConstants.CoralIntakeConstants;
 import frc.robot.constants.ClawConstants.WristConstants;

@@ -11,7 +11,6 @@ import frc.robot.constants.Configs;
 import frc.robot.constants.Configs.DrivingTalonConfig;
 
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -20,7 +19,6 @@ import com.revrobotics.spark.SparkMax;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
 
 public class KrakenSwerveModule {
   private final TalonFX m_drivingTalon;

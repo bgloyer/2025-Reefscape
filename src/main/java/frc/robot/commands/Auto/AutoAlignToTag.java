@@ -17,7 +17,6 @@ public class AutoAlignToTag extends Command {
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_pidController;
   private final String limelightName = VisionConstants.LightLightName;
-  private Direction dir;
   private double tolerance;
   public enum Direction {
     LEFT, RIGHT

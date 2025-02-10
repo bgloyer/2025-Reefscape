@@ -8,7 +8,6 @@ import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.util.Helpers.betterModulus;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
