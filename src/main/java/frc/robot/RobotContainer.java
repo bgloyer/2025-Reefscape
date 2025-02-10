@@ -22,6 +22,8 @@ import frc.robot.util.Level;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -136,6 +138,7 @@ public class RobotContainer {
       m_arm.resetSetpoint();
       m_elevator.resetSetpoint();
       m_claw.resetSetpoint();
+      ((PathPlannerAuto)getAutonomousCommand()).getStartingPose().getRotation().getDegrees();
   }
 
   public void teleopInit() {
