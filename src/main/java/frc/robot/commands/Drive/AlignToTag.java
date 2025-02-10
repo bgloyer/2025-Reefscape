@@ -73,8 +73,6 @@ public class AlignToTag extends Command {
   @Override
   public void end(boolean interrupted) {
     m_robotDrive.driveSideways(0);
-    m_robotDrive.setAlignedToReef(false);
-
   }
 
   // Returns true when the command should end.

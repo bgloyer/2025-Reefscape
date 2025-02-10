@@ -17,8 +17,8 @@ public class Vision {
 
     public void updatePoseEstimation(Pigeon2 gyro) {
         boolean doRejectUpdate = false;
-        LimelightHelpers.SetRobotOrientation("limelight-threeg", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-threeg");
+        LimelightHelpers.SetRobotOrientation(VisionConstants.LightLightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LightLightName);
         if(mt2 == null)
             return;
         if (Math.abs(gyro.getRate()) > 720)  { // if our angular velocity is greater than 720 degrees per second, ignore vision updates

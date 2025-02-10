@@ -46,7 +46,7 @@ public final class DriveConstants {
     public static final double TurnkI = 0;
     public static final double TurnkD = 0.0012;
 
-    public static double TranslationkP = 0.009;
+    public static double TranslationkP = 0.014;
     public static double TranslationkI = 0;
     public static double TranslationkD = 0;
 

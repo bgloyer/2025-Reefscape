@@ -85,8 +85,8 @@ public class CoralMaster extends SubsystemBase {
         this.level = level;
     }
 
-    public boolean isLevelFour() {
-        return level == Level.FOUR;
+    public boolean isLevelFourOrTwo() {
+        return level == Level.FOUR || level == Level.TWO;
     }
 
     @Override

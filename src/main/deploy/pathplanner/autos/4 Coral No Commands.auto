@@ -5,9 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Auto Intake"
+            "pathName": " 4 Coral Auto 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 2"
           }
         },
         {
@@ -17,21 +23,27 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Align to Reef"
+            "pathName": "4 Coral Auto 4"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.1
+            "pathName": "4 Coral Auto 5"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Score L4"
+            "pathName": "4 Coral Auto 6"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 7"
           }
         }
       ]

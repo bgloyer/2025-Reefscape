@@ -12,7 +12,9 @@ import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
+import frc.robot.commands.Drive.AlignWheels;
 import frc.robot.commands.Drive.AutoAlignToTag;
+import frc.robot.commands.Drive.PointAtAngle;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
@@ -52,7 +54,7 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
-  private final Trigger isLevelFour = new Trigger(m_coralMaster::isLevelFour);
+  private final Trigger isLevelFour = new Trigger(m_coralMaster::isLevelFourOrTwo);
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
       // Build an auto chooser. This will use Commands.none() as the default option.
@@ -75,17 +77,16 @@ public class RobotContainer {
       coralStored.negate().and(isLevelFour).onTrue(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
       
       // ------------------ Aidan ----------------------------
-      m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster));
+      m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster, m_robotDrive));
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
         Commands.runOnce(() -> m_coralMaster.setStore()),
         Commands.waitUntil(m_arm::onTarget),
         new PositionCoral(m_claw).onlyIf(coralStored)));
 
-
       m_driverController.rightBumper().whileTrue(new PointAtReef(m_robotDrive));
       
       // Score 
-      m_driverController.leftBumper().whileTrue(new AlignToTag(m_robotDrive));
+      m_driverController.leftBumper().whileTrue(new AlignWheels(m_robotDrive, 90).andThen(new AlignToTag(m_robotDrive)));
         
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
 
@@ -100,10 +101,10 @@ public class RobotContainer {
       m_mechController.a().whileTrue(new SetLevel(Level.ONE, m_coralMaster, m_driverController));
       m_mechController.a().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
 
-      m_mechController.b().whileTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController).onlyIf(m_robotDrive::alignedToReef));
+      m_mechController.b().and(m_robotDrive::alignedToReef).whileTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController));
       m_mechController.b().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
 
-      m_mechController.x().whileTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController).onlyIf(m_robotDrive::alignedToReef));
+      m_mechController.x().and(m_robotDrive::alignedToReef).whileTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController));
       m_mechController.x().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
       
       m_mechController.y().and(m_robotDrive::alignedToReef).onTrue(new SetLevel(Level.FOUR, m_coralMaster, m_driverController));
@@ -111,6 +112,9 @@ public class RobotContainer {
       
       m_mechController.povUp().whileTrue(new SetLevel(Level.TOPALGAE, m_coralMaster, m_driverController));
       m_mechController.povUp().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+
+      m_mechController.povDown().whileTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController));
+      m_mechController.povDown().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
       
   }
   public void registerAutoCommands() {
@@ -119,7 +123,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Score L1", new SetLevel(Level.ONE, m_coralMaster, m_driverController));
     NamedCommands.registerCommand("Score L2", new SetLevel(Level.TWO, m_coralMaster, m_driverController));
     NamedCommands.registerCommand("Score L3", new SetLevel(Level.THREE, m_coralMaster, m_driverController));
-    NamedCommands.registerCommand("Score L4", new SetLevel(Level.FOUR, m_coralMaster, m_driverController));
+    NamedCommands.registerCommand("Score L4", new SetLevel(Level.TWO, m_coralMaster, m_driverController).until(coralStored.negate()));
     NamedCommands.registerCommand("Align to Reef", new AutoAlignToTag(m_robotDrive));
   }
   

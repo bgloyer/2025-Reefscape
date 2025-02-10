@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -142,6 +143,9 @@ private boolean aligned = false;
 
   @Override
   public void periodic() {
+    getAngleToReef();
+    SmartDashboard.putNumber("Wheel State", m_frontLeft.getState().angle.getDegrees());
+    SmartDashboard.putNumber("Wheel Angle", m_frontLeft.getPosition().angle.getDegrees());
     SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
@@ -264,6 +268,13 @@ private boolean aligned = false;
     m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
+  public void setWheels(double angle) {
+    m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(angle)));
+    m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(angle)));
+    m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(angle)));
+    m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(angle)));
+  }
+
   /**
    * Sets the swerve ModuleStates.
    *
@@ -286,9 +297,14 @@ private boolean aligned = false;
     m_rearRight.resetEncoders();
   }
 
+  public boolean wheelsOnTarget() {
+    return Math.abs(betterModulus(m_frontLeft.getPosition().angle.getDegrees(), 180) - 90) < 10;
+  }
+
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
+    m_odometry.resetRotation(Rotation2d.fromDegrees(0));
   }
 
   /**
@@ -356,6 +372,7 @@ private boolean aligned = false;
       centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
     }
     double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
+    
     return Math.round(angle / 60.0) * 60;
   }
 
@@ -369,5 +386,17 @@ private boolean aligned = false;
 
   public boolean alignedToReef() {
     return aligned;
+  }
+
+  public double getStationAngle() {
+    if (m_odometry.getEstimatedPosition().getY() < 4) {
+      return 54.011;
+    } else {
+      return -54.011;
+    }
+  }
+
+  private double betterModulus(double x, double y) {
+    return ((x % y + y) % y);
   }
 }

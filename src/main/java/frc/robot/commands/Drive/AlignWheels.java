@@ -4,40 +4,37 @@
 
 package frc.robot.commands.Drive;
 
-import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class PointAtReef extends Command {
+public class AlignWheels extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-
   private final DriveSubsystem m_robotDrive;
-  private PIDController turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
+  private double angle;
+
   /**
-   *  Points the robot to be flush with the nearest edge of the reef
+   * Creates a new ExampleCommand.
    *
-   * 
+   * @param subsystem The subsystem used by this command.
    */
-  public PointAtReef(DriveSubsystem subsystem) {
+  public AlignWheels(DriveSubsystem subsystem, double angle) {
     m_robotDrive = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+    this.angle = angle;
   }
-  
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turnPID.enableContinuousInput(0, 360);
+    m_robotDrive.setWheels(angle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), m_robotDrive.getAngleToReef());
-    m_robotDrive.driveWithController(output, true);
+
   }
 
   // Called once the command ends or is interrupted.
@@ -47,10 +44,6 @@ public class PointAtReef extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
-  }
-
-  private double betterModulus(double x, double y) {
-    return ((x % y + y) % y);
+    return m_robotDrive.wheelsOnTarget();
   }
 }

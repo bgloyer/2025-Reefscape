@@ -11,9 +11,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Align to Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4 Coral Auto 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Intake"
           }
         },
         {
@@ -23,9 +41,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Align to Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4 Coral Auto 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Intake"
           }
         },
         {
@@ -35,15 +71,45 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Align to Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4 Coral Auto 6"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Auto Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "4 Coral Auto 7"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align to Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
           }
         }
       ]
