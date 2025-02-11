@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.commands.Auto.AutoAlignToTag;
 import frc.robot.commands.Auto.AutoIntakeCoral;
 import frc.robot.commands.CoralIntake.PositionCoral;
 import frc.robot.commands.CoralMaster.IntakeCoral;
@@ -120,7 +119,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("Score L2", new SetLevel(Level.TWO, m_coralMaster, m_driverController));
     NamedCommands.registerCommand("Score L3", new SetLevel(Level.THREE, m_coralMaster, m_driverController));
     NamedCommands.registerCommand("Score L4", new SetLevel(Level.TWO, m_coralMaster, m_driverController).until(coralStored.negate()));
-    NamedCommands.registerCommand("Align to Reef", new AutoAlignToTag(m_robotDrive));
   }
   
   /**
