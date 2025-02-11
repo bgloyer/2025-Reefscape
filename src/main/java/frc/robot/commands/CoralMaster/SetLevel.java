@@ -20,8 +20,7 @@ public class SetLevel extends SequentialCommandGroup {
                 Commands.waitUntil(coralMaster::onTarget),
                 Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(level.armAngle), coralMaster.getArm()),
                 Commands.waitUntil(coralMaster::onTarget),
-                new Score(coralMaster, controller).onlyIf(() -> level.isReefScoringPosition)
-                
+                new Score(coralMaster, controller).onlyIf(() -> level.isReefScoringPosition)  
             );
     }
 

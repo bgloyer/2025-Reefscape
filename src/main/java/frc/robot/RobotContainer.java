@@ -89,6 +89,7 @@ public class RobotContainer {
 
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
+      
       // ------------------- James ----------------------------
       m_mechController.leftBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
       m_mechController.rightBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
@@ -96,12 +97,12 @@ public class RobotContainer {
       m_mechController.a().whileTrue(new SetLevel(Level.ONE, m_coralMaster, m_driverController));
       m_mechController.a().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
 
+      m_mechController.x().and(m_robotDrive::alignedToReef).onTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController));
+      // m_mechController.x().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+
       m_mechController.b().and(m_robotDrive::alignedToReef).whileTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController));
       m_mechController.b().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
 
-      m_mechController.x().and(m_robotDrive::alignedToReef).whileTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController));
-      m_mechController.x().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
-      
       m_mechController.y().and(m_robotDrive::alignedToReef).onTrue(new SetLevel(Level.FOUR, m_coralMaster, m_driverController));
       // m_mechController.y().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
       

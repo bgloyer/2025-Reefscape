@@ -144,9 +144,6 @@ private boolean aligned = false;
   @Override
   public void periodic() {
     getAngleToReef();
-    SmartDashboard.putNumber("Wheel State", m_frontLeft.getState().angle.getDegrees());
-    SmartDashboard.putNumber("Wheel Angle", m_frontLeft.getPosition().angle.getDegrees());
-    SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
         new SwerveModulePosition[] {
@@ -165,6 +162,7 @@ private boolean aligned = false;
   }
 
   private void smartDashboardPrints() {
+    SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     SmartDashboard.putData("Robot Field", m_field2d);
     SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());
     SmartDashboard.putNumber("Odometry Y", m_odometry.getEstimatedPosition().getY());
