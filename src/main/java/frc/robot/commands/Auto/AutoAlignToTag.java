@@ -2,18 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Drive;
+package frc.robot.commands.Auto;
 
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.util.Helpers.*;
+
+import java.util.function.DoubleSupplier;
+
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import frc.robot.util.LimelightHelpers;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class AlignToTag extends Command {
+public class AutoAlignToTag extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_pidController;
@@ -28,7 +37,7 @@ public class AlignToTag extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AlignToTag(DriveSubsystem subsystem) {
+  public AutoAlignToTag(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
     m_pidController = new PIDController(DriveConstants.TranslationkP, DriveConstants.TranslationkI,
         DriveConstants.TranslationkD);
@@ -53,29 +62,17 @@ public class AlignToTag extends Command {
         tolerance = Math.abs((rightTx1 - rightTx2));
         break;
     }
+    PPHolonomicDriveController.overrideXYFeedback(() -> getFieldRelativeSpeeds().vxMetersPerSecond, () -> getFieldRelativeSpeeds().vyMetersPerSecond);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    if (LimelightHelpers.getTV(limelightName)) {
-      double input = LimelightHelpers.getTX(limelightName);
-      // double input = tan(LimelightHelpers.getTX(limelightName)); // make change in input linear to robot change in x 
-      // double input = tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
-
-      double output = m_pidController.calculate(input);
-      m_robotDrive.driveSideways(output);
-    }
-
-    m_robotDrive.setAlignedToReef(Math.abs(LimelightHelpers.getTX(limelightName) - m_pidController.getSetpoint()) < tolerance);
-    
-
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_robotDrive.driveSideways(0);
+    PPHolonomicDriveController.clearFeedbackOverrides();
   }
 
   // Returns true when the command should end.
@@ -83,4 +80,12 @@ public class AlignToTag extends Command {
   public boolean isFinished() {
     return false;
   }
+
+  private ChassisSpeeds getFieldRelativeSpeeds() {
+    double robotRelativeYSpeed = m_pidController.calculate(tyToDistance(limelightName));
+    double robotRelativeXSpeed = m_pidController.calculate(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName))); 
+    return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeXSpeed, robotRelativeYSpeed, 0, m_robotDrive.m_gyro.getRotation2d());
+  }
+
+
 }
