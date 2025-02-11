@@ -18,5 +18,13 @@ public class Helpers {
 
     public static double betterModulus(double x, double y) {
         return (x % y + y) % y;
-      }
+    }
+
+    /**
+    *   @param degrees input angle in degrees
+    *   @return tan of the angle
+    */
+    public static double tan(double degrees) {
+        return Math.tan(Math.toRadians(degrees));
+    }
 }

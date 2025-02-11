@@ -7,6 +7,7 @@ package frc.robot.commands.Drive;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import static frc.robot.util.Helpers.*;
 import frc.robot.util.LimelightHelpers;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -58,7 +59,11 @@ public class AlignToTag extends Command {
   @Override
   public void execute() {
     if (LimelightHelpers.getTV(limelightName)) {
-      double output = m_pidController.calculate(LimelightHelpers.getTX(limelightName));
+      double input = LimelightHelpers.getTX(limelightName);
+      // double input = tan(LimelightHelpers.getTX(limelightName)); // make change in input linear to robot change in x 
+      // double input = 0.1759 / tan(LimelightHelpers.getTY(limelightName)) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
+
+      double output = m_pidController.calculate(input);
       m_robotDrive.driveSideways(output);
     }
 
