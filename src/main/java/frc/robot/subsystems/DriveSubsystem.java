@@ -305,7 +305,7 @@ private boolean aligned = false;
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
-    // m_odometry.resetRotation(Rotation2d.fromDegrees(0));
+    m_odometry.resetRotation(Rotation2d.fromDegrees(Helpers.isBlue ? 0 : 180));
   }
 
   /**
