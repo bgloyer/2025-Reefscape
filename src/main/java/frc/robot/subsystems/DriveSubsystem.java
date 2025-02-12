@@ -36,7 +36,13 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.util.Helpers;
+import frc.robot.util.LimelightHelpers;
+
 import static frc.robot.util.Helpers.betterModulus;
+import static frc.robot.util.Helpers.isBlue;
+import static frc.robot.util.Helpers.tan;
+import static frc.robot.util.Helpers.tyToDistance;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -71,7 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
   };
 
   // The gyro sensor
-  public final Pigeon2 m_gyro = new Pigeon2(17, "rio");
+  public final Pigeon2 m_gyro = new Pigeon2(16, "rio");
   private Field2d m_field2d = new Field2d();
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
   private Vision m_vision;
@@ -88,7 +94,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       },
-      new Pose2d(1,1, Rotation2d.fromDegrees(1)),
+      new Pose2d(0,0, Rotation2d.fromDegrees(0)),
       VisionConstants.StateStdDev,
       VisionConstants.VisionStdDev);
 
@@ -99,6 +105,7 @@ private boolean aligned = false;
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
     m_driverController = controller;
+    m_gyro.setYaw(0);
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
@@ -137,12 +144,13 @@ private boolean aligned = false;
       e.printStackTrace();
     }
 
-    m_gyro.setYaw(0);
     m_vision = new Vision(m_odometry);
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Distance m", Helpers.tyToDistance(VisionConstants.LightLightName));
+    SmartDashboard.putNumber("X Offset Distance m ", Helpers.tyToDistance(VisionConstants.LightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.LightLightName)));
     getAngleToReef();
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
@@ -223,11 +231,6 @@ private boolean aligned = false;
         rot,
         true);
   }
-
-  public void driveSideways(double speed) {
-    drive(0, speed, 0, false);
-  }
-
   /**
    * Method to drive the robot using joystick info.
    *
@@ -302,7 +305,7 @@ private boolean aligned = false;
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
-    m_odometry.resetRotation(Rotation2d.fromDegrees(0));
+    // m_odometry.resetRotation(Rotation2d.fromDegrees(0));
   }
 
   /**
@@ -366,12 +369,12 @@ private boolean aligned = false;
 
   public double getAngleToReef() {
     Translation2d centerOfReef = Constants.blueCenterOfReef;
-    if (Helpers.getAlliance() == Alliance.Red) {
+    if (!isBlue) {
       centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
     }
     double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
     
-    return Math.round(angle / 60.0) * 60;
+    return 180 + Math.round(angle / 60.0) * 60;
   }
 
   public void setScoringSide(Direction dir) {

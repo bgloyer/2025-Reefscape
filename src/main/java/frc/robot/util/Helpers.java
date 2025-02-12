@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -7,6 +9,9 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.VisionConstants;
 
 public class Helpers {
+
+    public static boolean isBlue;
+
     public static Pose3d get(int id) {
         return Constants.aprilTags.getTagPose(id).get();
     }
@@ -34,6 +39,6 @@ public class Helpers {
      * @return distance from limelight to tag
      */
     public static double tyToDistance(String limelightName) {
-        return VisionConstants.TagToLimelightHeightOffset * tan(LimelightHelpers.getTY(limelightName) + VisionConstants.LimelightMountAngle);
+        return VisionConstants.TagToLimelightHeightOffset / tan(LimelightHelpers.getTY(limelightName) + VisionConstants.LimelightMountAngle);
     }
 }

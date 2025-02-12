@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4 Coral Auto 3"
+            "pathName": "Station to Reef"
           }
         },
         {
@@ -23,15 +23,15 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.1
+            "name": "Score L2"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Score L4"
+            "pathName": "Move Away"
           }
         }
       ]

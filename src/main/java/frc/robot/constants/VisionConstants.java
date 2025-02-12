@@ -9,7 +9,7 @@ import edu.wpi.first.math.util.Units;
 public class VisionConstants {
     
     public static String LightLightName = "limelight-four";
-    public static final double TagToLimelightHeightOffset = 0.1759; // meters; check if this is right
+    public static final double TagToLimelightHeightOffset = 0.135892; // meters; check if this is right
     public static final double LimelightMountAngle = 28; // check this
 
     /* Standard deviations of the pose estimate (x position 
