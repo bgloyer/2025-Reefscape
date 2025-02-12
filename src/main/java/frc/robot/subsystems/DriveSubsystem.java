@@ -132,11 +132,12 @@ private boolean aligned = false;
             // This will flip the path being followed to the red side of the field.
             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-            var alliance = DriverStation.getAlliance();
-            if (alliance.isPresent()) {
-              return alliance.get() == DriverStation.Alliance.Red;
-            }
-            return false;
+            // var alliance = DriverStation.getAlliance();
+            // if (alliance.isPresent()) {
+            //   return alliance.get() == DriverStation.Alliance.Red;
+            // }
+            // return false;
+            return Helpers.isBlue;
           },
           this);
     } catch (Exception e) {
@@ -391,9 +392,9 @@ private boolean aligned = false;
 
   public double getStationAngle() {
     if (m_odometry.getEstimatedPosition().getY() < 4) {
-      return 54.011;
-    } else {
       return -54.011;
+    } else {
+      return 54.011;
     }
   }
 }

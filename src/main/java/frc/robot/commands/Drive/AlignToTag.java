@@ -37,6 +37,7 @@ public class AlignToTag extends Command {
     m_xController = new PIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD);
     m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
     m_turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
+  
     m_xController.setIZone(0.04);
     m_yController.setIZone(0.04);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -47,18 +48,19 @@ public class AlignToTag extends Command {
   @Override
   public void initialize() {
     m_turnPID.enableContinuousInput(0, 360);
-    m_yController.setSetpoint(0.56);
+    m_yController.setSetpoint(0.57);
+    m_yController.setTolerance(0.0175);
     switch (m_robotDrive.scoringSide) {
       case LEFT:
         double leftDistance1 = 0.188;
         double leftDistance2 = 0.242;
-        m_xController.setSetpoint((leftDistance1 + leftDistance2) / 2); //L Side: 0.242  0.188 Left mid 0.21 R mid -0.17
+        m_xController.setSetpoint((leftDistance1 + leftDistance2) / 2); // mid 0.2165 
         tolerance = Math.abs((leftDistance1 - leftDistance2) / 2);
         break;
       case RIGHT:
         double rightDistance1 = -0.1405;
         double rightDistance2 = -0.2;
-        m_xController.setSetpoint((rightDistance1 + rightDistance2) / 2); //R Side: -0.1405   mid -0.1601  -0.20
+        m_xController.setSetpoint((rightDistance1 + rightDistance2) / 2); // mid -0.1701 
         tolerance = Math.abs((rightDistance1 - rightDistance2));
         break;
       }
@@ -74,8 +76,11 @@ public class AlignToTag extends Command {
       double xOutput = m_xController.calculate(xInput);
       double yOutput = -m_yController.calculate(yDistanceFromTag);
 
-
-      m_robotDrive.drive(yOutput, xOutput, turnOutput, false);
+      if (m_yController.atSetpoint()) {
+        yOutput = 0;
+        turnOutput = 0;
+      }
+      m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
 
       m_robotDrive.setAlignedToReef(Math.abs(xInput - m_xController.getSetpoint()) < tolerance);
     }
