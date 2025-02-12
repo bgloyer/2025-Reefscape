@@ -6,9 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.Auto.AutoAlignToTag;
 import frc.robot.commands.Auto.AutoIntakeCoral;
-import frc.robot.commands.Auto.AutoScore;
 import frc.robot.commands.CoralIntake.PositionCoral;
-import frc.robot.commands.Auto.AutoSetLevel;
 import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.Drive.AlignToTag;
@@ -29,12 +27,14 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -53,9 +53,8 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
   private final Trigger isLevelFour = new Trigger(m_coralMaster::isLevelFourOrTwo);
-  private final Trigger isInTeleop = new Trigger(this::isInTeleop);
+  private final Trigger isInTeleop = RobotModeTriggers.teleop();
 
-  private boolean isTeleop = false;
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
       // Build an auto chooser. This will use Commands.none() as the default option.
@@ -125,15 +124,15 @@ public class RobotContainer {
   }
   public void registerAutoCommands() {
     NamedCommands.registerCommand("Auto Intake", Commands.sequence(new AutoIntakeCoral(m_coralMaster), new PositionCoral(m_claw)));
-    NamedCommands.registerCommand("Align to Reef", new AutoAlignToTag(m_robotDrive));
+    // NamedCommands.registerCommand("Align to Reef", new AutoAlignToTag(m_robotDrive));
     NamedCommands.registerCommand("Set Store", new SetLevel(Level.STORE, m_coralMaster, m_driverController));
     NamedCommands.registerCommand("Score L1", new SetLevel(Level.ONE, m_coralMaster, m_driverController).until(coralStored.negate()));
-    NamedCommands.registerCommand("Score L2", new SetLevel(Level.TWO, m_coralMaster, m_driverController).until(coralStored.negate()));
-    NamedCommands.registerCommand("Score L3", new SetLevel(Level.THREE, m_coralMaster, m_driverController).until(coralStored.negate()));
-    NamedCommands.registerCommand("Score L4", new SetLevel(Level.FOUR, m_coralMaster, m_driverController).until(coralStored.negate()));
+    NamedCommands.registerCommand("Score L2", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.TWO, m_coralMaster, m_driverController).until(coralStored.negate())));
+    NamedCommands.registerCommand("Score L3", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.THREE, m_coralMaster, m_driverController).until(coralStored.negate())));
+    NamedCommands.registerCommand("Score L4", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.FOUR, m_coralMaster, m_driverController).until(coralStored.negate())));
 
   }
-  
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    */
@@ -146,7 +145,6 @@ public class RobotContainer {
   }
 
   public void autoInit() {
-    isTeleop = false;
       m_arm.resetSetpoint();
       m_elevator.resetSetpoint();
       m_claw.resetSetpoint();
@@ -154,14 +152,9 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    isTeleop = true;
     m_arm.resetSetpoint();
     m_arm.setTargetAngle(0);
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
-  }
-
-  public boolean isInTeleop() {
-    return isTeleop;
   }
 }
