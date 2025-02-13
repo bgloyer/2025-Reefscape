@@ -23,10 +23,9 @@ public class Arm extends SubsystemBase {
     private final SparkFlex m_rightMotor; // follower moter
     private final SparkClosedLoopController m_controller;
     private final RelativeEncoder m_encoder;
-    private final TrapezoidProfile m_TrapezoidProfile = new TrapezoidProfile(new Constraints(100, 300));
+    private final TrapezoidProfile m_TrapezoidProfile = new TrapezoidProfile(new Constraints(ArmConstants.MaxVelocity, ArmConstants.MaxAcceleration));
     private State currentState = new State(0,0);
     private State targetState = new State(0,0);
-    private double targetAngle;
 
     public Arm() {
         m_leftMotor = new SparkFlex(ArmConstants.LeftMotorId, MotorType.kBrushless);
@@ -46,7 +45,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
+        double targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
         currentState.position = getAngle();
         currentState.velocity = 0;
         targetState.position = targetAngle;
@@ -58,7 +57,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean onTarget() {
-        return Math.abs(m_encoder.getPosition() - targetAngle) < ArmConstants.Tolerance;
+        return Math.abs(m_encoder.getPosition() - targetState.position) < ArmConstants.Tolerance;
     }
 
     public void resetVortexEncoder() {
@@ -74,11 +73,8 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // positionSlewRateLimiting();
         currentState = m_TrapezoidProfile.calculate(0.02, currentState, targetState);
         m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
-
-
         SmartDashboard.putNumber("Arm Angle", m_encoder.getPosition());
     }
 }

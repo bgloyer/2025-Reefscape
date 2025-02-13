@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -17,7 +15,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.Configs.ElevatorConfig;
 
@@ -27,11 +24,9 @@ public class Elevator extends SubsystemBase {
     private final SparkFlex m_rightMotor; // follower motor
     private final SparkClosedLoopController m_controller;
     private final RelativeEncoder m_encoder;
-    private final TrapezoidProfile m_TrapezoidProfile;
-    private State targetState;
-    private State currentState;
-    private double targetPosition;
-    private double currentSetpoint;
+    private final TrapezoidProfile m_TrapezoidProfile = new TrapezoidProfile(new Constraints(ElevatorConstants.MaxVelocity, ElevatorConstants.MaxAcceleration));
+    private State targetState = new State(0, 0);
+    private State currentState = new State(0, 0);
 
     public Elevator() {
         m_leftMotor = new SparkFlex(ElevatorConstants.leftMotorId, MotorType.kBrushless);
@@ -41,24 +36,18 @@ public class Elevator extends SubsystemBase {
         m_controller = m_leftMotor.getClosedLoopController();
         m_encoder = m_leftMotor.getEncoder();
         m_encoder.setPosition(0);
-        m_TrapezoidProfile = new TrapezoidProfile(new Constraints(3, 3.5));
-        targetState = new State(0, 0);
-        currentState = new State(0, 0);
         resetSetpoint();
     }
 
     public void resetSetpoint() {
-        // currentSetpoint = getHeight();
         currentState = new State(getHeight(), 0);
-        targetPosition = currentSetpoint;
         targetState = currentState;
     }
 
     
     public void setTarget(double height) {
-        targetPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
+        double targetPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
         targetState = new State(targetPosition, 0);
-        // currentSetpoint = getHeight();
         currentState = new State(getHeight(), 0);
     }
 
@@ -68,11 +57,11 @@ public class Elevator extends SubsystemBase {
     }
     
     public boolean onTarget() {
-        return Math.abs(m_encoder.getPosition() - targetPosition) < ElevatorConstants.Tolerance;
+        return Math.abs(m_encoder.getPosition() - targetState.position) < ElevatorConstants.Tolerance;
     }    
     
     public boolean almostOnTarget() {
-        return m_encoder.getPosition() > targetPosition * ElevatorConstants.ApproachingTargetThreshold;
+        return m_encoder.getPosition() > targetState.position * ElevatorConstants.ApproachingTargetThreshold;
     }
 
     @Override
@@ -82,10 +71,5 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Left Elevator Encoder", m_encoder.getPosition());
         SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Elevator Current", m_leftMotor.getOutputCurrent());
-    }
-
-
-    private void resetElevatorEncoder() {
-        m_encoder.setPosition(0);
     }
 }

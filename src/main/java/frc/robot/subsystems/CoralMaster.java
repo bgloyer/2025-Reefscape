@@ -32,6 +32,12 @@ public class CoralMaster extends SubsystemBase {
         m_claw.setTargetAngle(clawangle);
     }
 
+    public void setState(Level level) {
+        m_elevator.setTarget(level.elevatorHeight);
+        m_arm.setTargetAngle(level.armAngle);
+        m_claw.setTargetAngle(level.wristAngle);
+    }
+
     public void setIntake() {
         setState(ElevatorConstants.Station, ArmConstants.Station, WristConstants.Station); 
         m_claw.runIntake();  
@@ -39,22 +45,6 @@ public class CoralMaster extends SubsystemBase {
 
     public void setStore() {
         setState(ElevatorConstants.Store, ArmConstants.Store, WristConstants.Store);
-    }
-
-    public void setL1() {
-        setState(ElevatorConstants.L1, ArmConstants.L1, WristConstants.L1);
-    }
-
-    public void setL2() {
-        setState(ElevatorConstants.L2, ArmConstants.L2, WristConstants.L2);
-    }
-
-    public void setL3() {
-        setState(ElevatorConstants.L3, ArmConstants.L3, WristConstants.L3);
-    }
-
-    public void setL4() {
-        setState(ElevatorConstants.L4, ArmConstants.L4, WristConstants.L4);
     }
 
     public void runIntake() {
@@ -85,8 +75,8 @@ public class CoralMaster extends SubsystemBase {
         this.level = level;
     }
 
-    public boolean isLevelFourOrTwo() {
-        return level == Level.FOUR || level == Level.TWO || level == Level.THREE;
+    public boolean scoringButNotDealg() {
+        return level == Level.FOUR || level == Level.TWO || level == Level.THREE || level == Level.ONE;
     }
 
     @Override

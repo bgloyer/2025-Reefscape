@@ -10,9 +10,10 @@ public final class ElevatorConstants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kG = 0.37;
-    public static final double SlewRate = 0.04;
+    public static final double MaxVelocity = 3; // meters per second
+    public static final double MaxAcceleration = 3.5; // meters per second^2
 
-
+    
     public static final double MinHeight = 0;
     public static final double MaxHeight = Units.inchesToMeters(50);
     public static final double Tolerance = 0.02;
@@ -30,5 +31,5 @@ public final class ElevatorConstants {
     
 
     public static final double DiameterMeters = Units.inchesToMeters(1.751); // ask alex what this should be
-    public static final double MotorReduction = 58.0 / 7.0; 
+    public static final double MotorReduction = 58.0 / 7.0;
 }
