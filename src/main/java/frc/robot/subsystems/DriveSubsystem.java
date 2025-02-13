@@ -43,6 +43,8 @@ import static frc.robot.util.Helpers.isBlue;
 import static frc.robot.util.Helpers.tan;
 import static frc.robot.util.Helpers.tyToDistance;
 
+import java.rmi.server.RemoteStub;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -115,7 +117,7 @@ private boolean aligned = false;
       // Configure AutoBuilder last
       AutoBuilder.configure(
           this::getPose, // Robot pose supplier
-          this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+          this::autoResetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
           this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
           (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE
                                                                 // ChassisSpeeds. Also optionally outputs individual
@@ -137,7 +139,7 @@ private boolean aligned = false;
             //   return alliance.get() == DriverStation.Alliance.Red;
             // }
             // return false;
-            return true;
+            return !isBlue;
           },
           this);
     } catch (Exception e) {
@@ -195,6 +197,20 @@ private boolean aligned = false;
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
+        new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+        },
+        pose);
+  }
+
+  public void autoResetOdometry(Pose2d pose) {
+    Rotation2d flippedRotation = getFlippedRotation(pose.getRotation());
+    m_gyro.setYaw(flippedRotation.getDegrees());
+    m_odometry.resetPosition(
+        flippedRotation,
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -307,6 +323,7 @@ private boolean aligned = false;
   public void zeroHeading() {
     m_gyro.reset();
     m_odometry.resetRotation(Rotation2d.fromDegrees(Helpers.isBlue ? 0 : 180));
+    LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 1);
   }
 
   /**
@@ -396,5 +413,11 @@ private boolean aligned = false;
     } else {
       return 54.011;
     }
+  }
+
+  public Rotation2d getFlippedRotation(Rotation2d rotation2d) {
+    if (!isBlue)
+      return FlippingUtil.flipFieldRotation(rotation2d);
+    return rotation2d;
   }
 }

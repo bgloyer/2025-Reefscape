@@ -75,22 +75,10 @@ public class Elevator extends SubsystemBase {
         return m_encoder.getPosition() > targetPosition * ElevatorConstants.ApproachingTargetThreshold;
     }
 
-
-    private void positionSlewRateLimiting() {
-        double error = targetPosition - currentSetpoint;
-        currentSetpoint += Math.min(Math.abs(error), ElevatorConstants.SlewRate) * Math.signum(error);
-        m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
-    }
-
     @Override
     public void periodic() {
-
         currentState = m_TrapezoidProfile.calculate(0.02, currentState, targetState);
         m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
-
-
-
-        // positionSlewRateLimiting();
         SmartDashboard.putNumber("Left Elevator Encoder", m_encoder.getPosition());
         SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Elevator Current", m_leftMotor.getOutputCurrent());

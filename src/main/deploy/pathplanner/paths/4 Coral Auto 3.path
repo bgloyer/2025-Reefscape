@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.656,
-        "y": 5.031890902091169
+        "x": 3.789204545454545,
+        "y": 5.306349431818182
       },
       "prevControl": {
-        "x": 3.492939521337395,
-        "y": 5.2213936205369
+        "x": 3.6261440667919396,
+        "y": 5.4958521502639135
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "KL Score"
     }
   ],
   "rotationTargets": [],

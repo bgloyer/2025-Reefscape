@@ -11,21 +11,99 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Station to Reef"
+            "name": "Set Left"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Align to Reef"
+            "pathName": "4 Coral Auto 3"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Score L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Store"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Store"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 Coral Auto 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Store"
           }
         }
       ]

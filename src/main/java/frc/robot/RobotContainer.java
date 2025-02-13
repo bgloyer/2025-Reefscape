@@ -28,6 +28,7 @@ import frc.robot.util.LimelightHelpers;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -55,6 +56,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
   private final Trigger isLevelFour = new Trigger(m_coralMaster::isLevelFourOrTwo);
+  private final Trigger readyToBottomDealg = coralStored.negate().or(m_robotDrive::alignedToReef);
   private final Trigger isInTeleop = RobotModeTriggers.teleop();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -101,6 +103,7 @@ public class RobotContainer {
 
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
+      m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2)));
       
       // ------------------- James ----------------------------
       m_mechController.leftBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
@@ -112,16 +115,16 @@ public class RobotContainer {
       m_mechController.x().and(m_robotDrive::alignedToReef).onTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController));
       // m_mechController.x().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
 
-      m_mechController.b().and(m_robotDrive::alignedToReef).whileTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController));
-      m_mechController.b().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
+      m_mechController.b().and(m_robotDrive::alignedToReef).onTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController));
+      // m_mechController.b().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
 
       m_mechController.y().and(m_robotDrive::alignedToReef).onTrue(new SetLevel(Level.FOUR, m_coralMaster, m_driverController));
       // m_mechController.y().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
       
-      m_mechController.povUp().whileTrue(new SetLevel(Level.TOPALGAE, m_coralMaster, m_driverController).alongWith(Commands.runOnce(() -> m_claw.runOuttake())));
+      m_mechController.povUp().whileTrue(new SetLevel(Level.TOPALGAE, m_coralMaster, m_driverController).alongWith(Commands.runOnce(() -> m_claw.runVoltage(5))));
       m_mechController.povUp().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController).alongWith(Commands.runOnce(() -> m_claw.stopIntake())));
 
-      m_mechController.povDown().whileTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController));
+      m_mechController.povDown().and(readyToBottomDealg).whileTrue(new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController));
       m_mechController.povDown().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController));
       
   }
@@ -129,11 +132,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Auto Intake", Commands.sequence(new AutoIntakeCoral(m_coralMaster), new PositionCoral(m_claw)));
     // NamedCommands.registerCommand("Align to Reef", new AutoAlignToTag(m_robotDrive));
     NamedCommands.registerCommand("Set Store", new SetLevel(Level.STORE, m_coralMaster, m_driverController));
-    NamedCommands.registerCommand("Score L1", new SetLevel(Level.ONE, m_coralMaster, m_driverController).until(coralStored.negate()));
-    NamedCommands.registerCommand("Score L2", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.TWO, m_coralMaster, m_driverController).until(coralStored.negate())));
-    NamedCommands.registerCommand("Score L3", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.THREE, m_coralMaster, m_driverController).until(coralStored.negate())));
-    NamedCommands.registerCommand("Score L4", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.FOUR, m_coralMaster, m_driverController).until(coralStored.negate())));
-
+    NamedCommands.registerCommand("Score L2", Commands.sequence(new AutoAlignToTag(m_robotDrive), Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.TWO, m_coralMaster, m_driverController)).until(coralStored.negate())));
+    NamedCommands.registerCommand("Score L4", Commands.sequence(new AutoAlignToTag(m_robotDrive), Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.FOUR, m_coralMaster, m_driverController)).until(coralStored.negate())));
+    NamedCommands.registerCommand("Score L3", Commands.sequence(new AutoAlignToTag(m_robotDrive), Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.THREE, m_coralMaster, m_driverController)).until(coralStored.negate())));
+    // NamedCommands.registerCommand("Score L3", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.THREE, m_coralMaster, m_driverController).until(coralStored.negate())));
+    // NamedCommands.registerCommand("Score L4", new AutoAlignToTag(m_robotDrive).andThen(new SetLevel(Level.FOUR, m_coralMaster, m_driverController).until(coralStored.negate())));
+    NamedCommands.registerCommand("Set Left", Commands.runOnce(()-> m_robotDrive.scoringSide = Direction.LEFT));
+    NamedCommands.registerCommand("Set Right", Commands.runOnce(()-> m_robotDrive.scoringSide = Direction.RIGHT));
   }
 
   /**
@@ -152,7 +157,7 @@ public class RobotContainer {
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
     ((PathPlannerAuto)getAutonomousCommand()).getStartingPose().getRotation().getDegrees();
-    LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
+    // LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
   }
 
   public void teleopInit() {

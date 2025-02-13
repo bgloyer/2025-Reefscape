@@ -11,7 +11,8 @@ public enum Level {
     TWO(ElevatorConstants.L2, ArmConstants.L2, WristConstants.L2, true),
     THREE(ElevatorConstants.L3, ArmConstants.L3, WristConstants.L3, true),
     FOUR(ElevatorConstants.L4, ArmConstants.L4, WristConstants.L4, true),
-    TOPALGAE(ElevatorConstants.DeAlgaeL3, ArmConstants.DeAlgaeL3, WristConstants.DeAlgaeL3, false);
+    TOPALGAE(ElevatorConstants.DeAlgaeL3, ArmConstants.DeAlgaeL3, WristConstants.DeAlgaeL3, false),
+    BOTTOMALGAE(ElevatorConstants.L3, ArmConstants.L3, WristConstants.L3, true);
 
     public double elevatorHeight;
     public double armAngle;

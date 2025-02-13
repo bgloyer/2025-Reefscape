@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.656,
-        "y": 5.032
+        "x": 3.789204545454545,
+        "y": 5.306349431818182
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.480314195557162,
-        "y": 5.209860895413446
+        "x": 3.6135187410117067,
+        "y": 5.4842103272316285
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "KL Score"
     },
     {
       "anchor": {

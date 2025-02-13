@@ -10,7 +10,7 @@ import frc.robot.constants.VisionConstants;
 
 public class Helpers {
 
-    public static boolean isBlue;
+    public static boolean isBlue = false;
 
     public static Pose3d get(int id) {
         return Constants.aprilTags.getTagPose(id).get();

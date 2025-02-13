@@ -10,6 +10,9 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
@@ -20,7 +23,9 @@ public class Arm extends SubsystemBase {
     private final SparkFlex m_rightMotor; // follower moter
     private final SparkClosedLoopController m_controller;
     private final RelativeEncoder m_encoder;
-    private double currentSetpoint;
+    private final TrapezoidProfile m_TrapezoidProfile = new TrapezoidProfile(new Constraints(100, 300));
+    private State currentState = new State(0,0);
+    private State targetState = new State(0,0);
     private double targetAngle;
 
     public Arm() {
@@ -30,18 +35,22 @@ public class Arm extends SubsystemBase {
         m_rightMotor.configure(Configs.ArmConfig.rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_controller = m_leftMotor.getClosedLoopController();
         m_encoder = m_leftMotor.getEncoder();
+
         resetVortexEncoder();
         resetSetpoint();
     }
 
     public void resetSetpoint() {
-        currentSetpoint = getAngle();
-        targetAngle = currentSetpoint;
+        currentState.position = getAngle();
+        targetState.position = currentState.position;
     }
 
     public void setTargetAngle(double angle) {
         targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
-        currentSetpoint = getAngle();
+        currentState.position = getAngle();
+        currentState.velocity = 0;
+        targetState.position = targetAngle;
+        targetState.velocity = 0;
     }
 
     private double calculateFeedForward() {
@@ -62,17 +71,14 @@ public class Arm extends SubsystemBase {
     public double getAngle() {
         return m_encoder.getPosition();
     }
-    
-    private void positionSlewRateLimiting() {
-        double error = targetAngle - currentSetpoint;
-        // velocity error 
-        currentSetpoint += Math.min(Math.abs(error), ArmConstants.SlewRate) * Math.signum(error);
-        m_controller.setReference(currentSetpoint, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
-    }
 
     @Override
     public void periodic() {
-        positionSlewRateLimiting();
+        // positionSlewRateLimiting();
+        currentState = m_TrapezoidProfile.calculate(0.02, currentState, targetState);
+        m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
+
+
         SmartDashboard.putNumber("Arm Angle", m_encoder.getPosition());
     }
 }

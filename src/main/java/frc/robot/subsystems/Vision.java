@@ -12,7 +12,6 @@ public class Vision {
 
     protected Vision(SwerveDrivePoseEstimator poseEstimator) {
         m_poseEstimator = poseEstimator;
-        LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
     }
 
     public void updatePoseEstimation(Pigeon2 gyro) {
