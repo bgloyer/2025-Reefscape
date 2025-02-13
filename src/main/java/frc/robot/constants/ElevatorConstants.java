@@ -19,7 +19,7 @@ public final class ElevatorConstants {
     public static final double ApproachingTargetThreshold = 0.9;
 
     // from block cad
-    public static final double Store = 0.15;
+    public static final double Store = 0.0;
     public static final double Station = Units.inchesToMeters(1) * 2;
     public static final double L1 = Units.inchesToMeters(3.559) * 2;
     public static final double L2 = Units.inchesToMeters(0.4) * 2;

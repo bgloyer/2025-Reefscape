@@ -8,12 +8,12 @@ public class ArmConstants {
     public static final double MaxAngle = 90;
 
     // from block cad - degrees
-    public static final double Store = -10;
+    public static final double Store = 0;
     public static final double Station = 35;
     public static final double L1 = -105.702;
     public static final double L2 = -27.28;
     public static final double L3 = -29;
-    public static final double L4 = -35;
+    public static final double L4 = -24;
     public static final double DeAlgaeL3 = -28;
     public static final double Net = 0;
     public static final double GroundIntake = 21.27; 

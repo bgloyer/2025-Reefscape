@@ -137,7 +137,7 @@ private boolean aligned = false;
             //   return alliance.get() == DriverStation.Alliance.Red;
             // }
             // return false;
-            return Helpers.isBlue;
+            return true;
           },
           this);
     } catch (Exception e) {

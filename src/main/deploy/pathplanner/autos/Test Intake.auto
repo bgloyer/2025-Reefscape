@@ -25,13 +25,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Score L2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Move Away"
+            "name": "Score L4"
           }
         }
       ]

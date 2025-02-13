@@ -12,6 +12,7 @@ import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
 import frc.robot.commands.Drive.AlignWheels;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
 import frc.robot.util.Level;
+import frc.robot.util.LimelightHelpers;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -83,6 +85,7 @@ public class RobotContainer {
         Commands.runOnce(() -> m_coralMaster.setStore()),
         Commands.waitUntil(m_arm::onTarget),
         new PositionCoral(m_claw).onlyIf(coralStored)));
+        
 
       // Point At Reef
       m_driverController.rightBumper().whileTrue(new PointAtReef(m_robotDrive));
@@ -145,10 +148,11 @@ public class RobotContainer {
   }
 
   public void autoInit() {
-      m_arm.resetSetpoint();
-      m_elevator.resetSetpoint();
-      m_claw.resetSetpoint();
-      ((PathPlannerAuto)getAutonomousCommand()).getStartingPose().getRotation().getDegrees();
+    m_arm.resetSetpoint();
+    m_elevator.resetSetpoint();
+    m_claw.resetSetpoint();
+    ((PathPlannerAuto)getAutonomousCommand()).getStartingPose().getRotation().getDegrees();
+    LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
   }
 
   public void teleopInit() {
@@ -156,5 +160,6 @@ public class RobotContainer {
     m_arm.setTargetAngle(0);
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
+    LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
   }
 }

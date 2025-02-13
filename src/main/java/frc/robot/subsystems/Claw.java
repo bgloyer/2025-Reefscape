@@ -28,6 +28,7 @@ public class Claw extends SubsystemBase {
     private double targetAngle;
     private double currentSetpoint;
     private final LaserCan m_laser;
+    public boolean positioningCoral;
 
     public Claw() {
         m_wristMotor = new SparkFlex(WristConstants.MotarCanId, MotorType.kBrushless);
