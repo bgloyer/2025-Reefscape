@@ -17,7 +17,7 @@ public final class ElevatorConstants {
     public static final double MinHeight = 0;
     public static final double MaxHeight = Units.inchesToMeters(50);
     public static final double Tolerance = 0.02;
-    public static final double ApproachingTargetThreshold = 0.9;
+    public static final double ApproachingTargetThreshold = 0.5;
 
     // from block cad
     public static final double Store = 0.0;
@@ -26,6 +26,7 @@ public final class ElevatorConstants {
     public static final double L2 = Units.inchesToMeters(0.4) * 2;
     public static final double L3 = Units.inchesToMeters(9) * 2;
     public static final double L4 = Units.inchesToMeters(24) * 2;
+    public static final double NotTippable = 1.2;
     public static final double DeAlgaeL3 = Units.inchesToMeters(12) * 2;
     public static final double Net = Units.inchesToMeters(25) * 2;
     

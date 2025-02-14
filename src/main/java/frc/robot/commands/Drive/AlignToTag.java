@@ -38,8 +38,8 @@ public class AlignToTag extends Command {
     m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
     m_turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
   
-    m_xController.setIZone(0.04);
-    m_yController.setIZone(0.04);
+    m_xController.setIZone(0.08); // 0.04
+    m_yController.setIZone(0.08);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }

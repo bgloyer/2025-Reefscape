@@ -412,4 +412,8 @@ private boolean aligned = false;
       return FlippingUtil.flipFieldRotation(rotation2d);
     return rotation2d;
   }
+
+  public void roundGyro() {
+    m_gyro.setYaw(Math.round(getHeading() / 60.0) * 60);
+  }
 }

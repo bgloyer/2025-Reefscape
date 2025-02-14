@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9849601863582609,
-        "y": 7.081542720884085
+        "x": 1.9258928571428569,
+        "y": 7.018622448979591
       },
       "isLocked": false,
       "linkedName": "CoralStation"
     },
     {
       "anchor": {
-        "x": 5.058,
-        "y": 5.18
+        "x": 3.671173469387755,
+        "y": 5.144260204081632
       },
       "prevControl": {
-        "x": 4.849804613961585,
-        "y": 5.318400437977326
+        "x": 3.5111273694716356,
+        "y": 5.336315523980976
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,18 +31,41 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "PositionCoral",
+      "waypointRelativePos": 0.07,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "PositionCoral"
+        }
+      }
+    },
+    {
+      "name": "Ready Elevator L3",
+      "waypointRelativePos": 0.4,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Ready Elevator L3"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.9,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -119.99999999999999
+    "velocity": 0.75,
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": "4 Coral Auto",
@@ -50,5 +73,5 @@
     "velocity": 0,
     "rotation": -54.011
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

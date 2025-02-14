@@ -33,7 +33,7 @@ public class AutoAlignToTag extends Command {
    */
   public AutoAlignToTag(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
-    m_xController = new PIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD);
+    m_xController = new PIDController(DriveConstants.xTranslationkP + 0.1, DriveConstants.xTranslationkI + 0.45, DriveConstants.xTranslationkD);
     m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
     m_turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
   
@@ -48,7 +48,7 @@ public class AutoAlignToTag extends Command {
   public void initialize() {
     m_turnPID.enableContinuousInput(0, 360);
     m_yController.setSetpoint(0.57);
-    m_yController.setTolerance(0.0175);
+    m_yController.setTolerance(0.02);
     switch (m_robotDrive.scoringSide) {
       case LEFT:
         double leftDistance1 = 0.188;
@@ -68,7 +68,6 @@ public class AutoAlignToTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), m_robotDrive.getAngleToReef());
     if (LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
@@ -77,9 +76,8 @@ public class AutoAlignToTag extends Command {
 
       if (m_yController.atSetpoint()) {
         yOutput = 0;
-        turnOutput = 0;
       }
-      m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
+      m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), 0, false);
 
       m_robotDrive.setAlignedToReef(m_xController.atSetpoint());
     }
