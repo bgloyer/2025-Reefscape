@@ -36,6 +36,11 @@ public class CoralMaster extends SubsystemBase {
         m_claw.setTargetAngle(clawangle);
     }
 
+    public void setState(double elevatorPosition, double clawangle) {
+        m_elevator.setTarget(elevatorPosition);
+        m_claw.setTargetAngle(clawangle);
+    }
+
     public void setState(Level level) {
         m_elevator.setTarget(level.elevatorHeight);
         m_arm.setTargetAngle(level.armAngle);

@@ -107,7 +107,7 @@ public class RobotContainer {
       m_mechController.a().whileTrue(new SetLevel(Level.ONE, m_coralMaster, m_driverController, alignedToReef));
       m_mechController.a().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef));
 
-      m_mechController.x().and(alignedToReef).onTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef));
+      m_mechController.x().onTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef));
 
       m_mechController.b().onTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController, alignedToReef));
 

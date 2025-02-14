@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ElevatorConstants;
+import frc.robot.util.Level;
 import frc.robot.constants.Configs.ElevatorConfig;
 
 public class Elevator extends SubsystemBase {
@@ -64,8 +65,15 @@ public class Elevator extends SubsystemBase {
         return Math.abs(m_encoder.getPosition() - targetState.position) < ElevatorConstants.NotTippable;
     }
 
-    public boolean approachingHeight() {
-        return Math.abs(m_encoder.getPosition() - targetState.position) < 0.5;
+    public boolean approachingHeight(Level level) {
+        switch (level) {
+            case FOUR:
+                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.7;
+            case THREE:
+                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
+            default:
+                return onTarget();
+        }
     }
 
     @Override
