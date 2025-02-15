@@ -88,6 +88,10 @@ public class CoralMaster extends SubsystemBase {
         return level == Level.FOUR || level == Level.TWO || level == Level.THREE || level == Level.ONE;
     }
 
+    public Level getLevel() {
+        return level;
+    }
+
     @Override
     public void periodic() {
     }

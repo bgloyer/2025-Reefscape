@@ -19,13 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Intake to L3"
+            "pathName": "Intake to L4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score L3"
+            "name": "Score L4"
           }
         },
         {
@@ -98,13 +98,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Intake to L4"
+            "pathName": "Intake to L3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score L4"
+            "name": "Score L3"
           }
         },
         {

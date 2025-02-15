@@ -4,14 +4,16 @@
 
 package frc.robot.commands.Drive;
 
+import static frc.robot.util.Helpers.betterModulus;
+import static frc.robot.util.Helpers.tan;
+import static frc.robot.util.Helpers.tyToDistance;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import static frc.robot.util.Helpers.*;
-
 import frc.robot.util.LimelightHelpers;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class AlignToTag extends Command {
@@ -82,7 +84,8 @@ public class AlignToTag extends Command {
       }
       m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
 
-      m_robotDrive.setAlignedToReef(Math.abs(xInput - m_xController.getSetpoint()) < tolerance);
+      boolean aligned = Math.abs(xInput - m_xController.getSetpoint()) < tolerance && m_yController.atSetpoint();
+      m_robotDrive.setAlignedToReef(aligned);
     }
   }
 

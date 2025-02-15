@@ -1,11 +1,8 @@
 package frc.robot.commands.CoralMaster;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.CoralMaster;
@@ -24,7 +21,7 @@ public class SetLevel extends SequentialCommandGroup {
                 Commands.waitUntil(() -> coralMaster.getElevator().approachingHeight(level)),
                 Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(level.armAngle), coralMaster.getArm()),
                 Commands.waitUntil(alignedToReef.and(coralMaster::onTarget)),
-                new Score(coralMaster, controller).onlyIf(() -> level.isReefScoringPosition)
+                new Score(coralMaster).onlyIf(() -> level.isReefScoringPosition)
             );
     }
 

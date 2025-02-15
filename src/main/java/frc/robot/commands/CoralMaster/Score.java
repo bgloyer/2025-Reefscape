@@ -13,16 +13,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class Score extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final CoralMaster m_subsystem;
-  private final CommandXboxController m_controller;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Score(CoralMaster subsystem, CommandXboxController controller) {
+  public Score(CoralMaster subsystem) {
     m_subsystem = subsystem;
-    m_controller = controller;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -35,16 +33,12 @@ public class Score extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!m_subsystem.coralStored()) {
-      m_controller.setRumble(RumbleType.kBothRumble, 0.5);
-    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_subsystem.stopIntake();
-    m_controller.setRumble(RumbleType.kBothRumble, 0);
   }
 
   // Returns true when the command should end.

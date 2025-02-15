@@ -21,7 +21,7 @@ public final class Constants {
     public static final double kVortexFreeSpeedRpm = 6784;
     public static final double kKrakenFieldOrientedFreeSpeedRpm = 5800;
 
-    public static final AprilTagFieldLayout aprilTags =  AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+    // public static final AprilTagFieldLayout aprilTags =  AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     public static Translation2d blueCenterOfReef = new Translation2d(4.49,4.03); //blue
     public static final double kNeoVortexkV = 565;
     public static final int CoralLaserCanID = 17;

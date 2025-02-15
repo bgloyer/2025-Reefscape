@@ -33,7 +33,7 @@ public class AutoAlignToTag extends Command {
    */
   public AutoAlignToTag(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
-    m_xController = new PIDController(DriveConstants.xTranslationkP + 0.1, DriveConstants.xTranslationkI + 0.45, DriveConstants.xTranslationkD);
+    m_xController = new PIDController(DriveConstants.xTranslationkP + 0.1, DriveConstants.xTranslationkI + 0.5, DriveConstants.xTranslationkD);
     m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
     m_turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
   

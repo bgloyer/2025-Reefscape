@@ -12,9 +12,9 @@ public class Helpers {
 
     public static boolean isBlue = false;
 
-    public static Pose3d get(int id) {
-        return Constants.aprilTags.getTagPose(id).get();
-    }
+    // public static Pose3d get(int id) {
+    //     return Constants.aprilTags.getTagPose(id).get();
+    // }
 
     // public static Alliance getAlliance() {
     //     if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red)

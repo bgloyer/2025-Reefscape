@@ -68,7 +68,7 @@ public class Elevator extends SubsystemBase {
     public boolean approachingHeight(Level level) {
         switch (level) {
             case FOUR:
-                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.7;
+                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
             case THREE:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
             default:
