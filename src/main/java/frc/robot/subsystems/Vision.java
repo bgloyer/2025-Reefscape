@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import frc.robot.constants.VisionConstants;
 import frc.robot.util.LimelightHelpers;
@@ -32,16 +33,13 @@ public class Vision {
             doRejectUpdate = true;
         }
         if (!doRejectUpdate) {
-            double standardDev = calcStandardDev(mt2.avgTagDist);
-                        m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.VisionStdDev);
+            // stolen from 1678
+            double xyStdDev = (0.1) * ((0.01 * Math.pow(LimelightHelpers.getRawFiducials(limelightName)[0].distToCamera, 2.0)) + (0.005 * Math.pow(mt2.avgTagDist, 2.0))) / mt2.tagCount;
+            xyStdDev = Math.max(0.02, xyStdDev);
+                        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev, xyStdDev, 9999999));
                         m_poseEstimator.addVisionMeasurement(
                                 mt2.pose,
                                 mt2.timestampSeconds);
                     }
                 }
-
-
-    private double calcStandardDev(double dist) {
-        return 0;
-    }
 }
