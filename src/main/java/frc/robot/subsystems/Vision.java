@@ -14,10 +14,15 @@ public class Vision {
         m_poseEstimator = poseEstimator;
     }
 
-    public void updatePoseEstimation(Pigeon2 gyro) {
+    public void updatePoseEstimation(Pigeon2 gyroAngle) {
+        addToPoseEstimator(VisionConstants.ReefLightLightName, gyroAngle);
+        addToPoseEstimator(VisionConstants.ElevatorLimelightName, gyroAngle);
+    }
+
+    private void addToPoseEstimator(String limelightName, Pigeon2 gyro) {
         boolean doRejectUpdate = false;
-        LimelightHelpers.SetRobotOrientation(VisionConstants.LightLightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LightLightName);
+        LimelightHelpers.SetRobotOrientation(VisionConstants.ReefLightLightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.ReefLightLightName);
         if(mt2 == null)
             return;
         if (Math.abs(gyro.getRate()) > 720)  { // if our angular velocity is greater than 720 degrees per second, ignore vision updates
@@ -26,14 +31,17 @@ public class Vision {
         if (mt2.tagCount == 0) {
             doRejectUpdate = true;
         }
-        if(LimelightHelpers.getTY(VisionConstants.LightLightName) < -25)
-            doRejectUpdate = true;
         if (!doRejectUpdate) {
-            m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.VisionStdDev);
-            m_poseEstimator.addVisionMeasurement(
-                    mt2.pose,
-                    mt2.timestampSeconds);
-        }
+            double standardDev = calcStandardDev(mt2.avgTagDist);
+                        m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.VisionStdDev);
+                        m_poseEstimator.addVisionMeasurement(
+                                mt2.pose,
+                                mt2.timestampSeconds);
+                    }
+                }
 
+
+    private double calcStandardDev(double dist) {
+        return 0;
     }
 }

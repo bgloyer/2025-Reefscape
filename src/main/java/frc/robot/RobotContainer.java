@@ -103,7 +103,7 @@ public class RobotContainer {
 
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
-      m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2)));
+      m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));
       m_driverController.back().onTrue(Commands.runOnce(() -> m_robotDrive.roundGyro()));
       
       // ------------------- James ----------------------------
@@ -165,6 +165,6 @@ public class RobotContainer {
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
     m_claw.stopIntake();
-    LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
+    LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2);
   }
 }

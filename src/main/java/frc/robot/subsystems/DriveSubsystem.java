@@ -144,8 +144,8 @@ private boolean aligned = false;
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Distance m", Helpers.tyToDistance(VisionConstants.LightLightName));
-    SmartDashboard.putNumber("X Offset Distance m ", Helpers.tyToDistance(VisionConstants.LightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.LightLightName)));
+    SmartDashboard.putNumber("Distance m", Helpers.tyToDistance(VisionConstants.ReefLightLightName));
+    SmartDashboard.putNumber("X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName)));
     getAngleToReef();
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
@@ -154,12 +154,11 @@ private boolean aligned = false;
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition() });
-
-    m_field2d.setRobotPose(m_odometry.getEstimatedPosition());
-
-    if (useVision) {
-      m_vision.updatePoseEstimation(m_gyro);
-    }
+      
+      if (useVision) {
+        m_vision.updatePoseEstimation(m_gyro);
+      }
+      m_field2d.setRobotPose(m_odometry.getEstimatedPosition());
 
     smartDashboardPrints();
   }
@@ -315,7 +314,7 @@ private boolean aligned = false;
   public void zeroHeading() {
     m_gyro.reset();
     m_odometry.resetRotation(Rotation2d.fromDegrees(Helpers.isBlue ? 0 : 180));
-    LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 1);
+    LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 1);
   }
 
   /**

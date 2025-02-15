@@ -8,7 +8,7 @@ import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
     
-    public static String LightLightName = "limelight-four";
+    public static String ReefLightLightName = "limelight-four";
     public static final double TagToLimelightHeightOffset = 0.135892; // meters; check if this is right
     public static final double LimelightMountAngle = 28; // check this
 
@@ -25,4 +25,6 @@ public class VisionConstants {
     *  thes numbers to trustthe vision pose measurement less.
     **/
     public static Matrix<N3, N1> VisionStdDev = VecBuilder.fill(.7, .7, 9999999);
+
+    public static String ElevatorLimelightName = "limelight-threeg";
 }

@@ -21,7 +21,7 @@ public class AlignToTag extends Command {
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_xController;
   private final PIDController m_yController;
-  private final String limelightName = VisionConstants.LightLightName;
+  private final String limelightName = VisionConstants.ReefLightLightName;
   private double tolerance;
   private final PIDController m_turnPID;
 
