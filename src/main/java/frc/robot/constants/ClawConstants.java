@@ -5,7 +5,7 @@ public class ClawConstants {
     public final class WristConstants {
         public static final int MotarCanId = 14;
         public static final double MotorGearReduction = 12.0 / 64.0;
-        public static final double kP = 0.05;
+        public static final double kP = 0.1;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kG = 0;
@@ -34,6 +34,7 @@ public class ClawConstants {
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double IntakeVoltage = -3;
+        public static final double ScoreVoltage = -6;
         public static final double OuttakeVoltage = 4;
         public static final double IntakeVelocityFF = 1.0 / Constants.kNeoVortexkV / 12.0;
     }

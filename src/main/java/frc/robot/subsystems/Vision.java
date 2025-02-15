@@ -26,6 +26,8 @@ public class Vision {
         if (mt2.tagCount == 0) {
             doRejectUpdate = true;
         }
+        if(LimelightHelpers.getTY(VisionConstants.LightLightName) < -25)
+            doRejectUpdate = true;
         if (!doRejectUpdate) {
             m_poseEstimator.setVisionMeasurementStdDevs(VisionConstants.VisionStdDev);
             m_poseEstimator.addVisionMeasurement(

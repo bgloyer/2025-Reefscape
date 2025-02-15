@@ -4,6 +4,7 @@
 
 package frc.robot.commands.CoralMaster;
 
+import frc.robot.constants.ClawConstants.CoralIntakeConstants;
 import frc.robot.subsystems.CoralMaster;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,7 +29,7 @@ public class Score extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.runIntake();
+    m_subsystem.getClaw().runVoltage(CoralIntakeConstants.ScoreVoltage);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override

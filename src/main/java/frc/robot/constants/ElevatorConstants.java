@@ -28,7 +28,7 @@ public final class ElevatorConstants {
     public static final double L4 = Units.inchesToMeters(24) * 2;
     public static final double NotTippable = 1.2;
     public static final double TopDealg = Units.inchesToMeters(15.7) * 2;
-    public static final double BottomDealg = Units.inchesToMeters(8) * 2;
+    public static final double BottomDealg = Units.inchesToMeters(7.75) * 2;
     public static final double Net = Units.inchesToMeters(25) * 2;
     
 
