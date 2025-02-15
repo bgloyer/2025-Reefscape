@@ -16,7 +16,7 @@ public class SetLevel extends SequentialCommandGroup {
             addCommands(
                 Commands.runOnce(() -> coralMaster.setCurrentLevel(level)),
                 Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(ArmConstants.Store), coralMaster.getArm()),
-                Commands.waitUntil(coralMaster::onTarget),
+                Commands.waitUntil(coralMaster.getArm()::onTarget),
                 Commands.runOnce(() -> coralMaster.setState(level.elevatorHeight, level.wristAngle), coralMaster),
                 Commands.waitUntil(() -> coralMaster.getElevator().approachingHeight(level)),
                 Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(level.armAngle), coralMaster.getArm()),
