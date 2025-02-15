@@ -60,7 +60,7 @@
   "folder": "4 Coral Auto",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": -127.84754413491383
+    "rotation": -90.0
   },
   "useDefaultConstraints": false
 }

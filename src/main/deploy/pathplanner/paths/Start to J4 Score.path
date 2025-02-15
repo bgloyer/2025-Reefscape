@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.4,
+        "x": 7.178188775510205,
         "y": 5.236548295454545
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.15,
+        "x": 6.928188775510205,
         "y": 5.236548295454545
       },
       "isLocked": false,
-      "linkedName": "Middle of Start To J"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "Ready Elevator L4",
-      "waypointRelativePos": 0.6990459670425041,
+      "waypointRelativePos": 0.49766081871345025,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -60,7 +60,7 @@
   "folder": "4 Coral Auto",
   "idealStartingState": {
     "velocity": 2.5,
-    "rotation": -119.99999999999999
+    "rotation": -90.0
   },
   "useDefaultConstraints": false
 }

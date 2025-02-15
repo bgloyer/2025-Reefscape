@@ -8,7 +8,7 @@ public class ArmConstants {
     public static final double MaxAngle = 90;
 
     // from block cad - degrees
-    public static final double Store = -10;
+    public static final double Store = 0;
     public static final double Station = 35;
     public static final double L1 = -70;
     public static final double L2 = -19; // -27.28

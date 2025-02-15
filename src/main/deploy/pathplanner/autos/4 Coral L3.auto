@@ -13,12 +13,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start to J4 Accel"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "Start to J4 Score"
           }
         },

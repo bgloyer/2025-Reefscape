@@ -13,8 +13,8 @@ public class SetStore extends SequentialCommandGroup {
     public SetStore(CoralMaster coralMaster) {
             addCommands(
                 Commands.runOnce(() -> coralMaster.setCurrentLevel(Level.STORE)),
-                Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(ArmConstants.Store), coralMaster.getArm()),
-                Commands.runOnce(() -> coralMaster.getClaw().setTargetAngle(120), coralMaster.getArm()),
+                Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(-ArmConstants.Store), coralMaster.getArm()),
+                // Commands.runOnce(() -> coralMaster.getClaw().setTargetAngle(120), coralMaster.getArm()),
                 Commands.waitUntil(coralMaster::onTarget),
                 Commands.runOnce(() -> coralMaster.getElevator().setTarget(Level.STORE.elevatorHeight)),
                 Commands.waitUntil(coralMaster::onTarget),

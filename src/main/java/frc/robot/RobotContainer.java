@@ -16,6 +16,7 @@ import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.VisionConstants;
+import frc.robot.constants.ClawConstants.WristConstants;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -129,8 +130,8 @@ public class RobotContainer {
   public void registerAutoCommands() {
     NamedCommands.registerCommand("Auto Intake", new AutoIntakeCoral(m_coralMaster));
     NamedCommands.registerCommand("Set Store", new AutoSetStore(m_coralMaster));
-    NamedCommands.registerCommand("Ready Elevator L3", Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.BottomDealg)));
-    NamedCommands.registerCommand("Ready Elevator L4", Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.L4)));
+    NamedCommands.registerCommand("Ready Elevator L3", Commands.runOnce(() -> m_coralMaster.setState(ElevatorConstants.BottomDealg, WristConstants.L3)));
+    NamedCommands.registerCommand("Ready Elevator L4", Commands.runOnce(() -> m_coralMaster.setState(ElevatorConstants.L4, WristConstants.L4)));
 
     NamedCommands.registerCommand("Score L2", Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
     NamedCommands.registerCommand("Score L3", Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()).andThen(Commands.runOnce(() -> m_claw.runVoltage(-5))));
