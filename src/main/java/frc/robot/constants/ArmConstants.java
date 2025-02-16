@@ -13,7 +13,7 @@ public class ArmConstants {
     public static final double L1 = -70;
     public static final double L2 = -19; // -27.28
     public static final double L3 = -24;
-    public static final double L4 = -24;
+    public static final double L4 = -21;
     public static final double TopDealg = -28;
     public static final double BottomDeAlg = -28;
     public static final double Net = 0;

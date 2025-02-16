@@ -10,7 +10,7 @@ public class VisionConstants {
     
     public static String ReefLightLightName = "limelight-four";
     public static final double TagToLimelightHeightOffset = 0.135892; // meters; check if this is right
-    public static final double LimelightMountAngle = 28; // check this
+    public static final double LimelightMountAngle = 28.5; // check this
 
     /* Standard deviations of the pose estimate (x position 
     * in meters, y position in meters, and heading in radians). 

@@ -47,7 +47,7 @@ public class AutoAlignToTag extends Command {
   @Override
   public void initialize() {
     m_turnPID.enableContinuousInput(0, 360);
-    m_yController.setSetpoint(0.57);
+    m_yController.setSetpoint(0.50);
     m_yController.setTolerance(0.02);
     switch (m_robotDrive.scoringSide) {
       case LEFT:

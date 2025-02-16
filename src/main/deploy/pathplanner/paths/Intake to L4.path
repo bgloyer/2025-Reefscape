@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.729374999999999,
-        "y": 5.146803977272728
+        "x": 3.5890943877551025,
+        "y": 5.271109693877551
       },
       "prevControl": {
-        "x": 3.56932890008388,
-        "y": 5.338859297172072
+        "x": 3.429048287838983,
+        "y": 5.463165013776895
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     },
     {
       "name": "Ready Elevator L4",
-      "waypointRelativePos": 0.4,
+      "waypointRelativePos": 0.7023391812865531,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

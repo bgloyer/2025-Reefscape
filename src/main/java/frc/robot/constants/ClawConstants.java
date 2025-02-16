@@ -33,7 +33,8 @@ public class ClawConstants {
         public static final double kP = 0.0007;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double IntakeVoltage = -2;
+        public static final double IntakeVoltage = -3
+        ;
         public static final double ScoreVoltage = -6;
         public static final double OuttakeVoltage = 4;
         public static final double IntakeVelocityFF = 1.0 / Constants.kNeoVortexkV / 12.0;

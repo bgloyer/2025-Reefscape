@@ -12,11 +12,15 @@ import frc.robot.commands.CoralMaster.IntakeCoral;
 import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.CoralMaster.SetStore;
+import frc.robot.commands.CoralMaster.SpacedIntakeCoral;
 import frc.robot.commands.Drive.AlignToTag;
 import frc.robot.commands.Drive.AlignToTag.Direction;
+import frc.robot.constants.ArmConstants;
+import frc.robot.constants.ClawConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
+import frc.robot.constants.Configs.ArmConfig;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -33,6 +37,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -88,18 +93,32 @@ public class RobotContainer {
         Commands.runOnce(() -> m_coralMaster.setStore()),
         Commands.waitUntil(m_arm::onTarget),
         new PositionCoral(m_claw).onlyIf(coralStored)));
-        
-      // Point At Reef
-      m_driverController.rightBumper().whileTrue(new PointAtReef(m_robotDrive));
-      
+
+
+      // Intake with coral in the way
+      m_driverController.rightBumper().whileTrue(new SpacedIntakeCoral(m_coralMaster, m_robotDrive));
+      m_driverController.rightBumper().onFalse(Commands.sequence(
+        Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
+        new WaitCommand(0.1),
+        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_claw),
+        Commands.waitUntil(m_arm::onTarget),
+        new PositionCoral(m_claw).onlyIf(coralStored)));
+              
       // Score 
       m_driverController.leftBumper().whileTrue(new AlignToTag(m_robotDrive));
         
       // Store everything
-      m_driverController.b().onTrue(new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef));
+      m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster));
 
       // outtake
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
+
+      // ground intake
+      m_driverController.x().onTrue(Commands.parallel(
+        Commands.runOnce(() -> m_arm.setTargetAngle(-92.5)),
+        Commands.runOnce(() -> m_claw.setTargetAngle(11)),
+        Commands.runOnce(() -> m_claw.runVoltage(-7))));
+      m_driverController.x().onFalse(Commands.runOnce(() -> m_claw.stopIntake()));
 
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));

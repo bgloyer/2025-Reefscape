@@ -38,7 +38,7 @@ public class KrakenSwerveModule {
    * Encoder.
    */
   public KrakenSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    m_drivingTalon = new TalonFX(drivingCANId, "rio");
+    m_drivingTalon = new TalonFX(drivingCANId, "*");
     m_turningSpark = new SparkMax(turningCANId, MotorType.kBrushless);
 
     m_turningEncoder = m_turningSpark.getAbsoluteEncoder();

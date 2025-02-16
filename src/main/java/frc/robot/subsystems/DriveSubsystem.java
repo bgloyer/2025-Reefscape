@@ -71,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
   };
 
   // The gyro sensor
-  public final Pigeon2 m_gyro = new Pigeon2(16, "rio");
+  public final Pigeon2 m_gyro = new Pigeon2(16, "*");
   private Field2d m_field2d = new Field2d();
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
   private Vision m_vision;
@@ -253,7 +253,6 @@ private boolean aligned = false;
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
-
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
