@@ -7,7 +7,8 @@ package frc.robot.commands.Drive;
 import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.util.Helpers.betterModulus;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
@@ -15,7 +16,7 @@ public class PointAtReef extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
   private final DriveSubsystem m_robotDrive;
-  private PIDController turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
+  private ProfiledPIDController turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
   /**
    *  Points the robot to be flush with the nearest edge of the reef
    *
@@ -30,6 +31,7 @@ public class PointAtReef extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turnPID.reset(m_robotDrive.getHeading());
     turnPID.enableContinuousInput(0, 360);
   }
 

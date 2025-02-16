@@ -14,6 +14,7 @@ import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.CoralMaster.SetStore;
 import frc.robot.commands.CoralMaster.SpacedIntakeCoral;
 import frc.robot.commands.Drive.AlignToTag;
+import frc.robot.commands.Drive.PointAtAngle;
 import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants;
@@ -112,6 +113,9 @@ public class RobotContainer {
 
       // outtake
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
+
+      // turn test
+      m_driverController.y().whileTrue(new PointAtAngle(m_robotDrive, 90));
 
       // ground intake
       m_driverController.x().onTrue(Commands.parallel(

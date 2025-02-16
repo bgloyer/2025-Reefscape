@@ -8,12 +8,14 @@ import frc.robot.constants.DriveConstants;
 import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class IntakeCoral extends Command {
   private CoralMaster m_subsystem;
-  private PIDController turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
+  private ProfiledPIDController turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
   private double targetAngle;
   private DriveSubsystem m_robotDrive;
   
@@ -36,6 +38,7 @@ public class IntakeCoral extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    turnPID.reset(m_robotDrive.getHeading());
     m_robotDrive.setAlignedToReef(false);
     m_subsystem.setIntake();
     targetAngle = m_robotDrive.getStationAngle();

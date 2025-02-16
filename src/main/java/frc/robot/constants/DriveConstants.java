@@ -42,17 +42,25 @@ public final class DriveConstants {
 
     public static final double kDriveDeadband = 0.05;
 
-    public static final double TurnkP = 0.02;
+    public static final double TurnkP = 0.04;
     public static final double TurnkI = 0;
-    public static final double TurnkD = 0.0012;
-
+    public static final double TurnkD = 0;
+    public static final double TurnMaxVelocity = 360;
+    public static final double TurnMaxAccel = 180;
+    
+    
     public static double xTranslationkP = 1.2;
     public static double xTranslationkI = 1; // 0.7
     public static double xTranslationkD = 0.06;
+    public static final double xTranslationMaxVel = 2;
+    public static final double xTranslationMaxAccel = 3;
     
     public static double yTranslationkP = 0.7;
     public static double yTranslationkI = 0.5;
     public static double yTranslationkD = 0.013;
+    
+    public static final double yTranslationMaxVel = 2;
+    public static final double yTranslationMaxAccel = 3;
 
   }
 
