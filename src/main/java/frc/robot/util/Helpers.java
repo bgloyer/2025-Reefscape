@@ -39,6 +39,13 @@ public class Helpers {
      * @return distance from limelight to tag
      */
     public static double tyToDistance(String limelightName) {
-        return VisionConstants.TagToLimelightHeightOffset / tan(LimelightHelpers.getTY(limelightName) + VisionConstants.LimelightMountAngle);
+        switch (limelightName) {
+            case VisionConstants.ReefLightLightName:
+                return VisionConstants.TagToLimelightHeightOffset / tan(LimelightHelpers.getTY(limelightName) + VisionConstants.LimelightMountAngle);
+            case VisionConstants.ElevatorLimelightName:
+                return 0.4649 / tan(LimelightHelpers.getTY(limelightName) + 28);
+            default:
+                return 0;
+        }
     }
 }

@@ -38,7 +38,7 @@ public class IntakeCoral extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turnPID.reset(m_robotDrive.getHeading());
+    turnPID.reset(m_robotDrive.getHeading(), m_robotDrive.getTurnRate());
     m_robotDrive.setAlignedToReef(false);
     m_subsystem.setIntake();
     targetAngle = m_robotDrive.getStationAngle();

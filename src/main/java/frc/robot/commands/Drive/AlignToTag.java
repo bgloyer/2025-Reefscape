@@ -21,8 +21,8 @@ import frc.robot.util.LimelightHelpers;
 public class AlignToTag extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_robotDrive;
-  private final ProfiledPIDController m_xController;
-  private final ProfiledPIDController m_yController;
+  private final PIDController m_xController;
+  private final PIDController m_yController;
   private final String limelightName = VisionConstants.ReefLightLightName;
   private double tolerance;
   private final ProfiledPIDController m_turnPID;
@@ -38,12 +38,12 @@ public class AlignToTag extends Command {
    */
   public AlignToTag(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
-    m_xController = new ProfiledPIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD, new Constraints(DriveConstants.xTranslationMaxVel, DriveConstants.xTranslationMaxAccel));
-    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(DriveConstants.yTranslationMaxVel, DriveConstants.yTranslationMaxAccel));
- m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
-  
+    m_xController = new PIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD);
+    m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
+    m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); // 0.04
     m_yController.setIZone(0.08);
+    m_turnPID.enableContinuousInput(0, 360);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -51,21 +51,21 @@ public class AlignToTag extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_turnPID.enableContinuousInput(0, 360);
-    m_yController.setGoal(0.50);
+    m_turnPID.reset(m_robotDrive.getHeading());
+    m_yController.setSetpoint(0.50);
     m_yController.setTolerance(0.0175);
     switch (m_robotDrive.scoringSide) {
       case LEFT:
         double leftDistance1 = 0.188;
         double leftDistance2 = 0.242;
-        m_xController.setGoal((leftDistance1 + leftDistance2) / 2); // mid 0.2165 
+        m_xController.setSetpoint((leftDistance1 + leftDistance2) / 2); // mid 0.2165 
         tolerance = Math.abs((leftDistance1 - leftDistance2) / 2);
         m_xController.setTolerance(tolerance);
         break;
       case RIGHT:
         double rightDistance1 = -0.1405;
         double rightDistance2 = -0.2;
-        m_xController.setGoal((rightDistance1 + rightDistance2) / 2); // mid -0.1701 
+        m_xController.setSetpoint((rightDistance1 + rightDistance2) / 2); // mid -0.1701 
         tolerance = Math.abs((rightDistance1 - rightDistance2));
         m_xController.setTolerance(tolerance);
         break;
@@ -82,13 +82,13 @@ public class AlignToTag extends Command {
       double xOutput = m_xController.calculate(xInput);
       double yOutput = -m_yController.calculate(yDistanceFromTag);
 
-      if (m_yController.atGoal()) {
+      if (m_yController.atSetpoint()) {
         yOutput = 0;
         turnOutput = 0;
       }
       m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
 
-      boolean aligned = m_xController.atGoal() && m_yController.atGoal();
+      boolean aligned = m_xController.atSetpoint() && m_yController.atSetpoint();
       m_robotDrive.setAlignedToReef(aligned);
     }
   }

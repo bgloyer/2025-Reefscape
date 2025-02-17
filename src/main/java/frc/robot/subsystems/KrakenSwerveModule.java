@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.Configs;
 import frc.robot.constants.Configs.DrivingTalonConfig;
 
@@ -101,6 +102,7 @@ public class KrakenSwerveModule {
     m_turningClosedLoopController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
 
     m_desiredState = desiredState;
+    SmartDashboard.putNumber("Velocity Error", correctedDesiredState.speedMetersPerSecond - m_drivingTalon.getVelocity().getValueAsDouble());
   }
 
   /** Zeroes all the SwerveModule encoders. */

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.Auto.AutoAlignToStationTag;
 import frc.robot.commands.Auto.AutoAlignToTag;
 import frc.robot.commands.Auto.AutoIntakeCoral;
 import frc.robot.commands.Auto.AutoSetStore;
@@ -97,7 +98,7 @@ public class RobotContainer {
 
 
       // Intake with coral in the way
-      m_driverController.rightBumper().whileTrue(new SpacedIntakeCoral(m_coralMaster, m_robotDrive));
+      m_driverController.rightBumper().whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
       m_driverController.rightBumper().onFalse(Commands.sequence(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
         new WaitCommand(0.1),

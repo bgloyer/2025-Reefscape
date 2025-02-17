@@ -144,8 +144,8 @@ private boolean aligned = false;
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Distance m", Helpers.tyToDistance(VisionConstants.ReefLightLightName));
-    SmartDashboard.putNumber("X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName)));
+    SmartDashboard.putNumber("Distance m", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName));
+    SmartDashboard.putNumber("X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName)));
     getAngleToReef();
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),

@@ -62,7 +62,7 @@ public final class Configs {
             public static TalonFXConfiguration talonConfig = new TalonFXConfiguration();
             
             static {
-                    talonConfig.Slot0.kP = 0.004; // 0.004
+                    talonConfig.Slot0.kP = 0.008; // 0.004
                     talonConfig.Slot0.kI = 0;
                     talonConfig.Slot0.kD = 0;
                     talonConfig.Slot0.kV = 12 / ModuleConstants.kKrakenDriveFreeSpeedRps; // may need to be 12 not 1
