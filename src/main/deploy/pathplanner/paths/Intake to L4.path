@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.5890943877551025,
-        "y": 5.271109693877551
+        "x": 3.6595738636363637,
+        "y": 5.126860795454545
       },
       "prevControl": {
-        "x": 3.429048287838983,
-        "y": 5.463165013776895
+        "x": 3.4995277637202444,
+        "y": 5.318916115353889
       },
       "nextControl": null,
       "isLocked": false,
@@ -64,11 +64,11 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.75,
+    "velocity": 1.0,
     "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "4 Coral Auto",
+  "folder": "3 Coral Auto",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": -54.011
