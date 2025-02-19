@@ -47,7 +47,7 @@ public final class Configs {
                     turningConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                     // These are example gains you may need to them for your own robot!
-                    .pid(1, 0, 0)
+                    .pid(5, 0, 0)
                     .outputRange(-1, 1)
                     // Enable PID wrap around for the turning motor. This will allow the PID
                     // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
@@ -62,9 +62,9 @@ public final class Configs {
             public static TalonFXConfiguration talonConfig = new TalonFXConfiguration();
             
             static {
-                    talonConfig.Slot0.kP = 0.36; // 0.004
+                    talonConfig.Slot0.kP = 0.1;
                     talonConfig.Slot0.kI = 0;
-                    talonConfig.Slot0.kD = 0.000001 * 12.0;
+                    talonConfig.Slot0.kD = 0.0;
                     talonConfig.Slot0.kS = 0.1;
                     talonConfig.Slot0.kV = 12 / ModuleConstants.kKrakenDriveFreeSpeedRps;
     

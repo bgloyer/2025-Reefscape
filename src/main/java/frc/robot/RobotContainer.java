@@ -92,7 +92,9 @@ public class RobotContainer {
       // Intake
       m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster, m_robotDrive));
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
-        Commands.runOnce(() -> m_coralMaster.setStore()),
+        Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
+        new WaitCommand(0.1),
+        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_claw),
         Commands.waitUntil(m_arm::onTarget),
         new PositionCoral(m_claw).onlyIf(coralStored)));
 
@@ -115,9 +117,6 @@ public class RobotContainer {
       // outtake
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
 
-      // turn test
-      m_driverController.y().whileTrue(new PointAtAngle(m_robotDrive, 90));
-
       // ground intake
       m_driverController.x().onTrue(Commands.parallel(
         Commands.runOnce(() -> m_arm.setTargetAngle(-92.5)),
@@ -135,7 +134,7 @@ public class RobotContainer {
       m_mechController.rightBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
 
       m_mechController.a().whileTrue(new SetLevel(Level.ONE, m_coralMaster, m_driverController, alignedToReef));
-      m_mechController.a().onFalse(new Score(m_coralMaster).until(coralStored.negate()).andThen(new SetStore(m_coralMaster)));
+      m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-2), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(new SetStore(m_coralMaster)));
 
       m_mechController.x().onTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef));
 
@@ -148,6 +147,11 @@ public class RobotContainer {
 
       m_mechController.povDown().and(readyToBottomDealg).whileTrue(new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController, alignedToReef));
       m_mechController.povDown().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.stopIntake())));
+
+      m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_claw.resetSetpoint()));
+      m_mechController.povRight().onTrue(Commands.runOnce(() -> m_arm.resetSetpoint()));
+
+      
       
   }
   public void registerAutoCommands() {

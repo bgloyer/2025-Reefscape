@@ -22,7 +22,7 @@ public final class ElevatorConstants {
     // from block cad
     public static final double Store = 0.0;
     public static final double Station = Units.inchesToMeters(1) * 2;
-    public static final double L1 = Units.inchesToMeters(3.559) * 2;
+    public static final double L1 = 0.3;
     public static final double L2 = Units.inchesToMeters(0.4) * 2;
     public static final double L3 = Units.inchesToMeters(9) * 2;
     public static final double L4 = Units.inchesToMeters(24) * 2;

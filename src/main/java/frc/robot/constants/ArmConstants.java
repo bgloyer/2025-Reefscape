@@ -10,7 +10,7 @@ public class ArmConstants {
     // from block cad - degrees
     public static final double Store = 0;
     public static final double Station = 35;
-    public static final double L1 = -45;
+    public static final double L1 = -90;
     public static final double L2 = -19; // -27.28
     public static final double L3 = -24;
     public static final double L4 = -19;
