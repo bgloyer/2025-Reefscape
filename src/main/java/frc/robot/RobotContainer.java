@@ -117,13 +117,6 @@ public class RobotContainer {
       // outtake
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
 
-      // ground intake
-      m_driverController.x().onTrue(Commands.parallel(
-        Commands.runOnce(() -> m_arm.setTargetAngle(-92.5)),
-        Commands.runOnce(() -> m_claw.setTargetAngle(11)),
-        Commands.runOnce(() -> m_claw.runVoltage(-7))));
-      m_driverController.x().onFalse(Commands.runOnce(() -> m_claw.stopIntake()));
-
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
       m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));

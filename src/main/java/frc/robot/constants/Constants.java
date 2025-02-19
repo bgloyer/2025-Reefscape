@@ -24,5 +24,6 @@ public final class Constants {
     // public static final AprilTagFieldLayout aprilTags =  AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     public static Translation2d blueCenterOfReef = new Translation2d(4.49,4.03); //blue
     public static final double kNeoVortexkV = 565;
-    public static final int CoralLaserCanID = 17;
+    public static final int BackCoralLaserCanID = 17;
+    public static final int FrontCoralLaserCanID = 18;
 }

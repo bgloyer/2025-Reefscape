@@ -78,7 +78,7 @@ public class CoralMaster extends SubsystemBase {
     }
 
     public boolean coralStored() {
-        return m_claw.coralStored();
+        return m_claw.backLaserTriggered();
     }
 
     public boolean readyToScore() {

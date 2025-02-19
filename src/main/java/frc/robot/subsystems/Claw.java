@@ -27,7 +27,8 @@ public class Claw extends SubsystemBase {
     private final RelativeEncoder m_encoder; 
     private double targetAngle;
     private double currentSetpoint;
-    private final LaserCan m_laser;
+    private final LaserCan m_backLaser;
+    private final LaserCan m_frontLaser;
     public boolean positioningCoral;
 
     public Claw() {
@@ -43,9 +44,10 @@ public class Claw extends SubsystemBase {
         m_intakeController = m_intakeMotor.getClosedLoopController();
         resetSetpoint();
 
-        m_laser = new LaserCan(Constants.CoralLaserCanID);
+        m_backLaser = new LaserCan(Constants.BackCoralLaserCanID);
+        m_frontLaser = new LaserCan(Constants.FrontCoralLaserCanID);
         try {
-            m_laser.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
+            m_backLaser.setTimingBudget(TimingBudget.TIMING_BUDGET_20MS);
         } catch (Exception e) {
             System.out.println("laser can is the worst");
         }
@@ -92,14 +94,19 @@ public class Claw extends SubsystemBase {
     }
 
     public double getDistance() {
-        if (m_laser.getMeasurement() == null)
+        if (m_backLaser.getMeasurement() == null)
             return 0;
         else
-            return m_laser.getMeasurement().distance_mm;
+            return m_backLaser.getMeasurement().distance_mm;
     }
 
-    public boolean coralStored() {
-        return (m_laser.getMeasurement() != null) && (m_laser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
+    public boolean backLaserTriggered() {
+        return (m_backLaser.getMeasurement() != null) && (m_backLaser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
+    }
+
+    public boolean frontLaserTriggered() {
+        return (m_frontLaser.getMeasurement() != null) && (m_frontLaser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
+
     }
 
     @Override
@@ -107,6 +114,7 @@ public class Claw extends SubsystemBase {
         positionSlewRateLimiting();
         SmartDashboard.putNumber("Wrist Angle", getAngle());
         SmartDashboard.putNumber("Intake Velocity", m_intakeMotor.getEncoder().getVelocity());
-        SmartDashboard.putBoolean("Coral Stored", coralStored());
+        SmartDashboard.putBoolean("Front Coral Stored", frontLaserTriggered());
+        SmartDashboard.putBoolean("Back Coral Stored", backLaserTriggered());
     }
 }
