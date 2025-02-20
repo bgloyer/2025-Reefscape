@@ -19,6 +19,7 @@ import frc.robot.commands.Drive.PointAtAngle;
 import frc.robot.commands.Drive.AlignToTag.Direction;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants;
+import frc.robot.constants.ClimbConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
@@ -26,6 +27,7 @@ import frc.robot.constants.Configs.ArmConfig;
 import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
@@ -56,6 +58,7 @@ public class RobotContainer {
   private final Elevator m_elevator = new Elevator();
   private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
+  private final Climber m_climber = new Climber();
 
   private final SendableChooser<Command> autoChooser;
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
@@ -114,6 +117,9 @@ public class RobotContainer {
       // Store everything
       m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster));
 
+      // lower arm
+      m_driverController.x().onTrue(Commands.runOnce(() -> m_coralMaster.setState(0,-90,0)));
+
       // outtake
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
 
@@ -141,9 +147,14 @@ public class RobotContainer {
       m_mechController.povDown().and(readyToBottomDealg).whileTrue(new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController, alignedToReef));
       m_mechController.povDown().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.stopIntake())));
 
-      m_mechController.povLeft().onTrue(Commands.runOnce(() -> m_claw.resetSetpoint()));
-      m_mechController.povRight().onTrue(Commands.runOnce(() -> m_arm.resetSetpoint()));
+      m_mechController.rightTrigger().onTrue(Commands.runOnce(() -> m_climber.setAngle(ClimbConstants.StoreAngle), m_climber).onlyIf(() -> m_arm.getAngle() < -60)); // add clear arm constant
+      m_mechController.back().onTrue(Commands.sequence(
+        Commands.runOnce(() -> m_coralMaster.setState(0,-90,0)),
+        new WaitCommand(0.8),
+        Commands.runOnce(() -> m_climber.setAngle(ClimbConstants.ReadyAngle))));
 
+
+      m_mechController.start().onTrue(Commands.runOnce(() -> m_climber.setAngle(ClimbConstants.ClimbAngle), m_climber).onlyIf(() -> m_arm.getAngle() < -60));
       
       
   }
@@ -182,7 +193,6 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_arm.resetSetpoint();
-    m_arm.setTargetAngle(0);
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
     m_claw.stopIntake();
