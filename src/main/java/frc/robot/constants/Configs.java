@@ -151,4 +151,21 @@ public final class Configs {
                 motorConfig.encoder.positionConversionFactor(ClimbConstants.GearRatio * 360);
         }
     }
+
+    public static final class AlgaeIntakeConfig {
+        public static final SparkFlexConfig pivotMotorConfig = new SparkFlexConfig();
+        public static final SparkMaxConfig rollerMotorConfig = new SparkMaxConfig();
+
+        static {
+                pivotMotorConfig.idleMode(IdleMode.kBrake);
+                pivotMotorConfig.closedLoop
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD);
+                pivotMotorConfig.encoder.positionConversionFactor(AlgaeIntakeConstants.GearRatio * 360);
+
+                rollerMotorConfig.idleMode(IdleMode.kBrake);
+                rollerMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD);
+        }
+    }
 }

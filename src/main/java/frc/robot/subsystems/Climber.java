@@ -34,6 +34,10 @@ public class Climber extends SubsystemBase {
         m_controller.setReference(volts, ControlType.kVoltage);
     }
 
+    public boolean isStored() {
+        return m_encoder.getPosition() > -18;
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Climber Angle", m_encoder.getPosition());
