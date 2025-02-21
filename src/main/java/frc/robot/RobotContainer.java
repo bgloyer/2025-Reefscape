@@ -40,6 +40,8 @@ import frc.robot.util.LimelightHelpers;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -212,6 +214,9 @@ public class RobotContainer {
   public void testPeriodic() {
     if (m_driverController.getHID().getPort() != -1)
       m_robotDrive.setWheels(m_driverController.getHID().getPOV());
+
+    m_climber.setVoltage(12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
+
   }
 
   public void testInit() {
