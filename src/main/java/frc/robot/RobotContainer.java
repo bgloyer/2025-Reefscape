@@ -208,4 +208,12 @@ public class RobotContainer {
     m_claw.stopIntake();
     LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2);
   }
+
+  public void testPeriodic() {
+    if (m_driverController.getHID().getPort() != -1)
+      m_robotDrive.setWheels(m_driverController.getHID().getPOV());
+  }
+
+  public void testInit() {
+  }
 }
