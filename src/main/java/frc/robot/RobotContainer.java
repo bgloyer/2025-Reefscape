@@ -40,6 +40,7 @@ import frc.robot.util.LimelightHelpers;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -85,6 +86,7 @@ public class RobotContainer {
 
       autoChooser = AutoBuilder.buildAutoChooser();
       SmartDashboard.putData("Auto Chooser", autoChooser);
+      SmartDashboard.putBoolean("Mirror Auto?", false);
     
       // drive with controller
       m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
@@ -187,7 +189,7 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return new PathPlannerAuto(autoChooser.getSelected().getName(), SmartDashboard.getBoolean("Mirror Auto?", false));
   }
 
   public void setVortexArmEncoder() {
