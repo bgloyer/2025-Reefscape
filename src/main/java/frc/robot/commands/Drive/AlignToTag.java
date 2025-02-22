@@ -82,7 +82,8 @@ public class AlignToTag extends Command {
       m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
       boolean aligned = m_xController.atSetpoint() && m_yController.atSetpoint();
       m_robotDrive.setAlignedToReef(aligned);
-    }
+    } else
+      m_robotDrive.drive(0,0,turnOutput, false);
   }
 
   // Called once the command ends or is interrupted.

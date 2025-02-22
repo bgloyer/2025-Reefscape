@@ -34,7 +34,7 @@ public class AutoAlignToStationTag extends Command {
   }
 
   /**
-   * Aligns robot to the reef for scoring
+   * 
    *
    * @param subsystem The subsystem used by this command.
    */
@@ -78,7 +78,7 @@ public class AutoAlignToStationTag extends Command {
       }
       m_robotDrive.drive(Math.min(yOutput, 0.225), Math.min(xOutput, 0.3), turnOutput, false);
     } else {
-      m_robotDrive.driveWithController(true);
+      m_robotDrive.driveWithController(turnOutput, true);
     }
   }
 

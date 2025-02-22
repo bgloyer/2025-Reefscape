@@ -6,7 +6,7 @@ public class ClimbConstants {
     public static final double kP = 0.1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double StoreAngle = -20;
+    public static final double StoreAngle = -22;
     public static final double ReadyAngle = -183;
     public static final double ClimbAngle = -80;
     public static final double GearRatio = 1.0 / 450.0;

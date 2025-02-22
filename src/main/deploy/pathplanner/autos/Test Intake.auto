@@ -5,112 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Auto Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Right"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Intake to L4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score L4"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Set Store"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "L To Intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Left"
+            "pathName": "L To Intake"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Auto Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Intake to K4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score L4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Store"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "K to Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Auto Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Intake to L3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score L3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Set Store"
           }
         }
       ]
