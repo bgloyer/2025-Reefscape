@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ElevatorConstants;
@@ -11,6 +12,7 @@ public class CoralMaster extends SubsystemBase {
     private final Elevator m_elevator;
     private final Claw m_claw;
     private Level level = Level.STORE;
+    private boolean useIntakeAutoAlign;
     
     public CoralMaster(Arm arm, Elevator elevator, Claw claw ) {
         m_arm = arm;
@@ -95,6 +97,16 @@ public class CoralMaster extends SubsystemBase {
 
     public Level getLevel() {
         return level;
+    }
+
+    public boolean useIntakeAutoAlign() {
+        return useIntakeAutoAlign;
+    }
+
+    public Command toggleIntakeAutoAlign() {
+        return runOnce(() -> {
+            useIntakeAutoAlign = !useIntakeAutoAlign;
+        });
     }
 
     @Override

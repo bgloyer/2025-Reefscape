@@ -60,13 +60,14 @@ public class AutoAlignToStationTag extends Command {
     m_yController.setTolerance(0.0175);
     m_xController.setSetpoint(-Constants.IntakeAlignOffset);
     m_turnPID.setGoal(m_robotDrive.getStationAngle());
+    m_robotDrive.setAlignedToReef(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
-    if (LimelightHelpers.getTV(limelightName)) {
+    if (m_coralMaster.useIntakeAutoAlign() && LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = Helpers.tyToDistance(limelightName);
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); 
       double xOutput = m_xController.calculate(-xInput);

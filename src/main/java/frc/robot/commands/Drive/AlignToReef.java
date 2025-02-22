@@ -19,7 +19,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.LimelightHelpers;
 
 /** An example command that uses an example subsystem. */
-public class AlignToTag extends Command {
+public class AlignToReef extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_robotDrive;
   private final PIDController m_xController;
@@ -36,7 +36,7 @@ public class AlignToTag extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AlignToTag(DriveSubsystem subsystem) {
+  public AlignToReef(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
     m_xController = new PIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD);
     m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);

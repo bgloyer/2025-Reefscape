@@ -15,9 +15,9 @@ import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.CoralMaster.SetStore;
 import frc.robot.commands.CoralMaster.SpacedIntakeCoral;
-import frc.robot.commands.Drive.AlignToTag;
+import frc.robot.commands.Drive.AlignToReef;
 import frc.robot.commands.Drive.PointAtAngle;
-import frc.robot.commands.Drive.AlignToTag.Direction;
+import frc.robot.commands.Drive.AlignToReef.Direction;
 import frc.robot.constants.AlgaeIntakeConstants;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.ClawConstants;
@@ -112,17 +112,19 @@ public class RobotContainer {
         new PositionCoral(m_claw).onlyIf(coralStored)));
               
       // Score 
-      m_driverController.rightBumper().whileTrue(new AlignToTag(m_robotDrive));
+      m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive));
 
       // Algae Intake
       m_driverController.leftTrigger(0.4).whileTrue(new RunAlgaeIntake(m_algaeIntake));
 
-        
       // Store everything
       m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster));
 
       // outtake
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
+
+      // toggle intake mode
+      m_driverController.rightStick().onTrue(m_coralMaster.toggleIntakeAutoAlign());
 
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
@@ -148,9 +150,9 @@ public class RobotContainer {
       m_mechController.povDown().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.stopIntake())));
 
       m_mechController.back().onTrue(readyClimb());
-      m_mechController.rightStick().onTrue(unReadyClimb());
-
       m_mechController.start().onTrue(Commands.runOnce(() -> m_climber.setAngle(ClimbConstants.ClimbAngle), m_climber).onlyIf(() -> m_arm.getAngle() < -60));
+      
+      m_mechController.rightStick().onTrue(unReadyClimb());
       
       
   }
@@ -160,9 +162,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Ready Elevator L3", Commands.runOnce(() -> m_coralMaster.setState(ElevatorConstants.BottomDealg, WristConstants.L3)));
     NamedCommands.registerCommand("Ready Elevator L4", Commands.runOnce(() -> m_coralMaster.setState(ElevatorConstants.L4, WristConstants.L4)));
 
-    NamedCommands.registerCommand("Score L2", Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
-    NamedCommands.registerCommand("Score L3", Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()).andThen(Commands.runOnce(() -> m_claw.runVoltage(-5))));
-    NamedCommands.registerCommand("Score L4", Commands.parallel(new AlignToTag(m_robotDrive), new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
+    NamedCommands.registerCommand("Score L2", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
+    NamedCommands.registerCommand("Score L3", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()).andThen(Commands.runOnce(() -> m_claw.runVoltage(-5))));
+    NamedCommands.registerCommand("Score L4", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
     NamedCommands.registerCommand("Set Left", Commands.runOnce(()-> m_robotDrive.scoringSide = Direction.LEFT));
     NamedCommands.registerCommand("Set Right", Commands.runOnce(()-> m_robotDrive.scoringSide = Direction.RIGHT));
     NamedCommands.registerCommand("PositionCoral", new PositionCoral(m_claw).andThen(() -> m_claw.stopIntake()));
