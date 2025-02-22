@@ -77,4 +77,8 @@ public class Arm extends SubsystemBase {
         m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
         SmartDashboard.putNumber("Arm Angle", m_encoder.getPosition());
     }
+
+    public void stopPid() {
+        m_controller.setReference(0, ControlType.kVoltage);
+    }
 }

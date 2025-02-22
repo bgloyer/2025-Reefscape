@@ -4,8 +4,6 @@
 
 package frc.robot.constants;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
@@ -26,4 +24,10 @@ public final class Constants {
     public static final double kNeoVortexkV = 565;
     public static final int BackCoralLaserCanID = 17;
     public static final int FrontCoralLaserCanID = 18;
+
+    public static final double LeftReefOffset = 0.191;
+    public static final double RightReefOffset = -0.135;
+    public static final double ReefAlignTolerance = 0.025;
+    public static final double IntakeAlignOffset = -0.0894;
+    public static final double IntakeAlignDistance = 0.68;
 }

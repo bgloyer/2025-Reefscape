@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -27,18 +28,22 @@ public class AlgaeIntake extends SubsystemBase {
         m_encoder = m_pivotMotor.getEncoder();
         m_pivotController = m_pivotMotor.getClosedLoopController();
         m_pivotMotor.configure(AlgaeIntakeConfig.pivotMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+        setAngle(0);
         m_rollerMotor = new SparkMax(AlgaeIntakeConstants.RollerMotorId, MotorType.kBrushless);
         m_rollerController = m_rollerMotor.getClosedLoopController();
         m_rollerMotor.configure(AlgaeIntakeConfig.rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public void setAngle(double angle) {
-        m_pivotController.setReference(angle, ControlType.kPosition);
+        m_pivotController.setReference(angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, calcFeedForward());
     }
 
     public void setVoltage(double volts) {
         m_rollerController.setReference(volts, ControlType.kVoltage);
+    }
+
+    private double calcFeedForward() {
+        return AlgaeIntakeConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
     }
 
     @Override

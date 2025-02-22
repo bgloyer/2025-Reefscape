@@ -160,12 +160,14 @@ public final class Configs {
                 pivotMotorConfig.idleMode(IdleMode.kBrake);
                 pivotMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD);
+                        .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD)
+                        .maxOutput(0.05);
                 pivotMotorConfig.encoder.positionConversionFactor(AlgaeIntakeConstants.GearRatio * 360);
 
                 rollerMotorConfig.idleMode(IdleMode.kBrake);
                 rollerMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD);
+
         }
     }
 }

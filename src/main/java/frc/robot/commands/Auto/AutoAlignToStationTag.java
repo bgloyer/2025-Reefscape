@@ -6,9 +6,12 @@ package frc.robot.commands.Auto;
 
 import static frc.robot.util.Helpers.betterModulus;
 import static frc.robot.util.Helpers.tan;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.CoralMaster;
@@ -20,10 +23,9 @@ import frc.robot.util.LimelightHelpers;
 public class AutoAlignToStationTag extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_robotDrive;
-  private final ProfiledPIDController m_xController;
-  private final ProfiledPIDController m_yController;
+  private final PIDController m_xController;
+  private final PIDController m_yController;
   private final String limelightName = VisionConstants.ElevatorLimelightName;
-  private double tolerance;
   private final ProfiledPIDController m_turnPID;
   private final CoralMaster m_coralMaster;
 
@@ -38,8 +40,8 @@ public class AutoAlignToStationTag extends Command {
    */
   public AutoAlignToStationTag(DriveSubsystem subsystem, CoralMaster coralMaster) {
     m_robotDrive = subsystem;
-    m_xController = new ProfiledPIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD, new Constraints(DriveConstants.xTranslationMaxVel, DriveConstants.xTranslationMaxAccel));
-    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(DriveConstants.yTranslationMaxVel, DriveConstants.yTranslationMaxAccel));
+    m_xController = new PIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD);
+    m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
     m_yController.setIZone(0.08);
@@ -54,9 +56,9 @@ public class AutoAlignToStationTag extends Command {
   public void initialize() {
     m_coralMaster.setIntake();
     m_turnPID.reset(m_robotDrive.getHeading());
-    m_yController.setGoal(0.6127);
+    m_yController.setSetpoint(Constants.IntakeAlignDistance);
     m_yController.setTolerance(0.0175);
-    m_xController.setGoal(-0.1967); // mid 0.2165 
+    m_xController.setSetpoint(-Constants.IntakeAlignOffset);
     m_turnPID.setGoal(m_robotDrive.getStationAngle());
   }
 
@@ -66,18 +68,17 @@ public class AutoAlignToStationTag extends Command {
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
     if (LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = Helpers.tyToDistance(limelightName);
-      double xInput = yDistanceFromTag * tan(-LimelightHelpers.getTX(limelightName)); 
-      double xOutput = m_xController.calculate(xInput);
-      double yOutput = -m_yController.calculate(yDistanceFromTag);
+      double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); 
+      double xOutput = m_xController.calculate(-xInput);
+      double yOutput = m_yController.calculate(yDistanceFromTag);
 
-      if (m_yController.atGoal()) {
+      if (m_yController.atSetpoint()) {
         yOutput = 0;
         turnOutput = 0;
       }
-      m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
-
-      boolean aligned = m_xController.atGoal() && m_yController.atGoal();
-      m_robotDrive.setAlignedToReef(aligned);
+      m_robotDrive.drive(Math.min(yOutput, 0.225), Math.min(xOutput, 0.3), turnOutput, false);
+    } else {
+      m_robotDrive.driveWithController(true);
     }
   }
 

@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -24,7 +25,6 @@ public class AlignToTag extends Command {
   private final PIDController m_xController;
   private final PIDController m_yController;
   private final String limelightName = VisionConstants.ReefLightLightName;
-  private double tolerance;
   private final ProfiledPIDController m_turnPID;
 
   public enum Direction {
@@ -54,27 +54,20 @@ public class AlignToTag extends Command {
     m_turnPID.reset(m_robotDrive.getHeading());
     m_yController.setSetpoint(0.50);
     m_yController.setTolerance(0.0175);
-    switch (m_robotDrive.scoringSide) {
-      case LEFT:
-        double leftDistance1 = 0.188;
-        double leftDistance2 = 0.242;
-        m_xController.setSetpoint((leftDistance1 + leftDistance2) / 2); // mid 0.2165 
-        tolerance = Math.abs((leftDistance1 - leftDistance2) / 2);
-        m_xController.setTolerance(tolerance);
-        break;
-      case RIGHT:
-        double rightDistance1 = -0.1405;
-        double rightDistance2 = -0.2;
-        m_xController.setSetpoint((rightDistance1 + rightDistance2) / 2); // mid -0.1701 
-        tolerance = Math.abs((rightDistance1 - rightDistance2));
-        m_xController.setTolerance(tolerance);
-        break;
-      }
+    m_xController.setTolerance(Constants.ReefAlignTolerance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    switch (m_robotDrive.scoringSide) {
+      case LEFT:
+        m_xController.setSetpoint(Constants.LeftReefOffset); // mid 0.2165 
+        break;
+      case RIGHT:
+        m_xController.setSetpoint(Constants.RightReefOffset);
+        break;
+      }
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), m_robotDrive.getAngleToReef());
     if (LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = tyToDistance(limelightName);
@@ -87,7 +80,6 @@ public class AlignToTag extends Command {
         turnOutput = 0;
       }
       m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
-
       boolean aligned = m_xController.atSetpoint() && m_yController.atSetpoint();
       m_robotDrive.setAlignedToReef(aligned);
     }

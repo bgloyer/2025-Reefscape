@@ -144,8 +144,11 @@ private boolean aligned = false;
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Distance m", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName));
-    SmartDashboard.putNumber("X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName)));
+    SmartDashboard.putBoolean("is blue", Helpers.isBlue);
+    SmartDashboard.putNumber("Reef Distance m", Helpers.tyToDistance(VisionConstants.ReefLightLightName));
+    SmartDashboard.putNumber("Reef X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName)));
+    SmartDashboard.putNumber("Station Distance m", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName));
+    SmartDashboard.putNumber("Station X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName)));
     getAngleToReef();
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
@@ -381,9 +384,8 @@ private boolean aligned = false;
     if (!isBlue) {
       centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
     }
-    double angle = centerOfReef.minus(getPose().getTranslation()).getAngle().getDegrees();
-    
-    return 180 + Math.round(angle / 60.0) * 60;
+    double angle = getFlippedRotation(centerOfReef.minus(getPose().getTranslation()).getAngle()).getDegrees();
+    return Math.round(angle / 60.0) * 60;
   }
 
   public void setScoringSide(Direction dir) {

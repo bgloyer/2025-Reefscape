@@ -16,12 +16,6 @@ public class Helpers {
     //     return Constants.aprilTags.getTagPose(id).get();
     // }
 
-    // public static Alliance getAlliance() {
-    //     if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red)
-    //         return Alliance.Red;
-    //     return Alliance.Blue;
-    // }
-
     public static double betterModulus(double x, double y) {
         return (x % y + y) % y;
     }

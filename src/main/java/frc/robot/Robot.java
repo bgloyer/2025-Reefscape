@@ -4,11 +4,27 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.constants.VisionConstants;
+import frc.robot.util.Helpers;
 import frc.robot.util.LimelightHelpers;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import au.grapplerobotics.CanBridge;
 
@@ -61,12 +77,20 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
      LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 1);
-     System.out.println("disabled init");
+     CommandScheduler.getInstance().enable();
   }
 
   @Override
   public void disabledPeriodic() {
-    // Helpers.isBlue = DriverStation.getAlliance().get() == Alliance.Blue;
+    try {
+			if (DriverStation.getAlliance().isPresent())
+				if (DriverStation.getAlliance().get() == Alliance.Blue) 
+          Helpers.isBlue = true;
+        else 
+          Helpers.isBlue = false;
+		} catch (Throwable t) {
+			throw t;
+		}
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -105,6 +129,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    CommandScheduler.getInstance().disable();
     m_robotContainer.testInit();
   }
 

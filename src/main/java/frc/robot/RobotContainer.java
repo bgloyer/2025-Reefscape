@@ -101,7 +101,7 @@ public class RobotContainer {
 
       // ------------------ Aidan ----------------------------
       // Coral Intake
-      m_driverController.rightTrigger(0.4).whileTrue(new IntakeCoral(m_coralMaster, m_robotDrive));
+      m_driverController.rightTrigger(0.4).whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
         new WaitCommand(0.1),
@@ -215,10 +215,16 @@ public class RobotContainer {
     if (m_driverController.getHID().getPort() != -1)
       m_robotDrive.setWheels(m_driverController.getHID().getPOV());
 
-    m_climber.setVoltage(12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
+    if(m_driverController.getHID().getAButton())
+      m_climber.setAngle(-100);
+    else
+      m_climber.setVoltage(12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
 
+    if(m_driverController.getHID().getLeftStickButtonPressed())
+      m_climber.zero();
   }
 
   public void testInit() {
+    m_arm.stopPid();
   }
 }

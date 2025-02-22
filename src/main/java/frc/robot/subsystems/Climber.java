@@ -42,4 +42,8 @@ public class Climber extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Climber Angle", m_encoder.getPosition());
     }
+
+    public void zero() {
+        m_encoder.setPosition(0);
+    }
 }
