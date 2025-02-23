@@ -401,10 +401,27 @@ private boolean aligned = false;
   }
 
   public double getStationAngle() {
-    if (m_odometry.getEstimatedPosition().getY() < 4) {
+    if (onLeftSideOfField()) {
       return -54.011;
     } else {
       return 54.011;
+    }
+  }
+
+  public boolean onLeftSideOfField() {
+    if(Helpers.isBlue)
+      return m_odometry.getEstimatedPosition().getY() > 4;
+    else
+      return m_odometry.getEstimatedPosition().getY() < 4;
+  }
+
+  public double getStationOffset() {
+
+
+    if (onLeftSideOfField()) {
+      return -Constants.IntakeAlignOffset;
+    } else {
+      return Constants.IntakeAlignOffset;
     }
   }
 

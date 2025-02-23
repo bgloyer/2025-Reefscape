@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.2
+        "x": 5.0356534090909095,
+        "y": 2.853338068181819
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 6.95
+        "x": 5.02568181818182,
+        "y": 2.564161931818183
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Actual E"
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 5.0
+        "x": 1.1267897727272727,
+        "y": 1.21799715909091
       },
       "prevControl": {
-        "x": 2.0,
-        "y": 5.25
+        "x": 1.367881122872177,
+        "y": 1.284140646187578
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "RightCoralStation "
     }
   ],
   "rotationTargets": [],
@@ -33,22 +33,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.8,
-    "maxAcceleration": 4.93,
+    "maxVelocity": 4.9,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 0.25,
+    "rotation": 54.011
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Mirrored 3 Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 121.11533231474182
   },
   "useDefaultConstraints": false
 }

@@ -58,7 +58,7 @@ public class AutoAlignToStationTag extends Command {
     m_turnPID.reset(m_robotDrive.getHeading());
     m_yController.setSetpoint(Constants.IntakeAlignDistance);
     m_yController.setTolerance(0.0175);
-    m_xController.setSetpoint(-Constants.IntakeAlignOffset);
+    m_xController.setSetpoint(m_robotDrive.getStationOffset());
     m_turnPID.setGoal(m_robotDrive.getStationAngle());
     m_robotDrive.setAlignedToReef(false);
   }

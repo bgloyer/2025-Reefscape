@@ -145,10 +145,11 @@ public final class Configs {
 
         static {
                 motorConfig.idleMode(IdleMode.kBrake);
+                motorConfig.inverted(true);
                 motorConfig.closedLoop
-                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                         .pid(ClimbConstants.kP, ClimbConstants.kI, ClimbConstants.kD);
-                motorConfig.encoder.positionConversionFactor(ClimbConstants.GearRatio * 360);
+                motorConfig.absoluteEncoder.positionConversionFactor(360);
         }
     }
 

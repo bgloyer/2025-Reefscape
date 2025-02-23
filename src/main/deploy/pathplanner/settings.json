@@ -3,7 +3,8 @@
   "robotLength": 0.842,
   "holonomicMode": true,
   "pathFolders": [
-    "3 Coral Auto"
+    "3 Coral Auto",
+    "Mirrored 3 Coral"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.9,

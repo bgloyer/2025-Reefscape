@@ -124,7 +124,7 @@ public class RobotContainer {
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
 
       // toggle intake mode
-      m_driverController.rightStick().onTrue(m_coralMaster.toggleIntakeAutoAlign());
+      m_driverController.start().onTrue(m_coralMaster.toggleIntakeAutoAlign());
 
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
@@ -191,7 +191,8 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto(autoChooser.getSelected().getName(), SmartDashboard.getBoolean("Mirror Auto?", false));
+    return autoChooser.getSelected();
+    // return new PathPlannerAuto(autoChooser.getSelected().getName(), true);
   }
 
   public void setVortexArmEncoder() {
@@ -223,9 +224,6 @@ public class RobotContainer {
       m_climber.setAngle(-100);
     else
       m_climber.setVoltage(12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
-
-    if(m_driverController.getHID().getLeftStickButtonPressed())
-      m_climber.zero();
   }
 
   public void testInit() {

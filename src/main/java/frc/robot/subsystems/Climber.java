@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
@@ -16,12 +17,12 @@ import frc.robot.constants.Configs.ClimberConfig;
 public class Climber extends SubsystemBase {
     
     private final SparkFlex m_motor; 
-    private final RelativeEncoder m_encoder; 
+    private final AbsoluteEncoder m_encoder; 
     private final SparkClosedLoopController m_controller; 
     
     public Climber() {
         m_motor = new SparkFlex(ClimbConstants.MotorId, MotorType.kBrushless);
-        m_encoder = m_motor.getEncoder();
+        m_encoder = m_motor.getAbsoluteEncoder();
         m_controller = m_motor.getClosedLoopController();
         m_motor.configure(ClimberConfig.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -35,15 +36,11 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean isStored() {
-        return m_encoder.getPosition() > -18;
+        return m_encoder.getPosition() < 2;
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Climber Angle", m_encoder.getPosition());
-    }
-
-    public void zero() {
-        m_encoder.setPosition(0);
     }
 }

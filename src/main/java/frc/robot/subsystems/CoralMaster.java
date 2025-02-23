@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
@@ -12,7 +13,7 @@ public class CoralMaster extends SubsystemBase {
     private final Elevator m_elevator;
     private final Claw m_claw;
     private Level level = Level.STORE;
-    private boolean useIntakeAutoAlign;
+    private boolean useIntakeAutoAlign = true;
     
     public CoralMaster(Arm arm, Elevator elevator, Claw claw ) {
         m_arm = arm;
@@ -111,5 +112,6 @@ public class CoralMaster extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("Enable Intake Auto Align", useIntakeAutoAlign);
     }
 }
