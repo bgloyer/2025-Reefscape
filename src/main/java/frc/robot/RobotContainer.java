@@ -37,12 +37,16 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.util.Level;
 import frc.robot.util.LimelightHelpers;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -102,6 +106,10 @@ public class RobotContainer {
         new Trigger(() -> m_coralMaster.getLevel() == Level.FOUR)));
 
       // ------------------ Aidan ----------------------------
+
+      m_driverController.y().whileTrue(m_robotDrive.driveToPose(new Pose2d(14.848, 1.697, Rotation2d.fromDegrees(180))));
+
+
       // Coral Intake
       m_driverController.rightTrigger(0.4).whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
@@ -134,8 +142,8 @@ public class RobotContainer {
       m_mechController.leftBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
       m_mechController.rightBumper().onTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
 
-      m_mechController.a().whileTrue(new SetLevel(Level.ONE, m_coralMaster, m_driverController, alignedToReef));
-      m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-2), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(new SetStore(m_coralMaster)));
+      m_mechController.a().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.ONE)));
+      m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(new SetStore(m_coralMaster)));
 
       m_mechController.x().onTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef));
 
@@ -213,6 +221,7 @@ public class RobotContainer {
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
     m_claw.stopIntake();
+    m_robotDrive.setAlignedToReef(false);
     LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2);
   }
 
@@ -223,7 +232,7 @@ public class RobotContainer {
     if(m_driverController.getHID().getAButton())
       m_climber.setAngle(-100);
     else
-      m_climber.setVoltage(12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
+      m_climber.setVoltage(-12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
   }
 
   public void testInit() {

@@ -68,7 +68,8 @@ public class AlignToReef extends Command {
         m_xController.setSetpoint(Constants.RightReefOffset);
         break;
       }
-    double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), m_robotDrive.getAngleToReef());
+    // double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), m_robotDrive.getAngleToReef());
+    double turnOutput = 0;
     if (LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 

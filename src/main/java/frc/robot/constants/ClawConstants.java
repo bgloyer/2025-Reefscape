@@ -16,7 +16,7 @@ public class ClawConstants {
         public static final double Initial = 0;
         public static final double Store = 90;
         public static final double Station = 30;
-        public static final double L1 = 180;
+        public static final double L1 = 161.2;
         public static final double L2 = 83.19;
         public static final double L3 = 85;
         public static final double L4 = 47;

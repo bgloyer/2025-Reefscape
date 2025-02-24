@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.884630681818182,
-        "y": 7.16106534090909
+        "x": 2.0519770408163267,
+        "y": 6.793303571428571
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.034630681818182,
-        "y": 6.96106534090909
+        "x": 2.2019770408163266,
+        "y": 6.593303571428571
       },
       "isLocked": false,
       "linkedName": "CoralStation"
@@ -45,7 +45,7 @@
     },
     {
       "name": "Ready Elevator L4",
-      "waypointRelativePos": 0.7023391812865531,
+      "waypointRelativePos": 0.6473684210526293,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
