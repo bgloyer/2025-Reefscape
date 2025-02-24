@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "Ready Elevator L4",
-      "waypointRelativePos": 0.5198830409356786,
+      "waypointRelativePos": 0.3955365622032259,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
