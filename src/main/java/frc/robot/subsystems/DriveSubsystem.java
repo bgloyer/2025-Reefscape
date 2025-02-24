@@ -329,6 +329,10 @@ private boolean aligned = false;
     return Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()).getDegrees();
   }
 
+  public Rotation2d getRotation() {
+    return m_gyro.getRotation2d();
+  }
+
   /**
    * Returns the turn rate of the robot.
    *
