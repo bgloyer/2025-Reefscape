@@ -28,8 +28,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        // m_controller.setReference(angle, ControlType.kPosition);
-        m_controller.setReference(0, ControlType.kVoltage);
+        m_controller.setReference(angle, ControlType.kPosition);
     }
 
     public void setVoltage(double volts) {
