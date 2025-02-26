@@ -17,7 +17,7 @@ public class PointAtAngle extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_subsystem;
   // private PIDController turnPID = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
-  private ProfiledPIDController turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxAccel, DriveConstants.TurnMaxAccel));
+  private ProfiledPIDController turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
   private double targetAngle;
 
   /**
@@ -38,12 +38,13 @@ public class PointAtAngle extends Command {
   @Override
   public void initialize() {
     turnPID.reset(m_subsystem.getHeading());
+    turnPID.setGoal(targetAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = turnPID.calculate(betterModulus(m_subsystem.getHeading(), 360), targetAngle);
+    double output = turnPID.calculate(betterModulus(m_subsystem.getHeading(), 360));
     m_subsystem.driveWithController(output, true);
   }
 

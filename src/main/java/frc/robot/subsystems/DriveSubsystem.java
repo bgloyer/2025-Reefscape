@@ -144,12 +144,10 @@ private boolean aligned = false;
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("is blue", Helpers.isBlue);
     SmartDashboard.putNumber("Reef Distance m", Helpers.tyToDistance(VisionConstants.ReefLightLightName));
     SmartDashboard.putNumber("Reef X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName)));
     SmartDashboard.putNumber("Station Distance m", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName));
     SmartDashboard.putNumber("Station X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName)));
-    getAngleToReef();
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()),
         new SwerveModulePosition[] {
@@ -167,6 +165,7 @@ private boolean aligned = false;
   }
 
   private void smartDashboardPrints() {
+    SmartDashboard.putBoolean("is blue", Helpers.isBlue);
     SmartDashboard.putNumber("Wheel Angle", m_frontLeft.getPosition().angle.getDegrees());
     SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     SmartDashboard.putData("Robot Field", m_field2d);
@@ -384,9 +383,11 @@ private boolean aligned = false;
   }
 
   public double getAngleToReef() {
-    Translation2d centerOfReef = Constants.blueCenterOfReef;
-    if (!isBlue) {
-      centerOfReef = FlippingUtil.flipFieldPosition(Constants.blueCenterOfReef);
+    Translation2d centerOfReef;
+    if (isBlue) {
+      centerOfReef = Constants.blueCenterOfReef;
+    } else {
+      centerOfReef = Constants.redCenterOfReef;
     }
     double angle = getFlippedRotation(centerOfReef.minus(getPose().getTranslation()).getAngle()).getDegrees();
     return Math.round(angle / 60.0) * 60;

@@ -116,5 +116,6 @@ public class Claw extends SubsystemBase {
         SmartDashboard.putNumber("Intake Velocity", m_intakeMotor.getEncoder().getVelocity());
         SmartDashboard.putBoolean("Front Coral Stored", frontLaserTriggered());
         SmartDashboard.putBoolean("Back Coral Stored", backLaserTriggered());
+        SmartDashboard.putNumber("BackLaserCan Distance", getDistance());
     }
 }

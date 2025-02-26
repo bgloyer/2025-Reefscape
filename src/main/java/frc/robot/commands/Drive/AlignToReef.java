@@ -52,9 +52,13 @@ public class AlignToReef extends Command {
   @Override
   public void initialize() {
     m_turnPID.reset(m_robotDrive.getHeading());
-    m_yController.setSetpoint(0.50);
-    m_yController.setTolerance(0.0175);
+    m_turnPID.setTolerance(0.3);
+    m_turnPID.setGoal(m_robotDrive.getAngleToReef());
+    m_yController.setSetpoint(0.5); // one coral away: 0.62
+    m_yController.setTolerance(0.01);
     m_xController.setTolerance(Constants.ReefAlignTolerance);
+    m_yController.reset();
+    m_xController.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -68,8 +72,7 @@ public class AlignToReef extends Command {
         m_xController.setSetpoint(Constants.RightReefOffset);
         break;
       }
-    // double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360), m_robotDrive.getAngleToReef());
-    double turnOutput = 0;
+    double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
     if (LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
@@ -78,6 +81,8 @@ public class AlignToReef extends Command {
 
       if (m_yController.atSetpoint()) {
         yOutput = 0;
+      }
+      if (m_turnPID.atGoal()) {
         turnOutput = 0;
       }
       m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);

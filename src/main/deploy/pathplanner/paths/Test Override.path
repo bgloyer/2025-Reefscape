@@ -8,44 +8,56 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.564314195557162,
-        "y": 5.187860895413446
+        "x": 3.5569092032371037,
+        "y": 5.180228552660028
       },
       "isLocked": false,
       "linkedName": "Actual L"
     },
     {
       "anchor": {
-        "x": 1.9027423469387756,
-        "y": 7.211160714285714
+        "x": 1.4998086734693876,
+        "y": 7.285778061224489
       },
       "prevControl": {
-        "x": 2.137690702810886,
-        "y": 7.125724948514038
+        "x": 1.6911802411670918,
+        "y": 7.124915004319173
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CoralStation"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Override Feedback Intake",
+      "waypointRelativePos": 0.46374269005848584,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Override Feedback Intake"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 4.9,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 0.5,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.75,
+    "velocity": 0,
     "rotation": -54.011
   },
   "reversed": false,
-  "folder": "3 Coral Auto",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -59.99999999999999

@@ -135,8 +135,9 @@ public final class Configs {
                         .reverseSoftLimit(-90)
                         .forwardSoftLimitEnabled(true)
                         .reverseSoftLimitEnabled(true);
-                rightMotorConfig.apply(leftMotorConfig);
-                rightMotorConfig.follow(ArmConstants.LeftMotorId);
+                // rightMotorConfig.apply(leftMotorConfig);
+                rightMotorConfig.idleMode(IdleMode.kCoast);
+                // rightMotorConfig.follow(ArmConstants.LeftMotorId);
         }
     }
 

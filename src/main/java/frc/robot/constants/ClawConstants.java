@@ -19,7 +19,7 @@ public class ClawConstants {
         public static final double L1 = 161.2;
         public static final double L2 = 83.19;
         public static final double L3 = 85;
-        public static final double L4 = 47;
+        public static final double L4 = 47; //75 
         public static final double TopDealg = 85;
         public static final double Net = 150;
         public static final double GroundIntake = 21.27;

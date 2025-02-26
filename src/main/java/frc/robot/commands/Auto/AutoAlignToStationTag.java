@@ -10,6 +10,8 @@ import static frc.robot.util.Helpers.tan;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
@@ -37,7 +39,7 @@ public class AutoAlignToStationTag extends Command {
   public AutoAlignToStationTag(DriveSubsystem subsystem, CoralMaster coralMaster) {
     m_robotDrive = subsystem;
     m_xController = new PIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD);
-    m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
+    m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.stationYTranslationkD);
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
     m_yController.setIZone(0.08);
@@ -53,6 +55,8 @@ public class AutoAlignToStationTag extends Command {
     m_coralMaster.setIntake();
     m_turnPID.reset(m_robotDrive.getHeading());
     m_yController.setSetpoint(Constants.IntakeAlignDistance);
+    m_yController.reset();
+    m_xController.reset();
     m_yController.setTolerance(0.0175);
     m_xController.setSetpoint(m_robotDrive.getStationOffset());
     m_turnPID.setGoal(m_robotDrive.getStationAngle());

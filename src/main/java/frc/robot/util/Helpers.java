@@ -27,9 +27,17 @@ public class Helpers {
     public static double tan(double degrees) {
         return Math.tan(Math.toRadians(degrees));
     }
+    
+    /**
+    *   @param degrees input angle in degrees
+    *   @return sin of the angle
+    */
+    public static double sin(double degrees) {
+        return Math.sin(Math.toRadians(degrees));
+    }
 
     /**
-     * ONLY WORKS FOR REEF TAGS
+     * 
      * @return distance from limelight to tag
      */
     public static double tyToDistance(String limelightName) {

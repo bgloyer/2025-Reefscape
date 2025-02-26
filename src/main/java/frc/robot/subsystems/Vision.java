@@ -33,12 +33,12 @@ public class Vision {
         if (mt2.tagCount == 0) {
             doRejectUpdate = true;
         }
-        if (mt2.avgTagDist > 1.5) {
+        if (mt2.tagCount == 1 && mt2.avgTagDist > 2) {
             doRejectUpdate = true;
         }
         if (!doRejectUpdate) {
             // stolen from 1678
-            double xyStdDev = 4 * ((0.01 + (0.015 * Math.pow(mt2.avgTagDist, 2.0))) / mt2.tagCount);
+            double xyStdDev = 4 * ((0.01 + (0.08 * Math.pow(mt2.avgTagDist, 2.0))) / mt2.tagCount);
 
             SmartDashboard.putNumber("mt2 avg dist", mt2.avgTagDist);
             SmartDashboard.putNumber("xyStdDev", xyStdDev);
