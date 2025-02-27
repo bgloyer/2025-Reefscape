@@ -37,7 +37,6 @@ public class Claw extends SubsystemBase {
         m_wristController = m_wristMotor.getClosedLoopController();
         m_encoder = m_wristMotor.getEncoder();
         m_encoder.setPosition(WristConstants.Initial);
-        m_wristMotor.configure(ClawConfig.wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         m_intakeMotor = new SparkFlex(CoralIntakeConstants.MotorCanId, MotorType.kBrushless);
         m_intakeMotor.configure(ClawConfig.intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

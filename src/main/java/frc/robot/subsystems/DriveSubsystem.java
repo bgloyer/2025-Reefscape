@@ -96,6 +96,8 @@ public Direction scoringSide = Direction.RIGHT;
 
 private boolean aligned = false;
 
+private boolean closeToReef = false;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
     m_driverController = controller;
@@ -434,6 +436,14 @@ private boolean aligned = false;
     if (!isBlue)
       return FlippingUtil.flipFieldRotation(rotation2d);
     return rotation2d;
+  }
+
+  public void setCloseToReef(boolean b) {
+    closeToReef = b;
+  }
+
+  public boolean closeToReef() {
+    return closeToReef;
   }
 
 }

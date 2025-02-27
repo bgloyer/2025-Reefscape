@@ -6,12 +6,15 @@ import frc.robot.constants.ElevatorConstants;
 
 public enum Level {
     
+    NET(ElevatorConstants.Net, ArmConstants.Net, WristConstants.Net, false),
+    ALGAESTORE(ElevatorConstants.AlgaeStore, ArmConstants.AlgaeStore, WristConstants.AlgaeStore, false),
     STORE(ElevatorConstants.Store, ArmConstants.Store, WristConstants.Store, false), 
     ONE(ElevatorConstants.L1, ArmConstants.L1, WristConstants.L1, true),
     TWO(ElevatorConstants.L2, ArmConstants.L2, WristConstants.L2, true),
     THREE(ElevatorConstants.L3, ArmConstants.L3, WristConstants.L3, true),
     FOUR(ElevatorConstants.L4, ArmConstants.L4, WristConstants.L4, true),
-    TOPALGAE(ElevatorConstants.TopDealg, ArmConstants.TopDealg, WristConstants.TopDealg, true),
+    TOPALGAE(0.613, -55, 140, true), // 0.61
+    // TOPALGAE(ElevatorConstants.TopDealg, ArmConstants.TopDealg, WristConstants.TopDealg, true), // 0.61
     BOTTOMALGAE(ElevatorConstants.BottomDealg, ArmConstants.BottomDeAlg, WristConstants.L3, true);
 
     public double elevatorHeight;

@@ -39,6 +39,10 @@ public class Climber extends SubsystemBase {
         return m_encoder.getPosition() < 2;
     }
 
+    public double getAngle() {
+        return m_encoder.getPosition();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Climber Angle", m_encoder.getPosition());

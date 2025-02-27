@@ -5,7 +5,7 @@ public class ClawConstants {
     public final class WristConstants {
         public static final int MotarCanId = 14;
         public static final double MotorGearReduction = 12.0 / 64.0;
-        public static final double kP = 0.1;
+        public static final double kP = 0.3;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kG = 0;
@@ -13,6 +13,7 @@ public class ClawConstants {
         public static final double SlewRate = 5.5;
 
         // from block cad - degrees
+        public static final double AlgaeStore = 129.3;
         public static final double Initial = 0;
         public static final double Store = 90;
         public static final double Station = 30;

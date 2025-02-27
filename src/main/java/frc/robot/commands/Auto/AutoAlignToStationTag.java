@@ -64,6 +64,7 @@ public class AutoAlignToStationTag extends Command {
     m_xController.setSetpoint(m_robotDrive.getStationOffset());
     m_turnPID.setGoal(m_robotDrive.getStationAngle());
     m_robotDrive.setAlignedToReef(false);
+    m_robotDrive.setCloseToReef(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -75,9 +76,6 @@ public class AutoAlignToStationTag extends Command {
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); 
       double xOutput = m_xController.calculate(-xInput);
       double yOutput = m_yController.calculate(yDistanceFromTag);
-      SmartDashboard.putNumber("Station y output", yOutput);
-      SmartDashboard.putNumber("Station x output", xOutput);
-      yOutput = 0;
       if (m_yController.atSetpoint()) {
         turnOutput = 0;
       }

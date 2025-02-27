@@ -39,6 +39,7 @@ public class IntakeCoral extends Command {
   public void initialize() {
     turnPID.reset(m_robotDrive.getHeading(), m_robotDrive.getTurnRate());
     m_robotDrive.setAlignedToReef(false);
+    m_robotDrive.setCloseToReef(false);
     m_subsystem.setIntake();
     targetAngle = m_robotDrive.getStationAngle();
     turnPID.enableContinuousInput(0, 360);

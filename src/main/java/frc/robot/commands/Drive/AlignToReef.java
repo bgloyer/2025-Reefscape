@@ -29,12 +29,6 @@ public class AlignToReef extends Command {
   private final ProfiledPIDController m_yController;
   private final String limelightName = VisionConstants.ReefLightLightName;
   private final ProfiledPIDController m_turnPID;
-  private final TrapezoidProfile m_XTrapezoidProfile = new TrapezoidProfile(new Constraints(2, 2));
-  private final TrapezoidProfile m_YTrapezoidProfile = new TrapezoidProfile(new Constraints(2, 2));
-  private State targetStateX = new State(0, 0);
-  private State targetStateY = new State(0.5, 0);
-  private State currentStateX = new State(0, 0);
-  private State currentStateY = new State(0, 0);
   public enum Direction {
     LEFT, RIGHT
   }
@@ -46,8 +40,8 @@ public class AlignToReef extends Command {
    */
   public AlignToReef(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
-    m_xController = new ProfiledPIDController(1, 0, 0.1, new Constraints(2, 5));
-    m_yController = new ProfiledPIDController(1, 0, 0.1, new Constraints(2, 5));
+    m_xController = new ProfiledPIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD, new Constraints(2, 0.5));
+    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(4, 2));
 
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); // 0.04
@@ -66,7 +60,7 @@ public class AlignToReef extends Command {
     m_yController.setGoal(0.5); // one coral away: 0.62
     m_yController.setTolerance(0.01);
     m_xController.setTolerance(Constants.ReefAlignTolerance);
-    m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond));
+    m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
     m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond));
   }
 
@@ -96,8 +90,9 @@ public class AlignToReef extends Command {
         turnOutput = 0;
       }
       m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
-      boolean aligned = m_xController.atSetpoint() && m_yController.atSetpoint();
+      boolean aligned = m_xController.atGoal() && m_yController.atGoal();
       m_robotDrive.setAlignedToReef(aligned);
+      m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 0.7);
     } else
       m_robotDrive.drive(0,0,turnOutput, false);
   }

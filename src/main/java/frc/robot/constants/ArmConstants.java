@@ -4,10 +4,11 @@ public class ArmConstants {
 
     public static final int LeftMotorId = 12; 
     public static final int RightMotorId = 13; 
-    public static final double MinAngle = -100;
+    public static final double MinAngle = -110;
     public static final double MaxAngle = 90;
 
     // from block cad - degrees
+    public static final double AlgaeStore = 0;
     public static final double Store = 0;
     public static final double Station = 35;
     public static final double L1 = -72.9;
@@ -18,6 +19,7 @@ public class ArmConstants {
     public static final double BottomDeAlg = -28;
     public static final double Net = 0;
     public static final double GroundIntake = 21.27; 
+    public static final double Climb = -109;
 
     public static final double kP = 0.09;
     public static final double kI = 0;
