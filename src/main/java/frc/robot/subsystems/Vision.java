@@ -33,7 +33,7 @@ public class Vision {
         if (mt2.tagCount == 0) {
             doRejectUpdate = true;
         }
-        if (mt2.tagCount == 1 && mt2.avgTagDist > 2) {
+        if (mt2.tagCount == 1 && mt2.avgTagDist > 3) {
             doRejectUpdate = true;
         }
         if (!doRejectUpdate) {

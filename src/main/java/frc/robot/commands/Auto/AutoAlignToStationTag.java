@@ -10,8 +10,10 @@ import static frc.robot.util.Helpers.tan;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
@@ -53,7 +55,8 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void initialize() {
     m_coralMaster.setIntake();
-    m_turnPID.reset(m_robotDrive.getHeading());
+    // m_turnPID.reset(m_robotDrive.getHeading());
+    m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
     m_yController.setSetpoint(Constants.IntakeAlignDistance);
     m_yController.reset();
     m_xController.reset();
@@ -72,9 +75,10 @@ public class AutoAlignToStationTag extends Command {
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); 
       double xOutput = m_xController.calculate(-xInput);
       double yOutput = m_yController.calculate(yDistanceFromTag);
-
+      SmartDashboard.putNumber("Station y output", yOutput);
+      SmartDashboard.putNumber("Station x output", xOutput);
+      yOutput = 0;
       if (m_yController.atSetpoint()) {
-        yOutput = 0;
         turnOutput = 0;
       }
       m_robotDrive.drive(Math.min(yOutput, 0.225), Math.min(xOutput, 0.3), turnOutput, false);

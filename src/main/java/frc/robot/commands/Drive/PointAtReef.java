@@ -32,6 +32,7 @@ public class PointAtReef extends Command {
   @Override
   public void initialize() {
     turnPID.reset(m_robotDrive.getHeading());
+    turnPID.setGoal(m_robotDrive.getAngleToReef());
     turnPID.enableContinuousInput(0, 360);
   }
 

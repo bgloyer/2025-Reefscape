@@ -10,8 +10,11 @@ import static frc.robot.util.Helpers.tyToDistance;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
@@ -22,11 +25,16 @@ import frc.robot.util.LimelightHelpers;
 public class AlignToReef extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_robotDrive;
-  private final PIDController m_xController;
-  private final PIDController m_yController;
+  private final ProfiledPIDController m_xController;
+  private final ProfiledPIDController m_yController;
   private final String limelightName = VisionConstants.ReefLightLightName;
   private final ProfiledPIDController m_turnPID;
-
+  private final TrapezoidProfile m_XTrapezoidProfile = new TrapezoidProfile(new Constraints(2, 2));
+  private final TrapezoidProfile m_YTrapezoidProfile = new TrapezoidProfile(new Constraints(2, 2));
+  private State targetStateX = new State(0, 0);
+  private State targetStateY = new State(0.5, 0);
+  private State currentStateX = new State(0, 0);
+  private State currentStateY = new State(0, 0);
   public enum Direction {
     LEFT, RIGHT
   }
@@ -38,8 +46,9 @@ public class AlignToReef extends Command {
    */
   public AlignToReef(DriveSubsystem subsystem) {
     m_robotDrive = subsystem;
-    m_xController = new PIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD);
-    m_yController = new PIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD);
+    m_xController = new ProfiledPIDController(1, 0, 0.1, new Constraints(2, 5));
+    m_yController = new ProfiledPIDController(1, 0, 0.1, new Constraints(2, 5));
+
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); // 0.04
     m_yController.setIZone(0.08);
@@ -54,22 +63,23 @@ public class AlignToReef extends Command {
     m_turnPID.reset(m_robotDrive.getHeading());
     m_turnPID.setTolerance(0.3);
     m_turnPID.setGoal(m_robotDrive.getAngleToReef());
-    m_yController.setSetpoint(0.5); // one coral away: 0.62
+    m_yController.setGoal(0.5); // one coral away: 0.62
     m_yController.setTolerance(0.01);
     m_xController.setTolerance(Constants.ReefAlignTolerance);
-    m_yController.reset();
-    m_xController.reset();
+    m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond));
+    m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
     switch (m_robotDrive.scoringSide) {
       case LEFT:
-        m_xController.setSetpoint(Constants.LeftReefOffset); // mid 0.2165 
+        m_xController.setGoal(Constants.LeftReefOffset); // mid 0.2165 
         break;
-      case RIGHT:
-        m_xController.setSetpoint(Constants.RightReefOffset);
+        case RIGHT:
+        m_xController.setGoal(Constants.RightReefOffset);
         break;
       }
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
@@ -78,7 +88,7 @@ public class AlignToReef extends Command {
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = m_xController.calculate(xInput);
       double yOutput = -m_yController.calculate(yDistanceFromTag);
-
+      
       if (m_yController.atSetpoint()) {
         yOutput = 0;
       }

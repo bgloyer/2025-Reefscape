@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.74,
-        "y": 5.01
+        "x": 3.663711734693877,
+        "y": 5.241262755102041
       },
       "prevControl": {
-        "x": 3.579953900083881,
-        "y": 5.202055319899344
+        "x": 3.5036656347777577,
+        "y": 5.433318075001385
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Actual L"
+      "linkedName": "L"
     }
   ],
   "rotationTargets": [],
@@ -64,13 +64,13 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0.5,
     "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": "3 Coral Auto",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": -54.011
   },
   "useDefaultConstraints": false

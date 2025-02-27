@@ -227,13 +227,26 @@ public class RobotContainer {
   }
 
   public void testPeriodic() {
-    if (m_driverController.getHID().getPort() != -1)
+    if (m_driverController.getHID().getPOV() != -1)
       m_robotDrive.setWheels(m_driverController.getHID().getPOV());
 
     if(m_driverController.getHID().getAButton())
       m_climber.setAngle(-100);
     else
       m_climber.setVoltage(-12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
+
+    if (m_mechController.getHID().getYButton()) {
+      m_claw.zeroClaw();
+    }
+
+    if(m_mechController.getHID().getPOV() == 90) {
+      // m_claw.runClaw(1);
+    } else if (m_mechController.getHID().getPOV() == 270) {
+      m_claw.runClaw(-1);
+    } else {
+      m_claw.runClaw(0);
+    }
+    
   }
 
   public void testInit() {

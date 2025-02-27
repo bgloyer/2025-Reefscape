@@ -10,7 +10,7 @@ public class ClawConstants {
         public static final double kD = 0;
         public static final double kG = 0;
         public static final double Tolerance = 5;
-        public static final double SlewRate = 4;
+        public static final double SlewRate = 5.5;
 
         // from block cad - degrees
         public static final double Initial = 0;

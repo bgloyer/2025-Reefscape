@@ -74,6 +74,14 @@ public class Claw extends SubsystemBase {
         m_intakeController.setReference(volts, ControlType.kVoltage);
     }
 
+    public void zeroClaw() {
+        m_encoder.setPosition(0);
+    }
+
+    public void runClaw (double volts) {
+        m_wristController.setReference(volts, ControlType.kVoltage);
+    }
+
     public void stopIntake() {
         m_intakeMotor.stopMotor();
     }

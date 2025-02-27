@@ -166,7 +166,7 @@ private boolean aligned = false;
 
   private void smartDashboardPrints() {
     SmartDashboard.putBoolean("is blue", Helpers.isBlue);
-    SmartDashboard.putNumber("Wheel Angle", m_frontLeft.getPosition().angle.getDegrees());
+    SmartDashboard.putNumber("Wheel Speed", m_frontRight.getState().speedMetersPerSecond);
     SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     SmartDashboard.putData("Robot Field", m_field2d);
     SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());
