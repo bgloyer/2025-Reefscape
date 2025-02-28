@@ -6,44 +6,35 @@ package frc.robot;
 
 import frc.robot.commands.Algae.RunAlgaeIntake;
 import frc.robot.commands.Auto.AutoAlignToStationTag;
-import frc.robot.commands.Auto.AutoIntakeCoral;
 import frc.robot.commands.Auto.AutoSetStore;
 import frc.robot.commands.Auto.OverrideFeedbackIntake;
 import frc.robot.commands.CoralIntake.PositionCoral;
-import frc.robot.commands.CoralMaster.IntakeCoral;
-import frc.robot.commands.CoralMaster.Score;
 import frc.robot.commands.CoralMaster.SetLevel;
 import frc.robot.commands.CoralMaster.SetStore;
-import frc.robot.commands.CoralMaster.SpacedIntakeCoral;
 import frc.robot.commands.Drive.AlignToReef;
-import frc.robot.commands.Drive.PointAtAngle;
 import frc.robot.commands.Drive.AlignToReef.Direction;
 import frc.robot.constants.AlgaeIntakeConstants;
 import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ClawConstants;
+import frc.robot.constants.BlinkinConstants;
 import frc.robot.constants.ClimbConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
-import frc.robot.constants.Configs.ArmConfig;
-import frc.robot.commands.Drive.PointAtReef;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
+import frc.robot.util.Helpers;
 import frc.robot.util.Level;
 import frc.robot.util.LimelightHelpers;
-
-import static edu.wpi.first.units.Units.Rotation;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -51,7 +42,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -72,6 +62,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
   private final AlgaeIntake m_algaeIntake = new AlgaeIntake();
   private final Climber m_climber = new Climber();
+  private final Blinkin m_blinkin = new Blinkin();
 
   private final SendableChooser<Command> autoChooser;
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
@@ -101,15 +92,17 @@ public class RobotContainer {
      * Use this method to define your trigger->command mappings
      */
     private void configureBindings() {
+
+      Trigger oneCoralAway = new Trigger(() -> Helpers.isOneCoralAway);
+
+      oneCoralAway.whileTrue(Commands.runOnce(() -> m_coralMaster.setLevelWithCoralOffset()));
+
       coralStored.negate().and(isntDeAlgae).and(isInTeleop).onTrue(Commands.either(
         new SetStore(m_coralMaster),
         new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef), 
         new Trigger(() -> m_coralMaster.getLevel() == Level.FOUR)));
 
       // ------------------ Aidan ----------------------------
-
-      m_driverController.y().whileTrue(m_robotDrive.driveToPose(new Pose2d(14.848, 1.697, Rotation2d.fromDegrees(180))));
-
 
       // Coral Intake
       m_driverController.rightTrigger(0.4).whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
@@ -134,8 +127,18 @@ public class RobotContainer {
 
       //net score
       m_driverController.x().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster));
-      m_driverController.x().onFalse(Commands.sequence(Commands.runOnce(() -> m_claw.runVoltage(-2)), Commands.waitUntil(algaeStored.negate()), Commands.runOnce(() -> m_claw.stopIntake()), Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)));
 
+      Command netScore = Commands.sequence(
+        Commands.runOnce(() -> m_claw.runVoltage(-2)),
+        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store)),
+        Commands.waitSeconds(0.3),
+        Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
+      );
+
+      m_driverController.x().onFalse(netScore);
+
+      m_driverController.y().onTrue(Commands.runOnce(() -> m_blinkin.setColor(BlinkinConstants.White)));
+      m_driverController.y().onFalse(Commands.runOnce(() -> m_blinkin.setColor(BlinkinConstants.Black)));
 
       // toggle intake mode
       m_driverController.start().onTrue(m_coralMaster.toggleIntakeAutoAlign());

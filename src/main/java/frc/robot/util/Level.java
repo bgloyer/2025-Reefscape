@@ -13,6 +13,9 @@ public enum Level {
     TWO(ElevatorConstants.L2, ArmConstants.L2, WristConstants.L2, true),
     THREE(ElevatorConstants.L3, ArmConstants.L3, WristConstants.L3, true),
     FOUR(ElevatorConstants.L4, ArmConstants.L4, WristConstants.L4, true),
+    OFFSETTWO(ElevatorConstants.OffsetL2, ArmConstants.OffsetL2, WristConstants.OffsetL2, true),
+    OFFSETTHREE(ElevatorConstants.OffsetL3, ArmConstants.OffsetL3, WristConstants.OffsetL3, true),
+    OFFSETFOUR(ElevatorConstants.OffsetL4, ArmConstants.OffsetL4, WristConstants.OffsetL4, true),
     TOPALGAE(0.613, -55, 140, true), // 0.61
     // TOPALGAE(ElevatorConstants.TopDealg, ArmConstants.TopDealg, WristConstants.TopDealg, true), // 0.61
     BOTTOMALGAE(ElevatorConstants.BottomDealg, ArmConstants.BottomDeAlg, WristConstants.L3, true);
@@ -28,4 +31,11 @@ public enum Level {
         this.wristAngle = wristAngle;
         this.isReefScoringPosition = isReefScoringPosition;
     }
+
+    // public static Level getL4() {
+    //     if(Helpers.isOneCoralAway) {
+    //         return OFFSETFOUR;
+    //     }
+    //     return FOUR;
+    // }
 }

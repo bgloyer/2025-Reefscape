@@ -31,6 +31,7 @@ public final class Constants {
     public static final double LeftReefOffset = 0.181;//0.191
     public static final double RightReefOffset = -0.148;//-0.135
     public static final double ReefAlignTolerance = 0.025;
-    public static final double IntakeAlignOffset = -0.0894;
+    public static final double IntakeAlignOffset = 0.0894;
     public static final double IntakeAlignDistance = 0.68;
+    public static final double ReefOneCoralAwayDistance = 0.62;
 }

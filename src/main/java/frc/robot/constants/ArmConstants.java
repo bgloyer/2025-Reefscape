@@ -26,8 +26,10 @@ public class ArmConstants {
     public static final double kD = 0;
     public static final double kG = -0.2;
     public static final double MaxVelocity = 120; // degrees per sec
-    public static final double MaxAcceleration = 500; // degrees per sec^2 
+    public static final double MaxAcceleration = 500; // degrees per sec^2 500
     public static final double Tolerance = 5;
     public static final double MotorReduction = (7.0 / 68.0) / 4.0 * 360.0;
-
+    public static final double OffsetL2 = L2;
+    public static final double OffsetL3 = L3;
+    public static final double OffsetL4 = -42;
 }

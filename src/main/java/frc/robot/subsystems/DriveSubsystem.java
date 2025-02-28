@@ -13,7 +13,10 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.FlippingUtil;
+import com.pathplanner.lib.util.swerve.SwerveSetpoint;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
@@ -25,6 +28,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Drive.AlignToReef.Direction;
@@ -76,7 +80,6 @@ public class DriveSubsystem extends SubsystemBase {
   private SwerveDriveKinematics kinematics = DriveConstants.kDriveKinematics;
   private Vision m_vision;
   public CommandXboxController m_driverController;
-
   private boolean useVision = true;
   // Odometry class for tracking robot pose
   private SwerveDrivePoseEstimator m_odometry = new SwerveDrivePoseEstimator(
@@ -91,6 +94,9 @@ public class DriveSubsystem extends SubsystemBase {
       new Pose2d(0,0, Rotation2d.fromDegrees(0)),
       VisionConstants.StateStdDev,
       VisionConstants.VisionStdDev);
+
+private SwerveSetpointGenerator setpointGenerator;
+private SwerveSetpoint previousSetpoint;
 
 public Direction scoringSide = Direction.RIGHT;
 
@@ -136,6 +142,15 @@ private boolean closeToReef = false;
             return !isBlue;
           },
           this);
+
+      setpointGenerator = new SwerveSetpointGenerator(
+      config, // The robot configuration. This is the same config used for generating trajectories and running path following commands.
+      Units.rotationsToRadians(10.0) // The max rotation velocity of a swerve module in radians per second. This should probably be stored in your Constants file
+      );
+      // Initialize the previous setpoint to the robot's current speeds & module states
+      ChassisSpeeds currentSpeeds = getSpeeds(); // Method to get current robot-relative chassis speeds
+      SwerveModuleState[] currentStates = getModuleStates(); // Method to get the current swerve module states
+      previousSetpoint = new SwerveSetpoint(currentSpeeds, currentStates, DriveFeedforwards.zeros(config.numModules));
     } catch (Exception e) {
       // Handle exception as needed
       e.printStackTrace();
@@ -167,7 +182,7 @@ private boolean closeToReef = false;
   }
 
   private void smartDashboardPrints() {
-    SmartDashboard.putBoolean("is blue", Helpers.isBlue);
+    SmartDashboard.putBoolean("left side", onLeftSideOfField());
     SmartDashboard.putNumber("Wheel Speed", m_frontRight.getState().speedMetersPerSecond);
     SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     SmartDashboard.putData("Robot Field", m_field2d);
@@ -258,17 +273,23 @@ private boolean closeToReef = false;
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()))
-            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-    SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
-    m_rearRight.setDesiredState(swerveModuleStates[3]);
+    if(fieldRelative) {
+      driveRobotRelative254(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble())));
+    } else {
+      driveRobotRelative254(new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+    }
+    // var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+    //     fieldRelative
+    //         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+    //             Rotation2d.fromDegrees(m_gyro.getYaw().getValueAsDouble()))
+    //         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+    
+    // SwerveDriveKinematics.desaturateWheelSpeeds(
+    //     swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    // m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    // m_frontRight.setDesiredState(swerveModuleStates[1]);
+    // m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    // m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   /**
@@ -368,6 +389,17 @@ private boolean closeToReef = false;
 
     SwerveModuleState[] targetStates = kinematics.toSwerveModuleStates(targetSpeeds);
     setStates(targetStates);
+  }
+
+  public void driveRobotRelative254(ChassisSpeeds speeds) {
+   // Note: it is important to not discretize speeds before or after
+    // using the setpoint generator, as it will discretize them for you
+    previousSetpoint = setpointGenerator.generateSetpoint(
+        previousSetpoint, // The previous setpoint
+        speeds, // The desired target speeds
+        0.02 // The loop time of the robot code, in seconds
+    );
+    setModuleStates(previousSetpoint.moduleStates()); // Method that will drive the robot given target module states
   }
 
   public Command driveToPose(Pose2d pose) {

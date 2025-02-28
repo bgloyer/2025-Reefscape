@@ -42,11 +42,11 @@ public final class DriveConstants {
 
     public static final double kDriveDeadband = 0.05;
 
-    public static final double TurnkP = 0.04;
+    public static final double TurnkP = 0.01;
     public static final double TurnkI = 0;
     public static final double TurnkD = 0;
     public static final double TurnMaxVelocity = 360;
-    public static final double TurnMaxAccel = 180;
+    public static final double TurnMaxAccel = 99999;
     
     
     public static double xTranslationkP = 1.2;

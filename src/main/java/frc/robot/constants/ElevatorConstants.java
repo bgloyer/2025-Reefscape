@@ -35,4 +35,7 @@ public final class ElevatorConstants {
 
     public static final double DiameterMeters = Units.inchesToMeters(1.751); // ask alex what this should be
     public static final double MotorReduction = 58.0 / 7.0;
+    public static final double OffsetL2 = L2;
+    public static final double OffsetL3 = L3;
+    public static final double OffsetL4 = 1.25;
 }
