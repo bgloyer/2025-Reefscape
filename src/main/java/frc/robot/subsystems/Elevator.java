@@ -50,7 +50,7 @@ public class Elevator extends SubsystemBase {
         double targetPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
         if(targetPosition != targetState.position) {
             targetState = new State(targetPosition, 0);
-            currentState = new State(getHeight(), m_encoder.getVelocity());
+            currentState = new State(getHeight(),0);
         }
     }
 
@@ -84,6 +84,7 @@ public class Elevator extends SubsystemBase {
         m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
         SmartDashboard.putNumber("Left Elevator Encoder", m_encoder.getPosition());
         SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Elevator vel", m_encoder.getVelocity());
         SmartDashboard.putNumber("Elevator Current", m_leftMotor.getOutputCurrent());
     }
 }
