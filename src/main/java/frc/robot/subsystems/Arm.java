@@ -46,10 +46,10 @@ public class Arm extends SubsystemBase {
 
     public void setTargetAngle(double angle) {
         double targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
-        currentState.position = getAngle();
-        currentState.velocity = 0;
-        targetState.position = targetAngle;
-        targetState.velocity = 0;
+        if(targetAngle != targetState.position) {
+            targetState = new State(targetAngle, 0);
+            currentState = new State(getAngle(), m_encoder.getVelocity());
+        }
     }
 
     private double calculateFeedForward() {
