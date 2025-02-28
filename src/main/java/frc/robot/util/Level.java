@@ -32,10 +32,16 @@ public enum Level {
         this.isReefScoringPosition = isReefScoringPosition;
     }
 
-    // public static Level getL4() {
-    //     if(Helpers.isOneCoralAway) {
-    //         return OFFSETFOUR;
-    //     }
-    //     return FOUR;
-    // }
+    public Level withOffset() {
+        switch (this) {
+            case TWO:
+                return Helpers.isOneCoralAway ?  Level.OFFSETTWO : Level.TWO;
+            case THREE:
+                return Helpers.isOneCoralAway ?  Level.OFFSETTHREE : Level.THREE;
+            case FOUR:
+                return Helpers.isOneCoralAway ?  Level.OFFSETFOUR : Level.FOUR;
+            default:
+                return this;
+        }
+    }
 }

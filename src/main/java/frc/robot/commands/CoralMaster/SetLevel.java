@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.CoralMaster;
-import frc.robot.util.Helpers;
 import frc.robot.util.Level;
 
 public class SetLevel extends SequentialCommandGroup {
@@ -19,9 +18,9 @@ public class SetLevel extends SequentialCommandGroup {
                 Commands.runOnce(() -> coralMaster.setCurrentLevel(level)),
                 Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(ArmConstants.Store), coralMaster.getArm()),
                 Commands.waitUntil(coralMaster.getArm()::onTarget),
-                Commands.runOnce(() -> coralMaster.setState(level.elevatorHeight, level.wristAngle), coralMaster).onlyIf(RobotModeTriggers.teleop()),
+                Commands.runOnce(() -> coralMaster.setState(level.withOffset().elevatorHeight, level.withOffset().wristAngle), coralMaster).onlyIf(RobotModeTriggers.teleop()),
                 Commands.waitUntil(() -> coralMaster.getElevator().approachingHeight(level)),
-                Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(level.armAngle), coralMaster.getArm()).onlyIf(() ->!Helpers.isOneCoralAway),
+                Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(level.withOffset().armAngle), coralMaster.getArm()),
                 Commands.waitUntil(alignedToReef.and(coralMaster::onTarget)),
                 new Score(coralMaster).onlyIf(() -> level.isReefScoringPosition)
             );

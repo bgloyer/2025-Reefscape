@@ -14,7 +14,6 @@ public class CoralMaster extends SubsystemBase {
     private final Claw m_claw;
     private Level level = Level.STORE;
     private boolean useIntakeAutoAlign = true;
-        private boolean oneCoralAway;
         
         public CoralMaster(Arm arm, Elevator elevator, Claw claw ) {
             m_arm = arm;

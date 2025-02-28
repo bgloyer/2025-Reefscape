@@ -93,10 +93,6 @@ public class RobotContainer {
      */
     private void configureBindings() {
 
-      Trigger oneCoralAway = new Trigger(() -> Helpers.isOneCoralAway);
-
-      oneCoralAway.whileTrue(Commands.runOnce(() -> m_coralMaster.setLevelWithCoralOffset()));
-
       coralStored.negate().and(isntDeAlgae).and(isInTeleop).onTrue(Commands.either(
         new SetStore(m_coralMaster),
         new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef), 
