@@ -130,7 +130,7 @@ public class AlignToReef extends Command {
 
   private boolean coralInTheWay(double yOutput) {
     boolean nearOneCoralAway = MathUtil.isNear(Constants.ReefOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
-    boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.06; // I pulled these numbers out of my ass
+    boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.15; // I pulled these numbers out of my ass
 
     return nearOneCoralAway && notMoving;
   }

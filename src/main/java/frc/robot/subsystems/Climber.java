@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ClimbConstants;
@@ -19,6 +20,7 @@ public class Climber extends SubsystemBase {
     private final SparkFlex m_motor; 
     private final AbsoluteEncoder m_encoder; 
     private final SparkClosedLoopController m_controller; 
+    private double targetAngle = ClimbConstants.StoreAngle;
     
     public Climber() {
         m_motor = new SparkFlex(ClimbConstants.MotorId, MotorType.kBrushless);
@@ -28,6 +30,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
+        targetAngle = angle;
         m_controller.setReference(angle, ControlType.kPosition);
     }
 
@@ -37,6 +40,10 @@ public class Climber extends SubsystemBase {
 
     public boolean isStored() {
         return m_encoder.getPosition() < 2;
+    }
+
+    public boolean onTarget() {
+        return MathUtil.isNear(getAngle(), targetAngle, 3);
     }
 
     public double getAngle() {

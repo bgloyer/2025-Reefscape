@@ -17,6 +17,7 @@ public class ClawConstants {
         public static final double Initial = 0;
         public static final double Store = 90;
         public static final double Station = 30;
+        public static final double StationOffset = 0;
         public static final double L1 = 161.2;
         public static final double L2 = 83.19;
         public static final double L3 = 85;
@@ -27,8 +28,8 @@ public class ClawConstants {
 
         public static final double MaxAngle = 180;
         public static final double MinAngle = 0;
-        public static final double OffsetL2 = L2;
-        public static final double OffsetL3 = L3;
+        public static final double OffsetL2 = 96.3;
+        public static final double OffsetL3 = 96.3;
         public static final double OffsetL4 = 75;
     }
 

@@ -54,10 +54,10 @@ public class CoralMaster extends SubsystemBase {
             setState(ElevatorConstants.Station, ArmConstants.Station, WristConstants.Station); 
             m_claw.runIntake();  
         }
-    
-        public void setSpacedIntake() {
+
+        public void setOneCoralAwayIntake() {
+            setState(ElevatorConstants.StationOffset, ArmConstants.StationOffset, WristConstants.StationOffset); 
             m_claw.runIntake();  
-            setState(0, 35.77, 25.87); 
         }
     
         public void setStore() {

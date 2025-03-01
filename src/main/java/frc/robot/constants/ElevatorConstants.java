@@ -23,6 +23,7 @@ public final class ElevatorConstants {
     public static final double AlgaeStore = 0.37;
     public static final double Store = 0.0;
     public static final double Station = Units.inchesToMeters(1) * 2;
+    public static final double StationOffset = 0.172;
     public static final double L1 = 0; // 0.3
     public static final double L2 = Units.inchesToMeters(0.4) * 2;
     public static final double L3 = Units.inchesToMeters(9) * 2;
@@ -35,7 +36,7 @@ public final class ElevatorConstants {
 
     public static final double DiameterMeters = Units.inchesToMeters(1.751); // ask alex what this should be
     public static final double MotorReduction = 58.0 / 7.0;
-    public static final double OffsetL2 = L2;
-    public static final double OffsetL3 = L3;
+    public static final double OffsetL2 = 0.098;
+    public static final double OffsetL3 = 0.503;
     public static final double OffsetL4 = 1.25;
 }

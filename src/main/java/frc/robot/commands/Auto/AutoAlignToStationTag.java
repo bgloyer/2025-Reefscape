@@ -7,6 +7,7 @@ package frc.robot.commands.Auto;
 import static frc.robot.util.Helpers.betterModulus;
 import static frc.robot.util.Helpers.tan;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -21,6 +22,8 @@ import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.util.Helpers.tyToDistance;
+
+import frc.robot.util.Helpers;
 import frc.robot.util.LimelightHelpers;
 
 /** An example command that uses an example subsystem. */
@@ -75,7 +78,8 @@ public class AutoAlignToStationTag extends Command {
       double xInput = Math.abs(yDistanceFromTag) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;
       double yOutput = m_yController.calculate(yDistanceFromTag);
-      
+      SmartDashboard.putNumber("Station yOutput", yOutput);
+      SmartDashboard.putNumber("robot yvelocity", m_robotDrive.getSpeeds().vxMetersPerSecond);
       // if (m_yController.atGoal()) {
       //   yOutput = 0;
       // }
@@ -90,7 +94,13 @@ public class AutoAlignToStationTag extends Command {
       m_robotDrive.drive(Math.max(yOutput, -0.3), Math.max(-xOutput, -0.3), turnOutput, false);
       boolean aligned = m_xController.atGoal() && m_yController.atGoal();
       m_robotDrive.setAlignedToReef(aligned);
-      m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 0.7);
+      if(Helpers.isOneCoralAway == false)
+        Helpers.isOneCoralAway = coralInTheWay(yOutput);
+      SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
+      if(Helpers.isOneCoralAway) {
+        m_coralMaster.setOneCoralAwayIntake();
+        m_yController.setGoal(Constants.IntakeOneCoralAwayDistance);
+      }
     } else {
       m_robotDrive.driveWithController(turnOutput, true);
     }
@@ -101,11 +111,22 @@ public class AutoAlignToStationTag extends Command {
   public void end(boolean interrupted) {
     m_coralMaster.stopIntake();
     m_robotDrive.drive(0,0,0, false);
+    Helpers.isOneCoralAway = false;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return m_coralMaster.coralStored();
+  }
+
+    private boolean coralInTheWay(double yOutput) {
+    boolean nearOneCoralAway = MathUtil.isNear(Constants.IntakeOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
+    boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.18; // I pulled these numbers out of my ass
+    SmartDashboard.putBoolean("station not moving", notMoving);
+    SmartDashboard.putBoolean("nearOne Coral Away Station", nearOneCoralAway);
+    SmartDashboard.putNumber("Station hypotenuse speed", Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond)); // I pulled these numbers out of my ass
+    
+    return nearOneCoralAway && notMoving;
   }
 }
