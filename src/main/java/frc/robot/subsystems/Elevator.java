@@ -50,7 +50,7 @@ public class Elevator extends SubsystemBase {
         double targetPosition = MathUtil.clamp(height, ElevatorConstants.MinHeight, ElevatorConstants.MaxHeight); 
         if(targetPosition != targetState.position) {
             targetState = new State(targetPosition, 0);
-            currentState = new State(getHeight(),0);
+            currentState = new State(getHeight(),m_encoder.getVelocity());
         }
     }
 

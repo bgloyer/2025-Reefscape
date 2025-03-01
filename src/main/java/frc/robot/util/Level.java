@@ -16,7 +16,7 @@ public enum Level {
     OFFSETTWO(ElevatorConstants.OffsetL2, ArmConstants.OffsetL2, WristConstants.OffsetL2, true),
     OFFSETTHREE(ElevatorConstants.OffsetL3, ArmConstants.OffsetL3, WristConstants.OffsetL3, true),
     OFFSETFOUR(ElevatorConstants.OffsetL4, ArmConstants.OffsetL4, WristConstants.OffsetL4, true),
-    TOPALGAE(0.613, -55, 140, true), // 0.61
+    TOPALGAE(0.553, -55, 140, true), // 0.61
     // TOPALGAE(ElevatorConstants.TopDealg, ArmConstants.TopDealg, WristConstants.TopDealg, true), // 0.61
     BOTTOMALGAE(ElevatorConstants.BottomDealg, ArmConstants.BottomDeAlg, WristConstants.L3, true);
 

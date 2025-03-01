@@ -48,7 +48,7 @@ public class Arm extends SubsystemBase {
         double targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
         if(targetAngle != targetState.position) {
             targetState = new State(targetAngle, 0);
-            currentState = new State(getAngle(), m_encoder.getVelocity());
+            currentState = new State(getAngle(), currentState.velocity);
         }
     }
 

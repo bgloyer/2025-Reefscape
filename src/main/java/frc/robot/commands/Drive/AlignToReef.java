@@ -33,7 +33,7 @@ public class AlignToReef extends Command {
   private final String limelightName = VisionConstants.ReefLightLightName;
   private final ProfiledPIDController m_turnPID;
   public enum Direction {
-    LEFT, RIGHT
+    LEFT, RIGHT, MIDDLE
   }
 
   /** 
@@ -78,6 +78,8 @@ public class AlignToReef extends Command {
         case RIGHT:
         m_xController.setGoal(Constants.RightReefOffset);
         break;
+        case MIDDLE:
+        m_xController.setGoal(Constants.MiddleReefOffset);
       }
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
     if (LimelightHelpers.getTV(limelightName)) {
@@ -85,7 +87,8 @@ public class AlignToReef extends Command {
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;
       double yOutput = -m_yController.calculate(yDistanceFromTag);
-      
+      SmartDashboard.putNumber("yOutput", yOutput);
+      SmartDashboard.putNumber("robot yvelocity", m_robotDrive.getSpeeds().vxMetersPerSecond);
       if (m_yController.atGoal()) {
         yOutput = 0;
       }
@@ -127,7 +130,7 @@ public class AlignToReef extends Command {
 
   private boolean coralInTheWay(double yOutput) {
     boolean nearOneCoralAway = MathUtil.isNear(Constants.ReefOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
-    boolean notMoving = Math.abs(yOutput) > 0.05 && Math.abs(m_robotDrive.getSpeeds().vxMetersPerSecond) < 0.1; // I pulled these numbers out of my ass
+    boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.06; // I pulled these numbers out of my ass
 
     return nearOneCoralAway && notMoving;
   }
