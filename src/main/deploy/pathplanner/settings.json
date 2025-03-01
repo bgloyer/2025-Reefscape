@@ -4,7 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "3 Coral Auto",
-    "Mirrored 3 Coral"
+    "Mirrored 3 Coral",
+    "1 Coral"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.9,

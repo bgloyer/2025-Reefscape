@@ -4,7 +4,7 @@ public class ClawConstants {
 
     public final class WristConstants {
         public static final int MotarCanId = 14;
-        public static final double MotorGearReduction = 12.0 / 64.0;
+        public static final double MotorGearReduction = 12.0 / 64.0 * 16 / 23;
         public static final double kP = 0.3;
         public static final double kI = 0;
         public static final double kD = 0;
