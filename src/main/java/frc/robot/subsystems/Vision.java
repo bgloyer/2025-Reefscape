@@ -38,7 +38,7 @@ public class Vision {
         }
         if (!doRejectUpdate) {
             // stolen from 1678
-            double xyStdDev = 4 * ((0.01 + (0.08 * Math.pow(mt2.avgTagDist, 2.0))) / mt2.tagCount);
+            double xyStdDev = 4.5 * ((0.01 + (0.08 * Math.pow(mt2.avgTagDist, 2.0))) / mt2.tagCount);
 
             SmartDashboard.putNumber("mt2 avg dist", mt2.avgTagDist);
             SmartDashboard.putNumber("xyStdDev", xyStdDev);

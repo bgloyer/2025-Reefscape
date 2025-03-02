@@ -35,6 +35,7 @@ public class AutoAlignToStationTag extends Command {
   private final String limelightName = VisionConstants.ElevatorLimelightName;
   private final ProfiledPIDController m_turnPID;
   private final CoralMaster m_coralMaster;
+  private int count = 0;
 
   /**
    * 
@@ -43,7 +44,7 @@ public class AutoAlignToStationTag extends Command {
    */
   public AutoAlignToStationTag(DriveSubsystem subsystem, CoralMaster coralMaster) {
     m_robotDrive = subsystem;
-    m_xController = new ProfiledPIDController(DriveConstants.xTranslationkP, DriveConstants.xTranslationkI, DriveConstants.xTranslationkD, new Constraints(2, 3));
+    m_xController = new ProfiledPIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD , new Constraints(2, 3));
     m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(4, 3));
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
@@ -57,6 +58,7 @@ public class AutoAlignToStationTag extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    count = 0;
     m_coralMaster.setIntake();
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
     m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
@@ -123,10 +125,13 @@ public class AutoAlignToStationTag extends Command {
     private boolean coralInTheWay(double yOutput) {
     boolean nearOneCoralAway = MathUtil.isNear(Constants.IntakeOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
     boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.18; // I pulled these numbers out of my ass
-    SmartDashboard.putBoolean("station not moving", notMoving);
-    SmartDashboard.putBoolean("nearOne Coral Away Station", nearOneCoralAway);
-    SmartDashboard.putNumber("Station hypotenuse speed", Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond)); // I pulled these numbers out of my ass
     
-    return nearOneCoralAway && notMoving;
+    if(nearOneCoralAway && notMoving)
+      count++;
+    else
+      count = 0;
+    if(count >= 2)
+      return nearOneCoralAway && notMoving;
+    return false;
   }
 }

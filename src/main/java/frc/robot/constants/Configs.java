@@ -105,6 +105,8 @@ public final class Configs {
 
                 static {
                         wristMotorConfig.idleMode(IdleMode.kBrake);
+                        wristMotorConfig.inverted(true);
+
                         wristMotorConfig.closedLoop
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(WristConstants.kP, WristConstants.kI, WristConstants.kD);
@@ -115,6 +117,8 @@ public final class Configs {
                                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                 .pid(CoralIntakeConstants.kP, CoralIntakeConstants.kI, CoralIntakeConstants.kD);
                         intakeMotorConfig.idleMode(IdleMode.kBrake);
+                        intakeMotorConfig.smartCurrentLimit(70);
+                        intakeMotorConfig.secondaryCurrentLimit(80);
                 }
     }
 

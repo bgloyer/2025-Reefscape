@@ -52,6 +52,11 @@ public final class DriveConstants {
     public static double xTranslationkP = 1.2;
     public static double xTranslationkI = 1; // 0.7
     public static double xTranslationkD = 0.06;
+
+    public static double xIntakeTranslationkP = 1.2;
+    public static double xIntakeTranslationkI = 0;
+    public static double xIntakeTranslationkD = 0.1;
+    
     public static final double xTranslationMaxVel = 2;
     public static final double xTranslationMaxAccel = 3;
     

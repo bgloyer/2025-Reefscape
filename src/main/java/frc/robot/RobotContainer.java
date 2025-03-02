@@ -155,7 +155,8 @@ public class RobotContainer {
 
       m_mechController.y().and(m_robotDrive::closeToReef).onTrue(new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef));
       
-      m_mechController.povUp().onTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.TOPALGAE), m_coralMaster).alongWith(Commands.runOnce(() -> m_claw.runVoltage(7))).alongWith(Commands.runOnce(()-> m_robotDrive.setScoringSide(Direction.MIDDLE))));
+      m_mechController.povUp().onTrue(new SetLevel(Level.TOPALGAE, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.runVoltage(7))).alongWith(Commands.runOnce(()-> m_robotDrive.setScoringSide(Direction.MIDDLE))));
+      // m_mechController.povUp().onTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.TOPALGAE), m_coralMaster).alongWith(Commands.runOnce(() -> m_claw.runVoltage(7))).alongWith(Commands.runOnce(()-> m_robotDrive.setScoringSide(Direction.MIDDLE))));
       m_mechController.povUp().onFalse(Commands.either(Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster), 
         (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
         algaeStored));

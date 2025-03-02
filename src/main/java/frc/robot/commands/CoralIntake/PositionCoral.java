@@ -11,9 +11,9 @@ public class PositionCoral extends SequentialCommandGroup {
         Trigger coralStored = new Trigger(claw::backLaserTriggered);
         Trigger frontCoralTriggered = new Trigger(claw::frontLaserTriggered);
             addCommands(
-                Commands.runOnce(() -> claw.runVoltage(2)),
+                Commands.runOnce(() -> claw.runVoltage(1.5)),
                 Commands.waitUntil(frontCoralTriggered.negate().or(coralStored.negate())),
-                Commands.runOnce(() -> claw.runVoltage(-2)),
+                Commands.runOnce(() -> claw.runVoltage(-4)),
                 Commands.waitUntil(coralStored),
                 Commands.runOnce(() -> claw.runVoltage(0))
             );

@@ -32,6 +32,7 @@ public class AlignToReef extends Command {
   private final ProfiledPIDController m_yController;
   private final String limelightName = VisionConstants.ReefLightLightName;
   private final ProfiledPIDController m_turnPID;
+  public int count = 0;
   public enum Direction {
     LEFT, RIGHT, MIDDLE
   }
@@ -57,13 +58,14 @@ public class AlignToReef extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    count = 0;
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
     m_turnPID.setTolerance(1.5);
     m_turnPID.setGoal(m_robotDrive.getAngleToReef());
     m_yController.setTolerance(0.01);
     m_xController.setTolerance(Constants.ReefAlignTolerance);
-    m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
-    m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond));
+    m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getSpeeds().vxMetersPerSecond / 2.0)); // yes y and x are flipped
+    m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond / 2.0));
     m_yController.setGoal(0.5); // one coral away: 0.62
   }
 
@@ -131,8 +133,13 @@ public class AlignToReef extends Command {
   private boolean coralInTheWay(double yOutput) {
     boolean nearOneCoralAway = MathUtil.isNear(Constants.ReefOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
     boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.15; // I pulled these numbers out of my ass
-
-    return nearOneCoralAway && notMoving;
+    if(nearOneCoralAway && notMoving)
+      count++;
+    else
+      count = 0;
+    if(count >= 2)
+      return nearOneCoralAway && notMoving;
+    return false;
   }
 
 }
