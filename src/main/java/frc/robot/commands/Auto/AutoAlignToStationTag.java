@@ -61,7 +61,7 @@ public class AutoAlignToStationTag extends Command {
     count = 0;
     m_coralMaster.setIntake();
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
-    m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
+    m_yController.reset(new State(tyToDistance(limelightName) - Math.abs(m_robotDrive.getSpeeds().vxMetersPerSecond / 12.5), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
     m_xController.reset(new State(Math.abs(tyToDistance(limelightName)) * tan(LimelightHelpers.getTX(limelightName)), -m_robotDrive.getSpeeds().vyMetersPerSecond));
     m_yController.setGoal(Constants.IntakeAlignDistance);
     m_yController.setTolerance(0.0175);
@@ -79,7 +79,7 @@ public class AutoAlignToStationTag extends Command {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = Math.abs(yDistanceFromTag) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;
-      double yOutput = m_yController.calculate(yDistanceFromTag);
+      double yOutput = m_yController.calculate(yDistanceFromTag - Math.abs(m_robotDrive.getSpeeds().vxMetersPerSecond / 12.5));
       SmartDashboard.putNumber("Station yOutput", yOutput);
       SmartDashboard.putNumber("robot yvelocity", m_robotDrive.getSpeeds().vxMetersPerSecond);
       // if (m_yController.atGoal()) {

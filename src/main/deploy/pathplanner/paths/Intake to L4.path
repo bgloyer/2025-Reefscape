@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.9027423469387756,
-        "y": 7.211160714285714
+        "x": 1.5954545454545452,
+        "y": 7.280724431818181
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0527423469387758,
-        "y": 7.0111607142857135
+        "x": 1.7454545454545454,
+        "y": 7.080724431818181
       },
       "isLocked": false,
       "linkedName": "CoralStation"
     },
     {
       "anchor": {
-        "x": 3.663711734693877,
-        "y": 5.241262755102041
+        "x": 3.6894886363636368,
+        "y": 5.17671875
       },
       "prevControl": {
-        "x": 3.5036656347777577,
-        "y": 5.433318075001385
+        "x": 3.5294425364475175,
+        "y": 5.368774069899344
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,26 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.39895923677364065,
+      "constraints": {
+        "maxVelocity": 4.9,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "PositionCoral",
-      "waypointRelativePos": 0.07,
+      "waypointRelativePos": 0.1,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -45,7 +59,7 @@
     },
     {
       "name": "Ready Elevator L4",
-      "waypointRelativePos": 0.6473684210526293,
+      "waypointRelativePos": 0.65,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
