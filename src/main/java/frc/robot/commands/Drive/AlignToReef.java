@@ -64,8 +64,9 @@ public class AlignToReef extends Command {
     m_turnPID.setGoal(m_robotDrive.getAngleToReef());
     m_yController.setTolerance(0.01);
     m_xController.setTolerance(Constants.ReefAlignTolerance);
-    m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getSpeeds().vxMetersPerSecond / 2.0)); // yes y and x are flipped
-    m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond / 2.0));
+    m_yController.reset(tyToDistance(limelightName)); // yes y and x are flipped
+    m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
+    m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond ));
     m_yController.setGoal(0.5); // one coral away: 0.62
   }
 
@@ -88,9 +89,7 @@ public class AlignToReef extends Command {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;
-      double yOutput = -m_yController.calculate(yDistanceFromTag);
-      SmartDashboard.putNumber("yOutput", yOutput);
-      SmartDashboard.putNumber("robot yvelocity", m_robotDrive.getSpeeds().vxMetersPerSecond);
+      double yOutput = -(m_yController.calculate(yDistanceFromTag) + m_yController.getSetpoint().velocity / DriveConstants.kMaxSpeedMetersPerSecond);
       if (m_yController.atGoal()) {
         yOutput = 0;
       }
@@ -98,17 +97,19 @@ public class AlignToReef extends Command {
         turnOutput = 0;
       }
       if(Math.abs(betterModulus(m_robotDrive.getHeading(), 360) - m_turnPID.getGoal().position) < 5) {
-        xOutput = m_xController.calculate(xInput);
+        xOutput = m_xController.calculate(xInput) + m_xController.getSetpoint().velocity / DriveConstants.kMaxSpeedMetersPerSecond;
       } else {
         m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond));
       }
-      m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
+      m_robotDrive.drive(yOutput, xOutput, turnOutput, false);
+      // m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
       boolean aligned = m_xController.atGoal() && m_yController.atGoal();
       m_robotDrive.setAlignedToReef(aligned);
       m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 0.7);
       if(Helpers.isOneCoralAway == false)
         Helpers.isOneCoralAway = coralInTheWay(yOutput);
       SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
+      
       if(Helpers.isOneCoralAway) {
         m_yController.setGoal(Constants.ReefOneCoralAwayDistance);
       }
