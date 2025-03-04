@@ -71,6 +71,8 @@ public class Elevator extends SubsystemBase {
         switch (level) {
             case FOUR:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
+            case DEALGFOUR:
+                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
             case THREE:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
             case TOPALGAE:
