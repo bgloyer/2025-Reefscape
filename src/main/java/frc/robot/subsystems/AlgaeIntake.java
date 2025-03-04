@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.AlgaeIntakeConstants;
 import frc.robot.constants.Configs.AlgaeIntakeConfig;
@@ -42,9 +43,16 @@ public class AlgaeIntake extends SubsystemBase {
         m_rollerController.setReference(volts, ControlType.kVoltage);
     }
 
+    public Command runOuttake() {
+        return startEnd(
+            () -> setVoltage(AlgaeIntakeConstants.OuttakeVoltage), 
+            () -> setVoltage(0));
+    }
+
     private double calcFeedForward() {
         return AlgaeIntakeConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
     }
+
 
     @Override
     public void periodic() {

@@ -13,13 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start to J4 Accel"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Start to J4 Score"
+            "pathName": "Start to J4"
           }
         },
         {
@@ -106,12 +100,6 @@
           "type": "named",
           "data": {
             "name": "Score L4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.15
           }
         },
         {

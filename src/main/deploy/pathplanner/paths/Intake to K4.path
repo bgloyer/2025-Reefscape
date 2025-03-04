@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5954545454545452,
-        "y": 7.280724431818181
+        "x": 1.5356249999999998,
+        "y": 7.26078125
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7454545454545454,
-        "y": 7.080724431818181
+        "x": 1.685625,
+        "y": 7.06078125
       },
       "isLocked": false,
       "linkedName": "CoralStation"
     },
     {
       "anchor": {
-        "x": 3.8590056818181817,
-        "y": 5.306349431818182
+        "x": 3.6595738636363637,
+        "y": 5.50578125
       },
       "prevControl": {
-        "x": 3.6940723371726722,
-        "y": 5.494224368475645
+        "x": 3.4946405189908543,
+        "y": 5.693656186657463
       },
       "nextControl": null,
       "isLocked": false,
@@ -59,7 +59,7 @@
     },
     {
       "name": "Ready Elevator L4",
-      "waypointRelativePos": 0.6485380116959039,
+      "waypointRelativePos": 0.8031222896791042,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -71,14 +71,14 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.9,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
+    "velocity": 0.75,
     "rotation": -59.99999999999999
   },
   "reversed": false,

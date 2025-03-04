@@ -429,6 +429,9 @@ private boolean closeToReef = false;
 
   public void setScoringSide(Direction dir) {
     scoringSide = dir;
+    if (dir == Direction.MIDDLE) {
+      System.out.println("set to middle");
+    }
   }
 
   public void setAlignedToReef(boolean val) {

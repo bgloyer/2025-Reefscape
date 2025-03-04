@@ -30,7 +30,7 @@ import frc.robot.util.LimelightHelpers;
 public class AutoAlignToStationTag extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_robotDrive;
-  private final ProfiledPIDController m_xController;
+  private final PIDController m_xController;
   private final ProfiledPIDController m_yController;
   private final String limelightName = VisionConstants.ElevatorLimelightName;
   private final ProfiledPIDController m_turnPID;
@@ -44,7 +44,7 @@ public class AutoAlignToStationTag extends Command {
    */
   public AutoAlignToStationTag(DriveSubsystem subsystem, CoralMaster coralMaster) {
     m_robotDrive = subsystem;
-    m_xController = new ProfiledPIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD , new Constraints(2, 3));
+    m_xController = new PIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD);
     m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(4, 3));
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
@@ -61,11 +61,11 @@ public class AutoAlignToStationTag extends Command {
     count = 0;
     m_coralMaster.setIntake();
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
-    m_yController.reset(new State(tyToDistance(limelightName) - Math.abs(m_robotDrive.getSpeeds().vxMetersPerSecond / 12.5), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
-    m_xController.reset(new State(Math.abs(tyToDistance(limelightName)) * tan(LimelightHelpers.getTX(limelightName)), -m_robotDrive.getSpeeds().vyMetersPerSecond));
+    m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
+    m_xController.reset();
     m_yController.setGoal(Constants.IntakeAlignDistance);
-    m_yController.setTolerance(0.0175);
-    m_xController.setGoal(m_robotDrive.getStationOffset());
+    m_yController.setTolerance(0.02);
+    m_xController.setSetpoint(m_robotDrive.getStationOffset());
     m_turnPID.setGoal(m_robotDrive.getStationAngle());
     m_robotDrive.setAlignedToReef(false);
     m_robotDrive.setCloseToReef(false);
@@ -79,27 +79,25 @@ public class AutoAlignToStationTag extends Command {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = Math.abs(yDistanceFromTag) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;
-      double yOutput = m_yController.calculate(yDistanceFromTag - Math.abs(m_robotDrive.getSpeeds().vxMetersPerSecond / 12.5));
+      double yOutput = m_yController.calculate(yDistanceFromTag);
       SmartDashboard.putNumber("Station yOutput", yOutput);
       SmartDashboard.putNumber("robot yvelocity", m_robotDrive.getSpeeds().vxMetersPerSecond);
-      // if (m_yController.atGoal()) {
-      //   yOutput = 0;
-      // }
+      if (m_yController.atGoal()) {
+        yOutput = 0;
+      }
       if (m_turnPID.atGoal()) {
         turnOutput = 0;
       }
       if(Math.abs(betterModulus(m_robotDrive.getHeading(), 360) - m_turnPID.getGoal().position) < 5) {
         xOutput = m_xController.calculate(xInput);
-      } else {
-        m_xController.reset(new State(tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName)), m_robotDrive.getSpeeds().vyMetersPerSecond));
-      }
-      m_robotDrive.drive(Math.max(yOutput, -0.3), Math.max(-xOutput, -0.3), turnOutput, false);
-      boolean aligned = m_xController.atGoal() && m_yController.atGoal();
+      } 
+      m_robotDrive.drive(yOutput + m_yController.getSetpoint().velocity / DriveConstants.kMaxSpeedMetersPerSecond, Math.max(-xOutput, -0.3), turnOutput, false);
+      boolean aligned = m_xController.atSetpoint() && m_yController.atGoal();
       m_robotDrive.setAlignedToReef(aligned);
       if(Helpers.isOneCoralAway == false)
         Helpers.isOneCoralAway = coralInTheWay(yOutput);
       SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
-      if(Helpers.isOneCoralAway) {
+      if(Helpers.isOneCoralAway || Helpers.intakeCoralInTheWay) {
         m_coralMaster.setOneCoralAwayIntake();
         m_yController.setGoal(Constants.IntakeOneCoralAwayDistance);
       }
@@ -123,15 +121,18 @@ public class AutoAlignToStationTag extends Command {
   }
 
     private boolean coralInTheWay(double yOutput) {
-    boolean nearOneCoralAway = MathUtil.isNear(Constants.IntakeOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
-    boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.18; // I pulled these numbers out of my ass
-    
-    if(nearOneCoralAway && notMoving)
-      count++;
-    else
-      count = 0;
-    if(count >= 2)
-      return nearOneCoralAway && notMoving;
-    return false;
+      if(Helpers.isAuto) {
+        return false;
+      }
+      boolean nearOneCoralAway = MathUtil.isNear(Constants.IntakeOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
+      boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.18; // I pulled these numbers out of my ass
+      
+      if(nearOneCoralAway && notMoving)
+        count++;
+      else
+        count = 0;
+      if(count >= 2)
+        return nearOneCoralAway && notMoving;
+      return false;
   }
 }

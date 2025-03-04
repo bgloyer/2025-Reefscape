@@ -12,12 +12,14 @@ public class Helpers {
 
     public static boolean isBlue = false;
     public static boolean isOneCoralAway = false;
-
+    public static boolean intakeCoralInTheWay = true;
+    public static boolean isAuto = false;
     
 
     // public static Pose3d get(int id) {
     //     return Constants.aprilTags.getTagPose(id).get();
     // }
+    
 
     public static double betterModulus(double x, double y) {
         return (x % y + y) % y;

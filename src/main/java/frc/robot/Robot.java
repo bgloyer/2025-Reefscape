@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
 import au.grapplerobotics.CanBridge;
 
@@ -57,6 +59,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     PathfindingCommand.warmupCommand().schedule();
+    FollowPathCommand.warmupCommand().schedule();
   }
 
   /**

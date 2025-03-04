@@ -13,14 +13,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RunAlgaeIntake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final AlgaeIntake m_intake;
+  private double volts;
+  private double angle;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public RunAlgaeIntake(AlgaeIntake subsystem) {
+  public RunAlgaeIntake(double angle, double volts, AlgaeIntake subsystem) {
     m_intake = subsystem;
+    this.volts = volts;
+    this.angle = angle;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -29,7 +33,8 @@ public class RunAlgaeIntake extends Command {
   @Override
   public void initialize() {
     m_intake.setAngle(AlgaeIntakeConstants.IntakeAngle);
-    m_intake.setVoltage(AlgaeIntakeConstants.IntakeVoltage);
+    m_intake.setVoltage(volts);
+    m_intake.setAngle(angle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

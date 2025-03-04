@@ -73,6 +73,8 @@ public class Elevator extends SubsystemBase {
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
             case THREE:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
+            case TOPALGAE:
+                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
             default:
                 return onTarget();
         }

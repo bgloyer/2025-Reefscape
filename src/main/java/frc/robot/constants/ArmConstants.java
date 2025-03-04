@@ -11,12 +11,12 @@ public class ArmConstants {
     public static final double AlgaeStore = 0;
     public static final double Store = 0;
     public static final double Station = 35;
-    public static final double StationOffset = 55;
+    public static final double StationOffset = 42.8;
     public static final double L1 = -72.9;
     public static final double L2 = -19; 
     public static final double L3 = -24;
     public static final double L4 = -23; // -42 
-    public static final double TopDealg = -28;
+    public static final double TopDealg = -21.83;
     public static final double BottomDeAlg = -28;
     public static final double Net = 0;
     public static final double GroundIntake = 21.27; 
