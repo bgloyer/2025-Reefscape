@@ -426,6 +426,10 @@ private boolean closeToReef = false;
     double angle = getFlippedRotation(centerOfReef.minus(getPose().getTranslation()).getAngle()).getDegrees();
     return Math.round(angle / 60.0) * 60;
   }
+  
+  public boolean isTopDealgae() {
+    return getAngleToReef() % 120 == 0;
+  }
 
   public void setScoringSide(Direction dir) {
     scoringSide = dir;
