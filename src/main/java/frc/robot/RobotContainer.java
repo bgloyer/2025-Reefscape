@@ -88,6 +88,7 @@ public class RobotContainer {
       // drive with controller
       m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
       m_robotDrive.drive(0, 0, 0, true);
+      SmartDashboard.putBoolean("switch", false);
     }
 
   
@@ -97,10 +98,10 @@ public class RobotContainer {
     private void configureBindings() {
       coralStored.onTrue(m_blinkin.setColor(BlinkinConstants.White));
       coralStored.onFalse(m_blinkin.setColor(BlinkinConstants.Red));
-      coralStored.negate().and(isntDeAlgae).and(isInTeleop).onTrue(Commands.either(
-        new SetStore(m_coralMaster),
-        new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef), 
-        new Trigger(() -> m_coralMaster.getLevel() == Level.FOUR)));
+      // coralStored.negate().and(isntDeAlgae).and(isInTeleop).onTrue(Commands.either(
+      //   new SetStore(m_coralMaster),
+      //   new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef), 
+      //   new Trigger(() -> m_coralMaster.getLevel() == Level.FOUR)));
 
       // ------------------ Aidan ----------------------------
 
@@ -126,10 +127,10 @@ public class RobotContainer {
       m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster));
 
       // outtake
-      m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runOuttake(), () -> m_claw.stopIntake()));
+      m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runIntake(), () -> m_claw.stopIntake()));
 
       //net score
-      m_driverController.x().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster));
+      m_driverController.x().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster).alongWith(m_blinkin.setColor(BlinkinConstants.AlgaeScore)));
 
       Command netScore = Commands.sequence(
         Commands.runOnce(() -> m_claw.runVoltage(-2)),
@@ -155,11 +156,11 @@ public class RobotContainer {
       m_mechController.a().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.ONE)));
       m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-3), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(new SetStore(m_coralMaster)));
 
-      m_mechController.x().and(m_robotDrive::closeToReef).onTrue(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef));
+      m_mechController.x().and(m_robotDrive::closeToReef).onTrue(Commands.sequence(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
 
-      m_mechController.b().and(m_robotDrive::closeToReef).onTrue(new SetLevel(Level.THREE, m_coralMaster, m_driverController, alignedToReef));
+      m_mechController.b().and(m_robotDrive::closeToReef).onTrue(Commands.sequence(new SetLevel(Level.THREE, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
 
-      m_mechController.y().and(m_robotDrive::closeToReef).onTrue(new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef));
+      m_mechController.y().and(m_robotDrive::closeToReef).onTrue(Commands.sequence(new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetStore(m_coralMaster)));
       
       Command TopAlgaeGrab = Commands.sequence(
         new SetLevel(Level.DEALGFOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
@@ -176,23 +177,27 @@ public class RobotContainer {
             Commands.runOnce(() -> m_claw.runVoltage(7)),
             new SetLevel(Level.BOTTOMALGAEGRAB, m_coralMaster, m_driverController, alignedToReef)));
 
-        Command TopAlgaeRoll =  new SetLevel(Level.TOPALGAEROLL, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate()));
+        Command TopAlgaeRoll = Commands.sequence(
+          new SetLevel(Level.DEALGFOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
+          new SetLevel(Level.TOPALGAEROLL, m_coralMaster, m_driverController, alignedToReef)
+          .alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate())));
+
         Command BottomAlgaeRoll = new SetLevel(Level.BOTTOMALGAEROLL, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate()));
+        
+        
       
       //Dealgae and store    
 
       m_mechController.povUp().and(readyToDealg).whileTrue(Commands.either(TopAlgaeGrab, BottomAlgaeGrab, isTopDealgae));
-      m_mechController.povUp().onFalse(Commands.either(Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster), 
+      m_mechController.povUp().onFalse(Commands.either(Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster).alongWith(m_blinkin.setColor(BlinkinConstants.AlgaeHold)), 
         (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
         algaeStored));
 
       //Simlultaneous Dealgae and score
 
       // m_mechController.povDown().and(readyToDealg).whileTrue(new SetLevel(Level.BOTTOMALGAEROLL, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate())));
-      m_mechController.povDown().onTrue(Commands.either(TopAlgaeRoll, BottomAlgaeRoll, isTopDealgae));
+      m_mechController.povDown().and(readyToDealg).onTrue(Commands.either(TopAlgaeRoll, BottomAlgaeRoll, isTopDealgae));
       m_mechController.povDown().onFalse(new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.stopIntake())));
-
-      m_mechController.povRight().onTrue(Commands.runOnce(() -> Helpers.intakeCoralInTheWay = !Helpers.intakeCoralInTheWay));
 
       m_mechController.back().onTrue(readyClimb(this));
       m_mechController.start().onTrue(climb(this));

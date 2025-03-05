@@ -32,7 +32,7 @@ public final class ElevatorConstants {
     public static final double NotTippable = 1.2;
     public static final double TopAlgGrab = 0.3876;
     public static final double TopDealgRoll = 0.79756;
-    public static final double BottomAlgGrab = 0.2;
+    public static final double BottomAlgGrab = 0.05;
     public static final double BottomDealgRoll = Units.inchesToMeters(7.75) * 2;
     public static final double Net = Units.inchesToMeters(25) * 2;
     

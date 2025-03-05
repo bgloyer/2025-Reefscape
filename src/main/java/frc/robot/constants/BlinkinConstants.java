@@ -14,4 +14,6 @@ public final class BlinkinConstants {
     public static final double Gold = 0.67; 
     public static final double Yellow = 0.69;
     public static final double Pink = 0.57; 
+    public static final double AlgaeHold = 0.45;
+    public static final double AlgaeScore = 0.41;
 }

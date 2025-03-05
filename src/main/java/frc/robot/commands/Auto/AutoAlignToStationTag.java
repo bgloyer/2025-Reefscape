@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.DashboardManager;
 import frc.robot.constants.Constants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.VisionConstants;
@@ -97,7 +98,7 @@ public class AutoAlignToStationTag extends Command {
       if(Helpers.isOneCoralAway == false)
         Helpers.isOneCoralAway = coralInTheWay(yOutput);
       SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
-      if(Helpers.isOneCoralAway || Helpers.intakeCoralInTheWay) {
+      if(Helpers.isOneCoralAway || DashboardManager.intakeCoralInTheWay) {
         m_coralMaster.setOneCoralAwayIntake();
         m_yController.setGoal(Constants.IntakeOneCoralAwayDistance);
       }

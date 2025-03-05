@@ -12,7 +12,6 @@ public class Helpers {
 
     public static boolean isBlue = false;
     public static boolean isOneCoralAway = false;
-    public static boolean intakeCoralInTheWay = true;
     public static boolean isAuto = false;
     
 
