@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.851,
-  "robotLength": 0.851,
+  "robotWidth": 0.864,
+  "robotLength": 0.8636,
   "holonomicMode": true,
   "pathFolders": [
     "3 Coral Auto",

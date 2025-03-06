@@ -36,7 +36,8 @@ public class AlgaeIntake extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        m_pivotController.setReference(angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, calcFeedForward());
+        m_pivotController.setReference(angle, ControlType.kPosition);
+        // m_pivotController.setReference(angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, calcFeedForward());
     }
 
     public void setVoltage(double volts) {

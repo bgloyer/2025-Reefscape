@@ -20,7 +20,7 @@ public enum Level {
     TOPALGAEGRAB(ElevatorConstants.TopAlgGrab, ArmConstants.TopAlgGrab, WristConstants.TopAlgGrab, false), 
     TOPALGAEROLL(ElevatorConstants.TopDealgRoll, ArmConstants.TopDealgRoll, WristConstants.TopDealgRoll, false),
     BOTTOMALGAEGRAB(ElevatorConstants.BottomAlgGrab, ArmConstants.BottomAlgGrab, WristConstants.BottomAlgGrab, false), 
-    BOTTOMALGAEROLL(ElevatorConstants.BottomDealgRoll, ArmConstants.BottomDealgRoll, WristConstants.L3, true);
+    BOTTOMALGAEROLL(ElevatorConstants.BottomDealgRoll, ArmConstants.BottomDealgRoll, WristConstants.BottomAlgaeRoll, true);
 
     public double elevatorHeight;
     public double armAngle;

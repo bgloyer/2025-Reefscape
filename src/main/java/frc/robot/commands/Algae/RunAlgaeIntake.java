@@ -32,7 +32,6 @@ public class RunAlgaeIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setAngle(AlgaeIntakeConstants.IntakeAngle);
     m_intake.setVoltage(volts);
     m_intake.setAngle(angle);
   }

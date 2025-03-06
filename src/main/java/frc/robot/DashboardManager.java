@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DashboardManager extends SubsystemBase {
     
-    public static boolean intakeCoralInTheWay = false;
+    public static boolean intakeCoralInTheWay = true;
 
     public DashboardManager() {
         SmartDashboard.putBoolean("Intake Coral In the Way", false);

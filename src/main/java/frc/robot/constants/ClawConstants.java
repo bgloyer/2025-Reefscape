@@ -16,9 +16,9 @@ public class ClawConstants {
         public static final double Initial = 0;
         public static final double Store = 90;
 
-        public static final double Station = 8.71;
+        public static final double Station = 9.955;
         // public static final double Station = 30;
-        public static final double StationOffset = 12.01;
+        public static final double StationOffset = 2.06;
         public static final double L1 = 161.2;
         public static final double L2 = 83.19;
         public static final double L3 = 85;
@@ -26,6 +26,7 @@ public class ClawConstants {
         public static final double TopAlgGrab = 124.25;
         public static final double TopDealgRoll = 85;
         public static final double BottomAlgGrab = 124.25;
+        public static final double BottomAlgaeRoll = 88;
         public static final double Net = 129.3;
         public static final double GroundIntake = 21.27;
 

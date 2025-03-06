@@ -46,7 +46,7 @@ public class AutoAlignToStationTag extends Command {
   public AutoAlignToStationTag(DriveSubsystem subsystem, CoralMaster coralMaster) {
     m_robotDrive = subsystem;
     m_xController = new PIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD);
-    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(4, 3));
+    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(4, 2));
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
     m_yController.setIZone(0.08);
@@ -60,7 +60,10 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void initialize() {
     count = 0;
-    m_coralMaster.setIntake();
+    if(DashboardManager.intakeCoralInTheWay)
+      m_coralMaster.setOneCoralAwayIntake();
+    else
+      m_coralMaster.setIntake();
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
     m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
     m_xController.reset();

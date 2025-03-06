@@ -165,8 +165,7 @@ public final class Configs {
                 pivotMotorConfig.idleMode(IdleMode.kBrake);
                 pivotMotorConfig.closedLoop
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                        .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD)
-                        .maxOutput(0.05);
+                        .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD);
                 pivotMotorConfig.encoder.positionConversionFactor(AlgaeIntakeConstants.GearRatio * 360);
 
                 rollerMotorConfig.idleMode(IdleMode.kBrake);
