@@ -59,4 +59,17 @@ public class AlgaeIntake extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Intake Angle", m_encoder.getPosition());
     }
+
+    public void stopPid() {
+        m_pivotController.setReference(0, ControlType.kVoltage);
+    }
+
+    public void setZero() {
+        m_encoder.setPosition(0);
+
+
+        // in memory of james
+        // m_pivotMotor.configure(AlgaeIntakeConfig.pivotMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        // setAngle(0);
+    }
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
@@ -26,59 +27,63 @@ public class Arm extends SubsystemBase {
     private final TrapezoidProfile m_TrapezoidProfile = new TrapezoidProfile(new Constraints(ArmConstants.MaxVelocity, ArmConstants.MaxAcceleration));
     private State currentState = new State(0,0);
     private State targetState = new State(0,0);
-
-    public Arm() {
-        m_leftMotor = new SparkFlex(ArmConstants.LeftMotorId, MotorType.kBrushless);
-        m_rightMotor = new SparkFlex(ArmConstants.RightMotorId, MotorType.kBrushless);
-        m_leftMotor.configure(Configs.ArmConfig.leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        m_rightMotor.configure(Configs.ArmConfig.rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        m_controller = m_leftMotor.getClosedLoopController();
-        m_encoder = m_leftMotor.getEncoder();
-
-        resetVortexEncoder();
-        resetSetpoint();
-    }
-
-    public void resetSetpoint() {
-        currentState.position = getAngle();
-        targetState.position = currentState.position;
-    }
-
-    public void setTargetAngle(double angle) {
-        double targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
-        if(targetAngle != targetState.position) {
-            targetState = new State(targetAngle, 0);
-            currentState = new State(getAngle(), currentState.velocity);
+    private boolean stopPid;
+    
+        public Arm() {
+            m_leftMotor = new SparkFlex(ArmConstants.LeftMotorId, MotorType.kBrushless);
+            m_rightMotor = new SparkFlex(ArmConstants.RightMotorId, MotorType.kBrushless);
+            m_leftMotor.configure(Configs.ArmConfig.leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            m_rightMotor.configure(Configs.ArmConfig.rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            m_controller = m_leftMotor.getClosedLoopController();
+            m_encoder = m_leftMotor.getEncoder();
+    
+            resetVortexEncoder();
+            resetSetpoint();
         }
-    }
-
-    private double calculateFeedForward() {
-        return ArmConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
-    }
-
-    public boolean onTarget() {
-        return Math.abs(m_encoder.getPosition() - targetState.position) < ArmConstants.Tolerance;
-    }
-
-    public void resetVortexEncoder() {
-        if (m_leftMotor.getAbsoluteEncoder().getPosition() <= 45)
-            m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition());
-        else 
-            m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition() - 90);   
-    }
-
-    public double getAngle() {
-        return m_encoder.getPosition();
-    }
-
-    @Override
-    public void periodic() {
-        currentState = m_TrapezoidProfile.calculate(0.02, currentState, targetState);
-        m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
-        SmartDashboard.putNumber("Arm Angle", m_encoder.getPosition());
-    }
-
-    public void stopPid() {
-        m_controller.setReference(0, ControlType.kVoltage);
-    }
+    
+        public void resetSetpoint() {
+            currentState.position = getAngle();
+            // targetState.position = currentState.position;
+        }
+    
+        public void setTargetAngle(double angle) {
+            double targetAngle = MathUtil.clamp(angle, ArmConstants.MinAngle, ArmConstants.MaxAngle); 
+            if(targetAngle != targetState.position) {
+                targetState = new State(targetAngle, 0);
+                currentState = new State(getAngle(), currentState.velocity);
+            }
+        }
+    
+        private double calculateFeedForward() {
+            return ArmConstants.kG * Math.sin(Math.toRadians(m_encoder.getPosition()));
+        }
+    
+        public boolean onTarget() {
+            return Math.abs(m_encoder.getPosition() - targetState.position) < ArmConstants.Tolerance;
+        }
+    
+        public void resetVortexEncoder() {
+            if (m_leftMotor.getAbsoluteEncoder().getPosition() <= 45)
+                m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition());
+            else 
+                m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition() - 90);   
+        }
+    
+        public double getAngle() {
+            return m_encoder.getPosition();
+        }
+    
+        @Override
+        public void periodic() {
+            if (!DriverStation.isTestEnabled()) {
+                currentState = m_TrapezoidProfile.calculate(0.02, currentState, targetState);
+                m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, calculateFeedForward());
+            }
+            SmartDashboard.putNumber("Arm Angle", m_encoder.getPosition());
+        }
+    
+        public void stopPid() {
+            stopPid = true;
+            m_controller.setReference(0, ControlType.kVoltage);
+        }
 }

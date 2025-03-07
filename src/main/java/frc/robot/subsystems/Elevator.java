@@ -13,6 +13,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ElevatorConstants;
@@ -42,7 +43,7 @@ public class Elevator extends SubsystemBase {
 
     public void resetSetpoint() {
         currentState = new State(getHeight(), 0);
-        targetState = currentState;
+        // targetState = currentState;
     }
 
     
@@ -84,11 +85,21 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        currentState = m_TrapezoidProfile.calculate(0.02, currentState, targetState);
-        m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+        if (!DriverStation.isTestEnabled()) {
+            currentState = m_TrapezoidProfile.calculate(0.02, currentState, targetState);
+            m_controller.setReference(currentState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.kG);
+        }
         SmartDashboard.putNumber("Left Elevator Encoder", m_encoder.getPosition());
         SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Elevator vel", m_encoder.getVelocity());
         SmartDashboard.putNumber("Elevator Current", m_leftMotor.getOutputCurrent());
+    }
+
+    public void setZero() {
+        m_encoder.setPosition(0);
+    }
+
+    public void stopPID() {
+        m_controller.setReference(0, ControlType.kVoltage);
     }
 }

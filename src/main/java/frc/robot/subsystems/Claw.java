@@ -54,7 +54,7 @@ public class Claw extends SubsystemBase {
 
     public void resetSetpoint() {
         currentSetpoint = getAngle();
-        targetAngle = currentSetpoint;
+        // targetAngle = currentSetpoint;
     }
 
     public double getAngle() {

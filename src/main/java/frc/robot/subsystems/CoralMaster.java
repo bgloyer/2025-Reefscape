@@ -104,10 +104,8 @@ public class CoralMaster extends SubsystemBase {
             return useIntakeAutoAlign;
         }
     
-        public Command toggleIntakeAutoAlign() {
-            return runOnce(() -> {
-                useIntakeAutoAlign = !useIntakeAutoAlign;
-            });
+        public void toggleIntakeAutoAlign() {
+            useIntakeAutoAlign = !useIntakeAutoAlign;
         }
     
         @Override

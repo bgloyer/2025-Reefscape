@@ -29,6 +29,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Drive.AlignToReef.Direction;
@@ -104,6 +105,8 @@ private boolean aligned = false;
 
 private boolean closeToReef = false;
 
+private Direction oldScoringSide = Direction.RIGHT;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(CommandXboxController controller) {
     m_driverController = controller;
@@ -161,6 +164,7 @@ private boolean closeToReef = false;
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Reef Distance m", Helpers.tyToDistance(VisionConstants.ReefLightLightName));
     SmartDashboard.putNumber("Reef X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName)));
     SmartDashboard.putNumber("Station Distance m", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName));
@@ -432,10 +436,16 @@ private boolean closeToReef = false;
   }
 
   public void setScoringSide(Direction dir) {
+    if (dir != Direction.MIDDLE)
+      oldScoringSide = scoringSide;
     scoringSide = dir;
     SmartDashboard.putBoolean("Left", dir == Direction.LEFT);
     SmartDashboard.putBoolean("Middle", dir == Direction.MIDDLE);
     SmartDashboard.putBoolean("Right", dir == Direction.RIGHT);
+  }
+
+  public Direction getOldScoringSide() {
+    return oldScoringSide;
   }
 
   public void setAlignedToReef(boolean val) {

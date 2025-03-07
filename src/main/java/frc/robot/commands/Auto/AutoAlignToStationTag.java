@@ -73,6 +73,7 @@ public class AutoAlignToStationTag extends Command {
     m_turnPID.setGoal(m_robotDrive.getStationAngle());
     m_robotDrive.setAlignedToReef(false);
     m_robotDrive.setCloseToReef(false);
+    // m_robotDrive.setScoringSide(m_robotDrive.getOldScoringSide());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

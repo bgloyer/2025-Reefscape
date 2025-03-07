@@ -40,6 +40,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -64,8 +65,10 @@ public class RobotContainer {
   private final AlgaeIntake m_algaeIntake = new AlgaeIntake();
   private final Climber m_climber = new Climber();
   private final Blinkin m_blinkin = new Blinkin();
+  private final DashboardManager m_dashboardManager = new DashboardManager();
 
   private final SendableChooser<Command> autoChooser;
+
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
   private final Trigger algaeStored = new Trigger(m_coralMaster::coralStored);
   private final Trigger isntDeAlgae = new Trigger(m_coralMaster::scoringButNotDealg);
@@ -74,28 +77,30 @@ public class RobotContainer {
   private final Trigger isInTeleop = RobotModeTriggers.teleop();
   private final Trigger isTopDealgae = new Trigger(m_robotDrive::isTopDealgae);
 
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    public RobotContainer() {
-      // Build an auto chooser. This will use Commands.none() as the default option.
-      
-      // Configure the trigger bindings
-      configureBindings();
-      registerAutoCommands();
-      autoChooser = AutoBuilder.buildAutoChooser();
-      SmartDashboard.putData("Auto Chooser", autoChooser);
-      SmartDashboard.putBoolean("Mirror Auto?", false);
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public RobotContainer() {
     
-      // drive with controller
-      m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
-      m_robotDrive.drive(0, 0, 0, true);
-      SmartDashboard.putBoolean("switch", false);
+    // Configure the trigger bindings
+    configureBindings();
+    registerAutoCommands();
+
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putBoolean("Mirror Auto?", false);
+  
+    // drive with controller
+    m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
+    m_robotDrive.drive(0, 0, 0, true);
+    SmartDashboard.putBoolean("switch", false);
+
     }
 
   
     /**
      * Use this method to define your trigger->command mappings
      */
-    private void configureBindings() {
+  private void configureBindings() {
       coralStored.onTrue(m_blinkin.setColor(BlinkinConstants.White));
       coralStored.onFalse(m_blinkin.setColor(BlinkinConstants.Red));
       // coralStored.negate().and(isntDeAlgae).and(isInTeleop).onTrue(Commands.either(
@@ -104,13 +109,12 @@ public class RobotContainer {
       //   new Trigger(() -> m_coralMaster.getLevel() == Level.FOUR)));
 
       // ------------------ Aidan ----------------------------
-
       // Coral Intake
       m_driverController.rightTrigger(0.4).whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
         new WaitCommand(0.1),
-        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_claw),
+        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_coralMaster),
         Commands.waitUntil(m_arm::onTarget),
         new PositionCoral(m_claw).onlyIf(coralStored)));
               
@@ -145,7 +149,7 @@ public class RobotContainer {
       m_driverController.x().onFalse(netScore);
 
       // toggle intake mode
-      m_driverController.start().onTrue(m_coralMaster.toggleIntakeAutoAlign());
+      m_driverController.start().onTrue(Commands.runOnce(() -> m_coralMaster.toggleIntakeAutoAlign()));
 
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
@@ -219,11 +223,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("Score L3", Commands.parallel(new AlignToReef(m_robotDrive)).until(alignedToReef.and(m_coralMaster::onTarget)).andThen(Commands.runOnce(() -> m_claw.runVoltage(-5))));
     // NamedCommands.registerCommand("Score L3", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()).andThen(Commands.runOnce(() -> m_claw.runVoltage(-5))));
     NamedCommands.registerCommand("Score L4", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
-    NamedCommands.registerCommand("Set Left", Commands.runOnce(()-> m_robotDrive.scoringSide = Direction.LEFT));
-    NamedCommands.registerCommand("Set Right", Commands.runOnce(()-> m_robotDrive.scoringSide = Direction.RIGHT));
+    NamedCommands.registerCommand("Set Left", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
+    NamedCommands.registerCommand("Set Right", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
     NamedCommands.registerCommand("PositionCoral", new PositionCoral(m_claw).andThen(() -> m_claw.stopIntake()));
   }
-
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    */
@@ -231,7 +235,7 @@ public class RobotContainer {
     return autoChooser.getSelected();
     // return new PathPlannerAuto(autoChooser.getSelected().getName(), true);
   }
-
+  
   public void setVortexArmEncoder() {
     m_arm.resetVortexEncoder();
   }
@@ -248,7 +252,7 @@ public class RobotContainer {
     ((PathPlannerAuto)getAutonomousCommand()).getStartingPose().getRotation().getDegrees();
     // LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
   }
-
+  
   public void teleopInit() {
     Helpers.isAuto = false;
     m_blinkin.setColor(BlinkinConstants.Red);
@@ -259,35 +263,48 @@ public class RobotContainer {
     m_robotDrive.setAlignedToReef(false);
     LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2);
   }
-
+  
   public void testPeriodic() {
     if (m_driverController.getHID().getPOV() != -1)
-      m_robotDrive.setWheels(m_driverController.getHID().getPOV());
+    m_robotDrive.setWheels(m_driverController.getHID().getPOV());
 
     if(m_driverController.getHID().getAButton())
-      m_climber.setAngle(-100);
+    m_climber.setAngle(-100);
     else
-      m_climber.setVoltage(-12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
-
-    if (m_mechController.getHID().getYButton()) {
-      m_claw.zeroClaw();
-    }
-
+    m_climber.setVoltage(-12 * MathUtil.applyDeadband(m_driverController.getLeftX(), 0.07));
+    
+    
     if(m_mechController.getHID().getPOV() == 90) {
       m_claw.runClaw(1);
     } else if (m_mechController.getHID().getPOV() == 270) {
       m_claw.runClaw(-1);
     } else {
       m_claw.runClaw(0);
+      }
+      
+      if (m_mechController.getHID().getYButton()) {
+        switch (m_dashboardManager.getZeroSubsystem()) {
+          case "Arm":
+          m_arm.resetVortexEncoder();
+          break;
+          case "Claw":
+          m_claw.zeroClaw();
+          break;
+          case "Elevator":
+            m_elevator.setZero();
+            break;
+            case "Algae Intake":
+            m_algaeIntake.setZero();
+            break;
+      } 
     }
-    
   }
 
   public Claw getClaw() {
     return m_claw;
   }
-
-
+  
+  
   public Arm getArm() {
     return m_arm;
   }
@@ -300,6 +317,8 @@ public class RobotContainer {
 
   public void testInit() {
     m_arm.stopPid();
+    m_algaeIntake.stopPid();
+    m_elevator.stopPID();
   }
 
   public CoralMaster getCoral() {
