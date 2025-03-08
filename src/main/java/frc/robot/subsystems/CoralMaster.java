@@ -107,7 +107,7 @@ public class CoralMaster extends SubsystemBase {
         public void toggleIntakeAutoAlign() {
             useIntakeAutoAlign = !useIntakeAutoAlign;
         }
-    
+
         @Override
         public void periodic() {
             SmartDashboard.putBoolean("Enable Intake Auto Align", useIntakeAutoAlign);

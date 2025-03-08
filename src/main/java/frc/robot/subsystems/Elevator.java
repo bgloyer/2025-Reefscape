@@ -102,4 +102,9 @@ public class Elevator extends SubsystemBase {
     public void stopPID() {
         m_controller.setReference(0, ControlType.kVoltage);
     }
+    
+    public boolean atNetHeight() {
+        return m_encoder.getPosition() > 1.2;
+    }
+
 }

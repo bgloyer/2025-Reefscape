@@ -76,6 +76,7 @@ public class RobotContainer {
   private final Trigger alignedToReef = new Trigger(m_robotDrive::alignedToReef);
   private final Trigger isInTeleop = RobotModeTriggers.teleop();
   private final Trigger isTopDealgae = new Trigger(m_robotDrive::isTopDealgae);
+  private final Trigger atNetHeight = new Trigger(m_elevator::atNetHeight);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -136,17 +137,20 @@ public class RobotContainer {
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runIntake(), () -> m_claw.stopIntake()));
 
       //net score
-      m_driverController.x().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster).alongWith(m_blinkin.setColor(BlinkinConstants.AlgaeScore)));
-
       Command netScore = Commands.sequence(
-        Commands.runOnce(() -> m_claw.runVoltage(-2)),
+        Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster), 
+        m_blinkin.setColor(BlinkinConstants.AlgaeScore),
+        Commands.waitUntil(atNetHeight),
+        Commands.runOnce(() -> m_claw.runVoltage(-8)),
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store)),
-        Commands.waitSeconds(0.3),
+        Commands.waitUntil(m_claw::onTarget),
         Commands.runOnce(() -> m_claw.runVoltage(0)),
-        Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
+        Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster),
+        Commands.runOnce(() -> System.out.println("getting here"))
       );
 
-      m_driverController.x().onFalse(netScore);
+      m_driverController.x().toggleOnTrue(netScore);
+
 
       // toggle intake mode
       m_driverController.start().onTrue(Commands.runOnce(() -> m_coralMaster.toggleIntakeAutoAlign()));
@@ -209,6 +213,7 @@ public class RobotContainer {
       m_mechController.start().onTrue(climb(this));
       
       m_mechController.rightStick().onTrue(storeClimb(this));
+      m_mechController.rightTrigger(0.3).whileTrue(m_blinkin.setColor(Math.round((Math.random() * 100.0)) / 100.0));
 
       
       

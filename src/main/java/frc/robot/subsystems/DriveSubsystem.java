@@ -475,9 +475,9 @@ private Direction oldScoringSide = Direction.RIGHT;
 
 
     if (onLeftSideOfField()) {
-      return -Constants.IntakeAlignOffset;
+      return -Constants.IntakeLeftAlignOffset;
     } else {
-      return Constants.IntakeAlignOffset;
+      return Constants.IntakeRightAlignOffset;
     }
   }
 
