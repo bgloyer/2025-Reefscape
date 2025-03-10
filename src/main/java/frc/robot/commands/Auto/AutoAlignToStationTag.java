@@ -60,7 +60,7 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void initialize() {
     count = 0;
-    if(DashboardManager.intakeCoralInTheWay)
+    if(DashboardManager.intakeCoralInTheWayOverride)
       m_coralMaster.setOneCoralAwayIntake();
     else
       m_coralMaster.setIntake();
@@ -102,7 +102,7 @@ public class AutoAlignToStationTag extends Command {
       if(Helpers.isOneCoralAway == false)
         Helpers.isOneCoralAway = coralInTheWay(yOutput);
       SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
-      if(Helpers.isOneCoralAway || DashboardManager.intakeCoralInTheWay) {
+      if(Helpers.isOneCoralAway || DashboardManager.intakeCoralInTheWayOverride) {
         m_coralMaster.setOneCoralAwayIntake();
         m_yController.setGoal(Constants.IntakeOneCoralAwayDistance);
       }

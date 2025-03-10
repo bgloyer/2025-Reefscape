@@ -77,6 +77,7 @@ public class RobotContainer {
   private final Trigger isInTeleop = RobotModeTriggers.teleop();
   private final Trigger isTopDealgae = new Trigger(m_robotDrive::isTopDealgae);
   private final Trigger atNetHeight = new Trigger(m_elevator::atNetHeight);
+  private final Trigger readyToStartScoreSequence = new Trigger(m_robotDrive::closeToReef).or(m_dashboardManager::getUseManualScoring); // idk what to name this
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -166,11 +167,11 @@ public class RobotContainer {
       m_mechController.a().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.ONE)));
       m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-5), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(Commands.waitSeconds(0.4)).andThen(new SetStore(m_coralMaster)));
 
-      m_mechController.x().and(m_robotDrive::closeToReef).onTrue(Commands.sequence(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
+      m_mechController.x().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
 
-      m_mechController.b().and(m_robotDrive::closeToReef).onTrue(Commands.sequence(new SetLevel(Level.THREE, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
+      m_mechController.b().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.THREE, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
 
-      m_mechController.y().and(m_robotDrive::closeToReef).onTrue(Commands.sequence(new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetStore(m_coralMaster)));
+      m_mechController.y().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetStore(m_coralMaster)));
       
       Command TopAlgaeGrab = Commands.sequence(
         new SetLevel(Level.DEALGFOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
@@ -224,10 +225,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Set Store", new AutoSetStore(m_coralMaster));
     NamedCommands.registerCommand("Ready Elevator L3", Commands.runOnce(() -> m_coralMaster.setState(Level.BOTTOMALGAEROLL)));
     NamedCommands.registerCommand("Ready Elevator L4", Commands.runOnce(() -> m_coralMaster.setState(ElevatorConstants.L4, ArmConstants.Store, WristConstants.L4)));
-    NamedCommands.registerCommand("Override Feedback Intake", new OverrideFeedbackIntake(m_robotDrive, m_coralMaster));
     NamedCommands.registerCommand("Score L2", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
     NamedCommands.registerCommand("Score L3", Commands.parallel(new AlignToReef(m_robotDrive)).until(alignedToReef.and(m_coralMaster::onTarget)).andThen(Commands.runOnce(() -> m_claw.runVoltage(-5))));
-    // NamedCommands.registerCommand("Score L3", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.BOTTOMALGAE, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()).andThen(Commands.runOnce(() -> m_claw.runVoltage(-5))));
     NamedCommands.registerCommand("Score L4", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
     NamedCommands.registerCommand("Set Left", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
     NamedCommands.registerCommand("Set Right", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));

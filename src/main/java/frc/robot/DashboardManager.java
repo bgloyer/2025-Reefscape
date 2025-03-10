@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DashboardManager extends SubsystemBase {
     
-    public static boolean intakeCoralInTheWay = false;
+    public static boolean intakeCoralInTheWayOverride = false;
+    public static boolean useManualScoring = false;
     private String zeroSelected;
     private final SendableChooser<String> zeroChooser;
 
@@ -17,17 +18,21 @@ public class DashboardManager extends SubsystemBase {
         zeroChooser.addOption("Claw", "Claw");
         zeroChooser.addOption("Elevator", "Elevator");
         zeroChooser.addOption("Algae Intake", "Algae Intake");
-        SmartDashboard.putBoolean("Intake Coral In the Way", false);
+        SmartDashboard.putBoolean("Intake Coral In the Way Override", intakeCoralInTheWayOverride);
+        SmartDashboard.putBoolean("Use Manual Scoring", useManualScoring);
     }
     @Override
     public void periodic() {
-        intakeCoralInTheWay = SmartDashboard.getBoolean("Intake Coral In the Way", false);
+        intakeCoralInTheWayOverride = SmartDashboard.getBoolean("Intake Coral In the Way", false);
     }
 
     public String getZeroSubsystem() {
         return zeroChooser.getSelected();
     }
-    public void zeroStuff() {
 
+    public boolean getUseManualScoring() {
+        return SmartDashboard.getBoolean("Use Manual Scoring", false);
     }
+
+
 }
