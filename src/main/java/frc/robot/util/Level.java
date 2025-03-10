@@ -6,7 +6,7 @@ import frc.robot.constants.ElevatorConstants;
 
 public enum Level {
     
-    NET(ElevatorConstants.Net, ArmConstants.Net, WristConstants.Net, false),
+    NET(ElevatorConstants.Net, ArmConstants.Net, WristConstants.AlgaeStore, false),
     ALGAESTORE(ElevatorConstants.AlgaeStore, ArmConstants.AlgaeStore, WristConstants.AlgaeStore, false),
     STORE(ElevatorConstants.Store, ArmConstants.Store, WristConstants.Store, false), 
     ONE(ElevatorConstants.L1, ArmConstants.L1, WristConstants.L1, true),

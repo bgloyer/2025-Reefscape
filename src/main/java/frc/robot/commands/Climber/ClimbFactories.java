@@ -10,7 +10,7 @@ public final class ClimbFactories {
     
     public static Command readyClimb(RobotContainer container) {
         return Commands.sequence(
-            Commands.runOnce(() -> container.getAlgaeIntake().setAngle(AlgaeIntakeConstants.ClimbAngle)),
+            Commands.runOnce(() -> container.getAlgaeIntake().setAngle(AlgaeIntakeConstants.ClimbReadyAngle)),
             Commands.runOnce(() -> container.getClaw().setTargetAngle(90)),
             Commands.runOnce(() -> container.getArm().setTargetAngle(90)),
             Commands.waitUntil(() ->container.getArm().onTarget()),
@@ -39,7 +39,7 @@ public final class ClimbFactories {
       public static Command climb(RobotContainer container) {
         return Commands.sequence(
           Commands.runOnce(() -> container.getClimber().setAngle(ClimbConstants.ClimbAngle)),
-          Commands.runOnce(() -> container.getAlgaeIntake().setAngle(AlgaeIntakeConstants.StoreAngle))
+          Commands.runOnce(() -> container.getAlgaeIntake().setAngle(AlgaeIntakeConstants.ClimbStoreAngle))
         );
       }
     

@@ -13,6 +13,7 @@ public class ClawConstants {
         public static final double SlewRate = 5.5;
         // from block cad - degrees
         public static final double AlgaeStore = 124.25;
+        public static final double AlgaeNetFlick = 90;
         public static final double Initial = 0;
         public static final double Store = 90;
 
@@ -22,12 +23,11 @@ public class ClawConstants {
         public static final double L1 = 161.2;
         public static final double L2 = 83.19;
         public static final double L3 = 85;
-        public static final double L4 = 47; //75 
+        public static final double L4 = 50; //75 
         public static final double TopAlgGrab = 124.25;
         public static final double TopDealgRoll = 85;
         public static final double BottomAlgGrab = 124.25;
         public static final double BottomAlgaeRoll = 88;
-        public static final double Net = 129.3;
         public static final double GroundIntake = 21.27;
 
         public static final double MaxAngle = 180;

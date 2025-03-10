@@ -13,13 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start to E4 Accel"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Start to E4 Score"
+            "pathName": "Start to E4"
           }
         },
         {
@@ -91,21 +85,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Set Right"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Intake to C3"
+            "pathName": "Intake to D4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score L3"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.15
+            "name": "Score L4"
           }
         },
         {
@@ -115,7 +109,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "C To Intake"
+                  "pathName": "D to Intake"
                 }
               },
               {

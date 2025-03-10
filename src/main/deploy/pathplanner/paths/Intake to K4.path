@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.5356249999999998,
-        "y": 7.26078125
+        "y": 7.261
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.685625,
-        "y": 7.06078125
+        "y": 7.061
       },
       "isLocked": false,
       "linkedName": "CoralStation"

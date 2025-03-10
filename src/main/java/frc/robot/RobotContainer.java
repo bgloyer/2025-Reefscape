@@ -142,7 +142,7 @@ public class RobotContainer {
         m_blinkin.setColor(BlinkinConstants.AlgaeScore),
         Commands.waitUntil(atNetHeight),
         Commands.runOnce(() -> m_claw.runVoltage(-8)),
-        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store)),
+        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.AlgaeNetFlick)),
         Commands.waitUntil(m_claw::onTarget),
         Commands.runOnce(() -> m_claw.runVoltage(0)),
         Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster),
@@ -190,7 +190,8 @@ public class RobotContainer {
         Command TopAlgaeRoll = Commands.sequence(
           new SetLevel(Level.DEALGFOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
           new SetLevel(Level.TOPALGAEROLL, m_coralMaster, m_driverController, alignedToReef)
-          .alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate())));
+          .alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf
+          (coralStored.negate())));
 
         Command BottomAlgaeRoll = new SetLevel(Level.BOTTOMALGAEROLL, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate()));
         
@@ -247,6 +248,7 @@ public class RobotContainer {
 
   public void autoInit() {
     Helpers.isAuto = true;
+    m_robotDrive.useVision = true;
     m_blinkin.setColor(BlinkinConstants.Red);
     if(m_climber.getAngle() < 30) {
       m_climber.setAngle(ClimbConstants.StoreAngle);
@@ -259,6 +261,7 @@ public class RobotContainer {
   }
   
   public void teleopInit() {
+    m_robotDrive.useVision = true;
     Helpers.isAuto = false;
     m_blinkin.setColor(BlinkinConstants.Red);
     m_arm.resetSetpoint();
@@ -324,6 +327,10 @@ public class RobotContainer {
     m_arm.stopPid();
     m_algaeIntake.stopPid();
     m_elevator.stopPID();
+  }
+
+  public void disabledInit() {
+    m_robotDrive.useVision = false;
   }
 
   public CoralMaster getCoral() {

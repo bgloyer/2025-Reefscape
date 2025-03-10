@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.331960227272727,
-        "y": 3.0228551136363633
+        "x": 7.149630681818182,
+        "y": 3.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.081960227272727,
-        "y": 3.0228551136363633
+        "x": 6.899630681818182,
+        "y": 3.0
       },
       "isLocked": false,
       "linkedName": "Middle of Start To E"
     },
     {
       "anchor": {
-        "x": 5.215142045454546,
-        "y": 2.7835369318181815
+        "x": 5.1553125,
+        "y": 2.8333948863636365
       },
       "prevControl": {
-        "x": 5.465142045454546,
-        "y": 2.7835369318181815
+        "x": 5.4053125,
+        "y": 2.8333948863635565
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.5,
+      "constraints": {
+        "maxVelocity": 4.9,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
@@ -46,7 +60,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.9,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -60,7 +74,7 @@
   "folder": "Mirrored 3 Coral",
   "idealStartingState": {
     "velocity": 2.5,
-    "rotation": 120.47699048187057
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

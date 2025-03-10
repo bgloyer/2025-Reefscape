@@ -104,7 +104,7 @@ public class Elevator extends SubsystemBase {
     }
     
     public boolean atNetHeight() {
-        return m_encoder.getPosition() > 1.2;
+        return m_encoder.getPosition() > 1.1;
     }
 
 }

@@ -82,6 +82,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
      LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 1);
+     m_robotContainer.disabledInit();
      CommandScheduler.getInstance().enable();
   }
 

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1267897727272727,
-        "y": 1.21799715909091
+        "x": 0.9473011363636362,
+        "y": 1.1481960227272725
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3091740737622937,
-        "y": 1.3889824413112426
+        "x": 1.155313709948099,
+        "y": 1.2868710717835772
       },
       "isLocked": false,
       "linkedName": "RightCoralStation "
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 3.6595738636363637,
-        "y": 2.873
+        "y": 2.694
       },
       "prevControl": {
-        "x": 3.482297866250615,
-        "y": 2.6967240210610415
+        "x": 3.4453973992802256,
+        "y": 2.565048683155604
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,26 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.39895923677364065,
+      "constraints": {
+        "maxVelocity": 4.9,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "PositionCoral",
-      "waypointRelativePos": 0.07,
+      "waypointRelativePos": 0.1,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -45,7 +59,7 @@
     },
     {
       "name": "Ready Elevator L4",
-      "waypointRelativePos": 0.7023391812865531,
+      "waypointRelativePos": 0.8048568950563755,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -57,20 +71,20 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.9,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
+    "velocity": 0.75,
     "rotation": 59.99999999999999
   },
   "reversed": false,
   "folder": "Mirrored 3 Coral",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 0.75,
     "rotation": 54.011
   },
   "useDefaultConstraints": false

@@ -15,7 +15,7 @@ public class ArmConstants {
     public static final double L1 = -72.9;
     public static final double L2 = -19; 
     public static final double L3 = -24;
-    public static final double L4 = -25; 
+    public static final double L4 = -27; 
     public static final double TopAlgGrab = -30;
     public static final double TopDealgRoll = -29;
     public static final double BottomDealgRoll = -32;

@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Start To G4"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Set Left"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start To G4"
           }
         },
         {
@@ -26,12 +26,6 @@
           "type": "named",
           "data": {
             "name": "Set Store"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "G4 To Stationish"
           }
         }
       ]
