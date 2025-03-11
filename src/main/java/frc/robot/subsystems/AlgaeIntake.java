@@ -9,6 +9,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.AlgaeIntakeConstants;
 import frc.robot.constants.Configs.AlgaeIntakeConfig;
 
-public class AlgaeIntake extends SubsystemBase {
+public class AlgaeIntake extends TorSubsystemBase {
     
     private final SparkFlex m_pivotMotor; 
     private final SparkMax m_rollerMotor; 
@@ -71,5 +73,16 @@ public class AlgaeIntake extends SubsystemBase {
         // in memory of james
         // m_pivotMotor.configure(AlgaeIntakeConfig.pivotMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         // setAngle(0);
+    }
+
+    @Override
+    public void toggleIdleMode() {
+        SparkBaseConfig config = super.getIdleModeConfig();
+        m_pivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public boolean isBrakeMode() {
+        return m_pivotMotor.configAccessor.getIdleMode() == IdleMode.kBrake;
     }
 }

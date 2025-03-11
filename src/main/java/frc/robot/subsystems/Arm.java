@@ -8,6 +8,9 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -19,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.Configs;
 
-public class Arm extends SubsystemBase {
+public class Arm extends TorSubsystemBase {
     private final SparkFlex m_leftMotor;
     private final SparkFlex m_rightMotor; // follower moter
     private final SparkClosedLoopController m_controller;
@@ -37,7 +40,7 @@ public class Arm extends SubsystemBase {
             m_controller = m_leftMotor.getClosedLoopController();
             m_encoder = m_leftMotor.getEncoder();
     
-            resetVortexEncoder();
+            setZero();
             resetSetpoint();
         }
     
@@ -62,7 +65,7 @@ public class Arm extends SubsystemBase {
             return Math.abs(m_encoder.getPosition() - targetState.position) < ArmConstants.Tolerance;
         }
     
-        public void resetVortexEncoder() {
+        public void setZero() {
             if (m_leftMotor.getAbsoluteEncoder().getPosition() <= 45)
                 m_encoder.setPosition(m_leftMotor.getAbsoluteEncoder().getPosition());
             else 
@@ -86,4 +89,17 @@ public class Arm extends SubsystemBase {
             stopPid = true;
             m_controller.setReference(0, ControlType.kVoltage);
         }
+
+        @Override
+        public void toggleIdleMode() {
+            SparkBaseConfig config = super.getIdleModeConfig();
+            m_leftMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            m_rightMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        }
+
+        @Override
+        public boolean isBrakeMode() {
+            return m_leftMotor.configAccessor.getIdleMode() == IdleMode.kBrake;
+        }
+
 }

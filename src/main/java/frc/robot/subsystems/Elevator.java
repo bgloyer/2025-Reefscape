@@ -8,6 +8,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -20,7 +22,7 @@ import frc.robot.constants.ElevatorConstants;
 import frc.robot.util.Level;
 import frc.robot.constants.Configs.ElevatorConfig;
 
-public class Elevator extends SubsystemBase {
+public class Elevator extends TorSubsystemBase {
     
     private final SparkFlex m_leftMotor;
     private final SparkFlex m_rightMotor; // follower motor
@@ -72,8 +74,6 @@ public class Elevator extends SubsystemBase {
         switch (level) {
             case FOUR:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
-            case DEALGFOUR:
-                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
             case THREE:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
             case TOPALGAEGRAB:
@@ -105,6 +105,18 @@ public class Elevator extends SubsystemBase {
     
     public boolean atNetHeight() {
         return m_encoder.getPosition() > 1.1;
+    }
+
+    @Override
+    public void toggleIdleMode() {
+        SparkBaseConfig config = super.getIdleModeConfig();
+        m_leftMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_rightMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public boolean isBrakeMode() {
+        return m_leftMotor.configAccessor.getIdleMode() == IdleMode.kBrake;
     }
 
 }

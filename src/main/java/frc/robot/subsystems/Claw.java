@@ -7,6 +7,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
@@ -18,7 +20,7 @@ import frc.robot.constants.ClawConstants.CoralIntakeConstants;
 import frc.robot.constants.ClawConstants.WristConstants;
 import frc.robot.constants.Configs.ClawConfig;
 
-public class Claw extends SubsystemBase {
+public class Claw extends TorSubsystemBase {
     
     private final SparkFlex m_wristMotor;
     private final SparkFlex m_intakeMotor;
@@ -73,7 +75,8 @@ public class Claw extends SubsystemBase {
         m_intakeController.setReference(volts, ControlType.kVoltage);
     }
 
-    public void zeroClaw() {
+    @Override
+    public void setZero() {
         m_encoder.setPosition(0);
     }
 
@@ -124,5 +127,16 @@ public class Claw extends SubsystemBase {
         SmartDashboard.putBoolean("Front Coral Stored", frontLaserTriggered());
         SmartDashboard.putBoolean("Back Coral Stored", backLaserTriggered());
         SmartDashboard.putNumber("BackLaserCan Distance", getDistance());
+    }
+
+    @Override
+    public void toggleIdleMode() {
+        SparkBaseConfig config = super.getIdleModeConfig();
+        m_wristMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public boolean isBrakeMode() {
+        return m_wristMotor.configAccessor.getIdleMode() == IdleMode.kBrake;
     }
 }

@@ -71,7 +71,7 @@ public final class Configs {
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
                     talonConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-                    talonConfig.CurrentLimits.StatorCurrentLimit = 100;
+                    talonConfig.CurrentLimits.StatorCurrentLimit = 80;
 
                     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 

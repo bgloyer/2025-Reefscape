@@ -32,6 +32,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralMaster;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.TorSubsystemBase;
 import frc.robot.util.Helpers;
 import frc.robot.util.Level;
 import frc.robot.util.LimelightHelpers;
@@ -45,6 +46,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -96,6 +98,10 @@ public class RobotContainer {
     m_robotDrive.drive(0, 0, 0, true);
     SmartDashboard.putBoolean("switch", false);
 
+    m_dashboardManager.idleModeChooser.addOption("Claw", m_claw);
+    m_dashboardManager.idleModeChooser.addOption("Elevator", m_elevator);
+    m_dashboardManager.idleModeChooser.addOption("Arm", m_arm);
+    m_dashboardManager.idleModeChooser.addOption("Algae Intake", m_algaeIntake);
     }
 
   
@@ -140,7 +146,6 @@ public class RobotContainer {
       //net score
       Command netScore = Commands.sequence(
         Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster), 
-        m_blinkin.setColor(BlinkinConstants.AlgaeScore),
         Commands.waitUntil(atNetHeight),
         Commands.runOnce(() -> m_claw.runVoltage(-8)),
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.AlgaeNetFlick)),
@@ -150,7 +155,8 @@ public class RobotContainer {
         Commands.runOnce(() -> System.out.println("getting here"))
       );
 
-      m_driverController.x().toggleOnTrue(netScore);
+      m_driverController.x().onTrue(netScore);
+      m_driverController.x().onTrue(m_blinkin.setColor(BlinkinConstants.AlgaeScore));
 
 
       // toggle intake mode
@@ -165,7 +171,7 @@ public class RobotContainer {
       m_mechController.rightBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
 
       m_mechController.a().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.ONE)));
-      m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-5), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(Commands.waitSeconds(0.4)).andThen(new SetStore(m_coralMaster)));
+      m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-6), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(Commands.waitSeconds(0.4)).andThen(new SetStore(m_coralMaster)));
 
       m_mechController.x().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
 
@@ -174,7 +180,7 @@ public class RobotContainer {
       m_mechController.y().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetStore(m_coralMaster)));
       
       Command TopAlgaeGrab = Commands.sequence(
-        new SetLevel(Level.DEALGFOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
+        new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
         Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
         Commands.parallel(
           Commands.runOnce(() -> m_claw.runVoltage(7)),
@@ -182,14 +188,14 @@ public class RobotContainer {
 
         
         Command BottomAlgaeGrab = Commands.sequence(
-          new SetLevel(Level.DEALGFOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
+          new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
           Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
           Commands.parallel(
             Commands.runOnce(() -> m_claw.runVoltage(7)),
             new SetLevel(Level.BOTTOMALGAEGRAB, m_coralMaster, m_driverController, alignedToReef)));
 
         Command TopAlgaeRoll = Commands.sequence(
-          new SetLevel(Level.DEALGFOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
+          new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
           new SetLevel(Level.TOPALGAEROLL, m_coralMaster, m_driverController, alignedToReef)
           .alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf
           (coralStored.negate())));
@@ -242,7 +248,7 @@ public class RobotContainer {
   }
   
   public void setVortexArmEncoder() {
-    m_arm.resetVortexEncoder();
+    m_arm.setZero();
   }
 
   public void autoInit() {
@@ -290,22 +296,13 @@ public class RobotContainer {
       }
       
       if (m_mechController.getHID().getYButton()) {
-        switch (m_dashboardManager.getZeroSubsystem()) {
-          case "Arm":
-          m_arm.resetVortexEncoder();
-          break;
-          case "Claw":
-          m_claw.zeroClaw();
-          break;
-          case "Elevator":
-            m_elevator.setZero();
-            break;
-            case "Algae Intake":
-            m_algaeIntake.setZero();
-            break;
+        TorSubsystemBase subsystem = m_dashboardManager.getSelectedSubsystem();
+          if (subsystem != null) {
+            subsystem.setZero();
+          }
       } 
     }
-  }
+  
 
   public Claw getClaw() {
     return m_claw;
@@ -345,4 +342,20 @@ public class RobotContainer {
   }
 
 
+  public void disabledPeriodic() {
+    if (m_mechController.getHID().getYButton()) {
+      TorSubsystemBase subsystem = m_dashboardManager.getSelectedSubsystem();
+        if (subsystem != null) {
+          subsystem.setZero();
+        }
+    } 
+    TorSubsystemBase subsystem = m_dashboardManager.getSelectedSubsystem(); 
+    if (subsystem != null) {
+      SmartDashboard.putBoolean("Is Brake Mode", subsystem.isBrakeMode());
+      if(SmartDashboard.getBoolean("Toggle Idle Mode", false)) {
+        subsystem.toggleIdleMode();
+        SmartDashboard.putBoolean("Toggle Idle Mode", false);
+      }
+    }
+  }
 }
