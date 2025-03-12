@@ -35,6 +35,7 @@ public class ClawConstants {
         public static final double OffsetL2 = 96.3;
         public static final double OffsetL3 = 96.3;
         public static final double OffsetL4 = 75;
+        public static final double GroundAlgae = 143;
     }
 
     public final class CoralIntakeConstants {
@@ -42,7 +43,7 @@ public class ClawConstants {
         public static final double kP = 0.0007;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double IntakeVoltage = -3
+        public static final double IntakeVoltage = -2.75
         ;
         public static final double ScoreVoltage = -6;
         public static final double OuttakeVoltage = 4;

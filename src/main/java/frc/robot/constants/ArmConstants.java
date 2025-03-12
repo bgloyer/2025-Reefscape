@@ -35,4 +35,5 @@ public class ArmConstants {
     public static final double OffsetL2 = -40;
     public static final double OffsetL3 = -40;
     public static final double OffsetL4 = -42;
+    public static final double GroundAlgae = -100;
 }

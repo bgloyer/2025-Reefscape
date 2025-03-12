@@ -187,7 +187,7 @@ private Direction oldScoringSide = Direction.RIGHT;
 
   private void smartDashboardPrints() {
     SmartDashboard.putBoolean("left side", onLeftSideOfField());
-    SmartDashboard.putNumber("Wheel Speed", m_frontRight.getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("Robot x Speed", getSpeeds().vxMetersPerSecond);
     SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     SmartDashboard.putData("Robot Field", m_field2d);
     SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());
@@ -493,6 +493,10 @@ private Direction oldScoringSide = Direction.RIGHT;
 
   public boolean closeToReef() {
     return closeToReef;
+  }
+
+  public ChassisSpeeds getPreviousSetpointSpeeds() {
+    return previousSetpoint.robotRelativeSpeeds();
   }
 
 }

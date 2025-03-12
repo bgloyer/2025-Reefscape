@@ -122,9 +122,9 @@ public class RobotContainer {
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
         new WaitCommand(0.1),
-        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_coralMaster),
-        Commands.waitUntil(m_arm::onTarget),
-        new PositionCoral(m_claw).onlyIf(coralStored)));
+        Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_coralMaster)));
+        // Commands.waitUntil(m_arm::onTarget),
+        // new PositionCoral(m_claw).onlyIf(coralStored)));
               
       // Score
       m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive).alongWith(m_blinkin.setColor(BlinkinConstants.Black)));
@@ -132,7 +132,25 @@ public class RobotContainer {
       // Algae Intake
       m_driverController.leftTrigger(0.4).whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.IntakeAngle, AlgaeIntakeConstants.IntakeVoltage, m_algaeIntake));
 
-      m_driverController.leftBumper().whileTrue(Commands.startEnd(() -> m_algaeIntake.setVoltage(AlgaeIntakeConstants.IntakeVoltage), () -> m_algaeIntake.setVoltage(0), m_algaeIntake));
+    Command groundIntake = Commands.sequence(
+      Commands.runOnce(() -> m_coralMaster.setState(Level.GROUNDALGAE), m_coralMaster),
+      Commands.runOnce(() -> m_claw.runVoltage(7)));
+
+    Command storeAlgae = Commands.sequence(
+      Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.AlgaeStore), m_elevator),
+      Commands.waitUntil(m_elevator::onTarget),
+      Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
+      m_blinkin.setColor(BlinkinConstants.AlgaeHold));
+
+    m_driverController.leftBumper().whileTrue(groundIntake);
+    m_driverController.leftBumper().onFalse(Commands.either(
+      storeAlgae,
+      (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
+      algaeStored));
+
+
+
+
       // Processor
       // m_driverController.y().whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.ScoreAngle, AlgaeIntakeConstants.OuttakeVoltage, m_algaeIntake));
       m_driverController.y().whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.StoreAngle, AlgaeIntakeConstants.OuttakeVoltage, m_algaeIntake));
@@ -221,7 +239,7 @@ public class RobotContainer {
       m_mechController.start().onTrue(climb(this));
       
       m_mechController.rightStick().onTrue(storeClimb(this));
-      m_mechController.rightTrigger(0.3).whileTrue(m_blinkin.setColor(Math.round((Math.random() * 100.0)) / 100.0));
+      m_mechController.rightTrigger(0.3).whileTrue(Commands.run(() -> m_blinkin.setRandom()));
 
       
       
@@ -236,7 +254,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Score L4", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef)).until(coralStored.negate()));
     NamedCommands.registerCommand("Set Left", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
     NamedCommands.registerCommand("Set Right", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
-    NamedCommands.registerCommand("PositionCoral", new PositionCoral(m_claw).andThen(() -> m_claw.stopIntake()));
+    // NamedCommands.registerCommand("PositionCoral", new PositionCoral(m_claw).andThen(() -> m_claw.stopIntake()));
+    NamedCommands.registerCommand("PositionCoral", Commands.none());
   }
   
   /**
@@ -320,6 +339,7 @@ public class RobotContainer {
 
 
   public void testInit() {
+    m_blinkin.setColorNotCommand(0.67);
     m_arm.stopPid();
     m_algaeIntake.stopPid();
     m_elevator.stopPID();

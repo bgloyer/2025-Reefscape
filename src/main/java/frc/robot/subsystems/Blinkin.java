@@ -19,4 +19,8 @@ public class Blinkin extends SubsystemBase{
     public Command setColor(double value) {
         return runOnce(() -> m_Blinkin.set(value));
     }
+
+    public void setRandom() {
+        setColorNotCommand(Math.round((Math.random() * 100.0)) / 100.0);
+    }
 }
