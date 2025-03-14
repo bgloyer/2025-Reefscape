@@ -28,7 +28,7 @@ public class DashboardManager extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        intakeCoralInTheWayOverride = SmartDashboard.getBoolean("Intake Coral In the Way", false);
+        intakeCoralInTheWayOverride = SmartDashboard.getBoolean("Intake Coral In the Way Override", false);
     }
 
     public String getZeroSubsystem() {

@@ -107,6 +107,9 @@ public class AutoAlignToStationTag extends Command {
         m_yController.setGoal(Constants.IntakeOneCoralAwayDistance);
       }
     } else {
+      if (DashboardManager.intakeCoralInTheWayOverride) {
+        m_coralMaster.setOneCoralAwayIntake();
+      }
       m_robotDrive.driveWithController(turnOutput, true);
     }
   }

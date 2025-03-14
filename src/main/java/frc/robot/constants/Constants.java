@@ -28,14 +28,14 @@ public final class Constants {
     public static final int FrontCoralLaserCanID = 17;
     public static final int BackCoralLaserCanID = 18;
 
-    public static final double LeftReefOffset = 0.181;//0.191
-    public static final double RightReefOffset = -0.148;//-0.135
+    public static final double LeftReefOffset = 0.183;//0.181;//0.191
+    public static final double RightReefOffset = -0.141;//-0.148;//-0.135
     public static final double MiddleReefOffset = 0.036;
 
     public static final double ReefAlignTolerance = 0.025;
-    public static final double IntakeRightAlignOffset = 0.0907;//0.0894
-    public static final double IntakeLeftAlignOffset = 0.0708;
-    public static final double IntakeAlignDistance = 0.71;
-    public static final double IntakeOneCoralAwayDistance = 0.82;
-    public static final double ReefOneCoralAwayDistance = 0.635;
+    public static final double IntakeRightAlignOffset = 0.0675; //0.0716;//0.0907;//0.0894 positive whenwe got it
+    public static final double IntakeLeftAlignOffset = 0.076; //0.104;//0.0708;
+    public static final double IntakeAlignDistance = 0.7404;//0.71;
+    public static final double IntakeOneCoralAwayDistance = 0.8607;//0.82;
+    public static final double ReefOneCoralAwayDistance = 0.6408;//0.635;
 }

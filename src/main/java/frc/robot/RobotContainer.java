@@ -189,7 +189,7 @@ public class RobotContainer {
       m_mechController.rightBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
 
       m_mechController.a().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.ONE)));
-      m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(-6), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(Commands.waitSeconds(0.4)).andThen(new SetStore(m_coralMaster)));
+      m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(10), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(Commands.waitSeconds(0.4)).andThen(new SetStore(m_coralMaster)));
 
       m_mechController.x().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.TWO, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef)));
 
