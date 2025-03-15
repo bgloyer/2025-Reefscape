@@ -104,7 +104,7 @@ public class Elevator extends TorSubsystemBase {
     }
     
     public boolean atNetHeight() {
-        return m_encoder.getPosition() > 1.1;
+        return m_encoder.getPosition() > 1.05;
     }
 
     @Override

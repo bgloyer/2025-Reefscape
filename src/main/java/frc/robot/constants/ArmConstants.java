@@ -10,7 +10,8 @@ public class ArmConstants {
     // from block cad - degrees
     public static final double AlgaeStore = 0;
     public static final double Store = 0;
-    public static final double Station = 40.966;//40.966
+    public static final double Station = 43;
+    ;//40.966
     public static final double StationOffset = 51.2;//51.2
     public static final double L1 = -52.07;//-72.9
     public static final double L2 = -19; //-19

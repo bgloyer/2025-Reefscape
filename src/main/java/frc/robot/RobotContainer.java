@@ -91,7 +91,6 @@ public class RobotContainer {
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    SmartDashboard.putBoolean("Mirror Auto?", false);
   
     // drive with controller
     m_robotDrive.setDefaultCommand(Commands.runOnce(() -> m_robotDrive.driveWithController(true), m_robotDrive));
@@ -169,8 +168,7 @@ public class RobotContainer {
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.AlgaeNetFlick)),
         Commands.waitUntil(m_claw::onTarget),
         Commands.runOnce(() -> m_claw.runVoltage(0)),
-        Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster),
-        Commands.runOnce(() -> System.out.println("getting here"))
+        Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
       );
 
       m_driverController.x().onTrue(netScore);

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.8081863038277515,
-        "y": 5.350940639952154
+        "x": 4.81281887755102,
+        "y": 5.412882653061224
       },
       "isLocked": false,
       "linkedName": "Actual J"
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.75,
+    "velocity": 0.5,
     "rotation": -54.011
   },
   "reversed": false,

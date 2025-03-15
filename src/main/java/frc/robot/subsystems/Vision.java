@@ -18,7 +18,7 @@ public class Vision {
 
     public void updatePoseEstimation(Pigeon2 gyroAngle) {
         addToPoseEstimator(VisionConstants.ReefLightLightName, gyroAngle);
-        // addToPoseEstimator(VisionConstants.ElevatorLimelightName, gyroAngle);
+        addToPoseEstimator(VisionConstants.ElevatorLimelightName, gyroAngle);
     }
 
     private void addToPoseEstimator(String limelightName, Pigeon2 gyro) {
