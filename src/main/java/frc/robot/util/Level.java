@@ -1,8 +1,8 @@
 package frc.robot.util;
 
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ClawConstants.WristConstants;
-import frc.robot.constants.ElevatorConstants;
+import frc.robot.Arm.ArmConstants;
+import frc.robot.Claw.ClawConstants.WristConstants;
+import frc.robot.Elevator.ElevatorConstants;
 
 public enum Level {
     

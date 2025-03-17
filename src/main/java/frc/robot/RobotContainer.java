@@ -4,38 +4,36 @@
 
 package frc.robot;
 
+import frc.robot.Arm.Arm;
+import frc.robot.Arm.ArmConstants;
+import frc.robot.Blinkin.Blinkin;
+import frc.robot.Blinkin.BlinkinConstants;
+import frc.robot.Claw.Claw;
+import frc.robot.Claw.ClawConstants.WristConstants;
+import frc.robot.Climber.ClimbConstants;
+import frc.robot.Climber.Climber;
+import frc.robot.CoralMaster.CoralMaster;
+import frc.robot.CoralMaster.SetLevel;
+import frc.robot.CoralMaster.SetStore;
+import frc.robot.Drive.DriveSubsystem;
+import frc.robot.Drive.VisionConstants;
+import frc.robot.Drive.DriveAutomation.AlignToReef;
+import frc.robot.Drive.DriveAutomation.AutoAlignToStationTag;
+import frc.robot.Drive.DriveAutomation.AlignToReef.Direction;
+import frc.robot.Elevator.Elevator;
+import frc.robot.Elevator.ElevatorConstants;
 import frc.robot.commands.Algae.RunAlgaeIntake;
-import frc.robot.commands.Auto.AutoAlignToStationTag;
 import frc.robot.commands.Auto.AutoSetStore;
-import frc.robot.commands.Auto.OverrideFeedbackIntake;
-
-import static frc.robot.commands.Climber.ClimbFactories.climb;
-import static frc.robot.commands.Climber.ClimbFactories.readyClimb;
-import static frc.robot.commands.Climber.ClimbFactories.storeClimb;
-import frc.robot.commands.CoralIntake.PositionCoral;
-import frc.robot.commands.CoralMaster.SetLevel;
-import frc.robot.commands.CoralMaster.SetStore;
-import frc.robot.commands.Drive.AlignToReef;
-import frc.robot.commands.Drive.AlignToReef.Direction;
 import frc.robot.constants.AlgaeIntakeConstants;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.BlinkinConstants;
-import frc.robot.constants.ClimbConstants;
-import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.VisionConstants;
-import frc.robot.constants.ClawConstants.WristConstants;
 import frc.robot.subsystems.AlgaeIntake;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Blinkin;
-import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.CoralMaster;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.TorSubsystemBase;
 import frc.robot.util.Helpers;
 import frc.robot.util.Level;
 import frc.robot.util.LimelightHelpers;
+
+import static frc.robot.Climber.ClimbFactories.climb;
+import static frc.robot.Climber.ClimbFactories.readyClimb;
+import static frc.robot.Climber.ClimbFactories.storeClimb;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;

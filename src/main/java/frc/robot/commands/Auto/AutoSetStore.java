@@ -2,10 +2,10 @@ package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.constants.ArmConstants;
-import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.ClawConstants.WristConstants;
-import frc.robot.subsystems.CoralMaster;
+import frc.robot.Arm.ArmConstants;
+import frc.robot.Claw.ClawConstants.WristConstants;
+import frc.robot.CoralMaster.CoralMaster;
+import frc.robot.Elevator.ElevatorConstants;
 import frc.robot.util.Level;
 
 public class AutoSetStore extends SequentialCommandGroup {

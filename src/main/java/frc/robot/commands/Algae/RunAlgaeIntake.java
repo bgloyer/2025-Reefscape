@@ -4,9 +4,9 @@
 
 package frc.robot.commands.Algae;
 
+import frc.robot.Arm.Arm;
 import frc.robot.constants.AlgaeIntakeConstants;
 import frc.robot.subsystems.AlgaeIntake;
-import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */

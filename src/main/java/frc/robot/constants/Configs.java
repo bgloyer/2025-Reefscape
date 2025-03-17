@@ -7,8 +7,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import frc.robot.constants.ClawConstants.CoralIntakeConstants;
-import frc.robot.constants.ClawConstants.WristConstants;
+import frc.robot.Arm.ArmConstants;
+import frc.robot.Claw.ClawConstants.CoralIntakeConstants;
+import frc.robot.Claw.ClawConstants.WristConstants;
+import frc.robot.Climber.ClimbConstants;
+import frc.robot.Elevator.ElevatorConstants;
 
 public final class Configs {
     public static final class MAXSwerveModule {
