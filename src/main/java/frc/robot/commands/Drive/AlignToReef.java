@@ -70,6 +70,7 @@ public class AlignToReef extends Command {
     m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getPreviousSetpointSpeeds().vxMetersPerSecond)); // yes y and x are flipped 
     m_xController.reset();
     m_yController.setGoal(0.522);//0.515 // one coral away: 0.62
+    SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
