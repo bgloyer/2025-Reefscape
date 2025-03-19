@@ -175,6 +175,7 @@ public final class Configs {
                 pivotMotorConfig.encoder.positionConversionFactor(AlgaeIntakeConstants.GearRatio * 360);
 
                 rollerMotorConfig.idleMode(IdleMode.kBrake);
+                rollerMotorConfig.smartCurrentLimit(17);
                 rollerMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .pid(AlgaeIntakeConstants.kP, AlgaeIntakeConstants.kI, AlgaeIntakeConstants.kD);
 

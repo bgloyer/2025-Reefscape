@@ -10,7 +10,7 @@ public class AlgaeIntakeConstants {
     // public static final double kG = -0.037 * 12;
     public static final double kG = -0.0;
     public static final double StoreAngle = 0;
-    public static final double IntakeAngle = 70;
+    public static final double IntakeAngle = 58;//70
     public static final double ClimbStoreAngle = -17;
     public static final double ScoreAngle = 80;
     public static final double ClimbReadyAngle = 109;

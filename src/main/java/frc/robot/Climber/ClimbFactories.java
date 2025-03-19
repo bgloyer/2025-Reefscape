@@ -11,7 +11,8 @@ public final class ClimbFactories {
         return Commands.sequence(
             Commands.runOnce(() -> container.getAlgaeIntake().setAngle(AlgaeIntakeConstants.ClimbReadyAngle)),
             Commands.runOnce(() -> container.getClaw().setTargetAngle(90)),
-            Commands.runOnce(() -> container.getArm().setTargetAngle(90)),
+            Commands.runOnce(() -> container.getArm().setTargetAngle(90), container.getArm()
+            ),
             Commands.waitUntil(() ->container.getArm().onTarget()),
             Commands.runOnce(() -> container.getClimber().setAngle(ClimbConstants.ReadyAngle)),
             Commands.waitUntil(() -> container.getClimber().onTarget()),

@@ -108,10 +108,6 @@ public class RobotContainer {
   private void configureBindings() {
       coralStored.onTrue(m_blinkin.setColor(BlinkinConstants.White));
       coralStored.onFalse(m_blinkin.setColor(BlinkinConstants.Red));
-      // coralStored.negate().and(isntDeAlgae).and(isInTeleop).onTrue(Commands.either(
-      //   new SetStore(m_coralMaster),
-      //   new SetLevel(Level.STORE, m_coralMaster, m_driverController, alignedToReef), 
-      //   new Trigger(() -> m_coralMaster.getLevel() == Level.FOUR)));
 
       // ------------------ Aidan ----------------------------
       // Coral Intake
@@ -120,8 +116,6 @@ public class RobotContainer {
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
         new WaitCommand(0.1),
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_coralMaster)));
-        // Commands.waitUntil(m_arm::onTarget),
-        // new PositionCoral(m_claw).onlyIf(coralStored)));
               
       // Score
       m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive).alongWith(m_blinkin.setColor(BlinkinConstants.Black)));
@@ -149,8 +143,8 @@ public class RobotContainer {
 
 
       // Processor
-      // m_driverController.y().whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.ScoreAngle, AlgaeIntakeConstants.OuttakeVoltage, m_algaeIntake));
-      m_driverController.y().whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.StoreAngle, AlgaeIntakeConstants.OuttakeVoltage, m_algaeIntake));
+      m_driverController.y().whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.IntakeAngle, AlgaeIntakeConstants.OuttakeVoltage, m_algaeIntake));
+      m_driverController.y().onFalse(new RunAlgaeIntake(AlgaeIntakeConstants.StoreAngle, 0, m_algaeIntake));
 
       // Store everything
       m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster));
@@ -201,25 +195,24 @@ public class RobotContainer {
           new SetLevel(Level.TOPALGAEGRAB, m_coralMaster, m_driverController, alignedToReef)));
 
         
-        Command BottomAlgaeGrab = Commands.sequence(
+      Command BottomAlgaeGrab = Commands.sequence(
           new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
           Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
           Commands.parallel(
             Commands.runOnce(() -> m_claw.runVoltage(7)),
             new SetLevel(Level.BOTTOMALGAEGRAB, m_coralMaster, m_driverController, alignedToReef)));
 
-        Command TopAlgaeRoll = Commands.sequence(
+      Command TopAlgaeRoll = Commands.sequence(
           new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
           new SetLevel(Level.TOPALGAEROLL, m_coralMaster, m_driverController, alignedToReef)
           .alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf
           (coralStored.negate())));
 
-        Command BottomAlgaeRoll = new SetLevel(Level.BOTTOMALGAEROLL, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate()));
+      Command BottomAlgaeRoll = new SetLevel(Level.BOTTOMALGAEROLL, m_coralMaster, m_driverController, alignedToReef).alongWith(Commands.runOnce(() -> m_claw.runVoltage(-5)).onlyIf(coralStored.negate()));
         
         
       
-      //Dealgae and store    
-
+      //Dealgae and store   
       m_mechController.povUp().and(readyToDealg).whileTrue(Commands.either(TopAlgaeGrab, BottomAlgaeGrab, isTopDealgae));
       m_mechController.povUp().onFalse(Commands.either(Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster).alongWith(m_blinkin.setColor(BlinkinConstants.AlgaeHold)), 
         (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
