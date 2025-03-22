@@ -17,9 +17,12 @@ public enum Level {
     OFFSETTHREE(ElevatorConstants.OffsetL3, ArmConstants.OffsetL3, WristConstants.OffsetL3, true),
     OFFSETFOUR(ElevatorConstants.OffsetL4, ArmConstants.OffsetL4, WristConstants.OffsetL4, true),
     TOPALGAEGRAB(ElevatorConstants.TopAlgGrab, ArmConstants.TopAlgGrab, WristConstants.TopAlgGrab, false), 
+    OFFSETTOPALGAEGRAB(ElevatorConstants.OffsetTopAlgGrab, ArmConstants.OffsetTopAlgGrab, WristConstants.OffsetTopAlgGrab, false), 
     TOPALGAEROLL(ElevatorConstants.TopDealgRoll, ArmConstants.TopDealgRoll, WristConstants.TopDealgRoll, false),
     BOTTOMALGAEGRAB(ElevatorConstants.BottomAlgGrab, ArmConstants.BottomAlgGrab, WristConstants.BottomAlgGrab, false), 
+    OFFSETBOTTOMALGAEGRAB(ElevatorConstants.OffsetBotAlgGrab, ArmConstants.OffsetBotAlgGrab, WristConstants.OffsetBotAlgGrab, false), 
     BOTTOMALGAEROLL(ElevatorConstants.BottomDealgRoll, ArmConstants.BottomDealgRoll, WristConstants.BottomAlgaeRoll, true),
+    OFFSETBOTTOMALGAEROLL(ElevatorConstants.OffsetBotAlgRoll, ArmConstants.OffsetBotAlgRoll, WristConstants.OffsetBotAlgRoll, true),
     GROUNDALGAE(ElevatorConstants.Store, ArmConstants.GroundAlgae, WristConstants.AlgaeStore, false);
 
     public double elevatorHeight;
@@ -42,6 +45,12 @@ public enum Level {
                 return Helpers.isOneCoralAway ?  Level.OFFSETTHREE : Level.THREE;
             case FOUR:
                 return Helpers.isOneCoralAway ?  Level.OFFSETFOUR : Level.FOUR;
+            case TOPALGAEGRAB:
+                return Helpers.isOneCoralAway ? Level.OFFSETTOPALGAEGRAB : Level.TOPALGAEGRAB;
+            case BOTTOMALGAEGRAB:
+                return Helpers.isOneCoralAway ? Level.OFFSETBOTTOMALGAEGRAB : Level.BOTTOMALGAEGRAB;
+            case BOTTOMALGAEROLL:
+                return Helpers.isOneCoralAway ? Level.OFFSETBOTTOMALGAEROLL : Level.BOTTOMALGAEROLL;
             default:
                 return this;
         }

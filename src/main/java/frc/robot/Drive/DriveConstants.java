@@ -69,6 +69,10 @@ public final class DriveConstants {
     public static final double yTranslationMaxVel = 2;
     public static final double yTranslationMaxAccel = 3;
 
+    public static final double DriveToNetP = 1;
+    public static final double DriveToNetI = 0;
+    public static final double DriveToNetD = 0;
+
   }
 
   

@@ -80,7 +80,7 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void execute() {
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
-    if (m_coralMaster.useIntakeAutoAlign() && LimelightHelpers.getTV(limelightName)) {
+    if (m_coralMaster.useIntakeAutoAlign() && LimelightHelpers.getTV(limelightName) && tyToDistance(limelightName) < 1.7) {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = Math.abs(yDistanceFromTag) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;

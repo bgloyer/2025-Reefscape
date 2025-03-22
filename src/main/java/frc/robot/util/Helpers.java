@@ -55,6 +55,10 @@ public class Helpers {
         }
     }
 
+    public static double txToDistanceOffset(String limelightName) {
+        return tyToDistance(limelightName) * tan(LimelightHelpers.getTX(limelightName));
+    }
+
     
     
 }

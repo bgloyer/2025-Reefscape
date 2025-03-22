@@ -36,6 +36,7 @@ import frc.robot.Drive.DriveAutomation.AligningConstants;
 import frc.robot.Drive.DriveAutomation.AlignToReef.Direction;
 import frc.robot.constants.AutoConstants;
 import frc.robot.subsystems.KrakenSwerveModule;
+import frc.robot.subsystems.TorSubsystemBase;
 import frc.robot.util.Helpers;
 import frc.robot.util.LimelightHelpers;
 
@@ -262,6 +263,22 @@ private Direction oldScoringSide = Direction.RIGHT;
         rot,
         true);
   }
+
+  /**
+   * Method to drive the robot using joystick info and given rotation output.
+   *
+   * @param xVel          Speed of the robot in the x direction (forward).
+   * @param rot           Angular rate of the robot.
+   * @param fieldRelative Whether the provided x and y speeds are relative to the
+   *                      field.
+   */
+  public void driveWithController(double xVel, double rot, boolean fieldRelative) {
+    drive(
+        xVel,
+        -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband),
+        rot,
+        true);
+  }
   /**
    * Method to drive the robot using joystick info.
    *
@@ -387,6 +404,10 @@ private Direction oldScoringSide = Direction.RIGHT;
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
+  public ChassisSpeeds getFieldRelSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getSpeeds(), m_gyro.getRotation2d());
+  }
+
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
@@ -497,5 +518,4 @@ private Direction oldScoringSide = Direction.RIGHT;
   public ChassisSpeeds getPreviousSetpointSpeeds() {
     return previousSetpoint.robotRelativeSpeeds();
   }
-
 }

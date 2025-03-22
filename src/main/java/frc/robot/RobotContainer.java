@@ -17,6 +17,7 @@ import frc.robot.CoralMaster.SetLevel;
 import frc.robot.CoralMaster.SetStore;
 import frc.robot.Drive.DriveSubsystem;
 import frc.robot.Drive.VisionConstants;
+import frc.robot.Drive.DriveAutomation.AlignToNet;
 import frc.robot.Drive.DriveAutomation.AlignToReef;
 import frc.robot.Drive.DriveAutomation.AutoAlignToStationTag;
 import frc.robot.Drive.DriveAutomation.AlignToReef.Direction;
@@ -71,10 +72,8 @@ public class RobotContainer {
 
   private final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
   private final Trigger algaeStored = new Trigger(m_coralMaster::coralStored);
-  private final Trigger isntDeAlgae = new Trigger(m_coralMaster::scoringButNotDealg);
   private final Trigger readyToDealg = coralStored.negate().or(m_robotDrive::closeToReef);
   private final Trigger alignedToReef = new Trigger(m_robotDrive::alignedToReef);
-  private final Trigger isInTeleop = RobotModeTriggers.teleop();
   private final Trigger isTopDealgae = new Trigger(m_robotDrive::isTopDealgae);
   private final Trigger atNetHeight = new Trigger(m_elevator::atNetHeight);
   private final Trigger readyToStartScoreSequence = new Trigger(m_robotDrive::closeToReef).or(m_dashboardManager::getUseManualScoring); // idk what to name this
@@ -110,50 +109,46 @@ public class RobotContainer {
       coralStored.onFalse(m_blinkin.setColor(BlinkinConstants.Red));
 
       // ------------------ Aidan ----------------------------
+
+      
       // Coral Intake
       m_driverController.rightTrigger(0.4).whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
       m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
         Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
         new WaitCommand(0.1),
         Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_coralMaster)));
-              
-      // Score
+        
+        // Score
       m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive).alongWith(m_blinkin.setColor(BlinkinConstants.Black)));
 
       // Algae Intake
       m_driverController.leftTrigger(0.4).whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.IntakeAngle, AlgaeIntakeConstants.IntakeVoltage, m_algaeIntake));
-
-    Command groundIntake = Commands.sequence(
-      Commands.runOnce(() -> m_coralMaster.setState(Level.GROUNDALGAE), m_coralMaster),
-      Commands.runOnce(() -> m_claw.runVoltage(7)));
-
+      
+      Command groundIntake = Commands.sequence(
+        Commands.runOnce(() -> m_coralMaster.setState(Level.GROUNDALGAE), m_coralMaster),
+        Commands.runOnce(() -> m_claw.runVoltage(7)));
+        
     Command storeAlgae = Commands.sequence(
       Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.AlgaeStore), m_elevator),
       Commands.waitUntil(m_elevator::onTarget),
       Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
       m_blinkin.setColor(BlinkinConstants.AlgaeHold));
-
-    m_driverController.leftBumper().whileTrue(groundIntake);
-    m_driverController.leftBumper().onFalse(Commands.either(
+      
+      m_driverController.leftBumper().whileTrue(groundIntake);
+      m_driverController.leftBumper().onFalse(Commands.either(
       storeAlgae,
       (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
       algaeStored));
-
-
-
-
-      // Processor
-      m_driverController.y().whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.IntakeAngle, AlgaeIntakeConstants.OuttakeVoltage, m_algaeIntake));
-      m_driverController.y().onFalse(new RunAlgaeIntake(AlgaeIntakeConstants.StoreAngle, 0, m_algaeIntake));
 
       // Store everything
       m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster));
 
       // outtake
       m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runIntake(), () -> m_claw.stopIntake()));
-
+      
       //net score
       Command netScore = Commands.sequence(
+        new AlignToNet(m_robotDrive),
         Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster), 
         Commands.waitUntil(atNetHeight),
         Commands.runOnce(() -> m_claw.runVoltage(-8)),
@@ -161,12 +156,11 @@ public class RobotContainer {
         Commands.waitUntil(m_claw::onTarget),
         Commands.runOnce(() -> m_claw.runVoltage(0)),
         Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
-      );
-
-      m_driverController.x().onTrue(netScore);
+        );
+        
+      m_driverController.x().onTrue(netScore);      
       m_driverController.x().onTrue(m_blinkin.setColor(BlinkinConstants.AlgaeScore));
-
-
+      
       // toggle intake mode
       m_driverController.start().onTrue(Commands.runOnce(() -> m_coralMaster.toggleIntakeAutoAlign()));
 
@@ -251,7 +245,7 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return new WaitCommand(0.01).andThen(autoChooser.getSelected());
     // return new PathPlannerAuto(autoChooser.getSelected().getName(), true);
   }
   
@@ -260,6 +254,7 @@ public class RobotContainer {
   }
 
   public void autoInit() {
+    // m_robotDrive.drive(0, 0.1, 0, false);
     Helpers.isAuto = true;
     m_robotDrive.useVision = true;
     m_blinkin.setColor(BlinkinConstants.Red);
@@ -269,7 +264,6 @@ public class RobotContainer {
     m_arm.resetSetpoint();
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
-    ((PathPlannerAuto)getAutonomousCommand()).getStartingPose().getRotation().getDegrees();
     // LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
   }
   

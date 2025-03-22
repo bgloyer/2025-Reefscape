@@ -7,6 +7,7 @@ package frc.robot.Drive.DriveAutomation;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -38,4 +39,6 @@ public final class AligningConstants {
     public static final double IntakeAlignDistance = 0.7404;//0.71;
     public static final double IntakeOneCoralAwayDistance = 0.8607;//0.82;
     public static final double ReefOneCoralAwayDistance = 0.6408;//0.635;
+    public static final double BlueNetXPosition = 5;
+    public static final double RedNetXPosition = 15;
 }

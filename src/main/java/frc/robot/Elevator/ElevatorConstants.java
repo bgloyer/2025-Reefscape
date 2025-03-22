@@ -42,4 +42,7 @@ public final class ElevatorConstants {
     public static final double OffsetL2 = 0.11;
     public static final double OffsetL3 = 0.513;
     public static final double OffsetL4 = 1.26;
+    public static final double OffsetTopAlgGrab = 0.473;    
+    public static final double OffsetBotAlgGrab = 0.12344;
+    public static final double OffsetBotAlgRoll = 0.552;
 }

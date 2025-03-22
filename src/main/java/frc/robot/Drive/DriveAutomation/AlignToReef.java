@@ -99,7 +99,7 @@ public class AlignToReef extends Command {
       } 
       m_robotDrive.drive(yOutput, xOutput, turnOutput, false);
       // m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
-      boolean aligned = m_xController.atSetpoint() && m_yController.atGoal();
+      boolean aligned = m_xController.atSetpoint() && m_yController.atGoal() && m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1;
       m_robotDrive.setAlignedToReef(aligned);
       m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 0.7);
       if(!Helpers.isOneCoralAway && !Helpers.isAuto)
