@@ -46,7 +46,7 @@ public final class DriveConstants {
     public static final double TurnkI = 0;
     public static final double TurnkD = 0;
     public static final double TurnMaxVelocity = 360;
-    public static final double TurnMaxAccel = 99999;
+    public static final double TurnMaxAccel = 32;
     
     
     public static double xTranslationkP = 1.2;

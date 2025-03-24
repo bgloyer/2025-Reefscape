@@ -23,10 +23,7 @@ import frc.robot.Drive.DriveAutomation.AutoAlignToStationTag;
 import frc.robot.Drive.DriveAutomation.AlignToReef.Direction;
 import frc.robot.Elevator.Elevator;
 import frc.robot.Elevator.ElevatorConstants;
-import frc.robot.commands.Algae.RunAlgaeIntake;
 import frc.robot.commands.Auto.AutoSetStore;
-import frc.robot.constants.AlgaeIntakeConstants;
-import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.TorSubsystemBase;
 import frc.robot.util.Helpers;
 import frc.robot.util.Level;
@@ -63,7 +60,6 @@ public class RobotContainer {
   private final Elevator m_elevator = new Elevator();
   private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
-  private final AlgaeIntake m_algaeIntake = new AlgaeIntake();
   private final Climber m_climber = new Climber();
   private final Blinkin m_blinkin = new Blinkin();
   private final DashboardManager m_dashboardManager = new DashboardManager();
@@ -74,6 +70,7 @@ public class RobotContainer {
   private final Trigger algaeStored = new Trigger(m_coralMaster::coralStored);
   private final Trigger readyToDealg = coralStored.negate().or(m_robotDrive::closeToReef);
   private final Trigger alignedToReef = new Trigger(m_robotDrive::alignedToReef);
+  private final Trigger alignedToMiddle = new Trigger(m_coralMaster::alignedToMiddle);
   private final Trigger isTopDealgae = new Trigger(m_robotDrive::isTopDealgae);
   private final Trigger atNetHeight = new Trigger(m_elevator::atNetHeight);
   private final Trigger readyToStartScoreSequence = new Trigger(m_robotDrive::closeToReef).or(m_dashboardManager::getUseManualScoring); // idk what to name this
@@ -97,7 +94,6 @@ public class RobotContainer {
     m_dashboardManager.idleModeChooser.addOption("Claw", m_claw);
     m_dashboardManager.idleModeChooser.addOption("Elevator", m_elevator);
     m_dashboardManager.idleModeChooser.addOption("Arm", m_arm);
-    m_dashboardManager.idleModeChooser.addOption("Algae Intake", m_algaeIntake);
     }
 
   
@@ -121,8 +117,6 @@ public class RobotContainer {
         // Score
       m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive).alongWith(m_blinkin.setColor(BlinkinConstants.Black)));
 
-      // Algae Intake
-      m_driverController.leftTrigger(0.4).whileTrue(new RunAlgaeIntake(AlgaeIntakeConstants.IntakeAngle, AlgaeIntakeConstants.IntakeVoltage, m_algaeIntake));
       
       Command groundIntake = Commands.sequence(
         Commands.runOnce(() -> m_coralMaster.setState(Level.GROUNDALGAE), m_coralMaster),
@@ -182,16 +176,20 @@ public class RobotContainer {
       m_mechController.y().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()), new SetStore(m_coralMaster)));
       
       Command TopAlgaeGrab = Commands.sequence(
+        Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored())),
         new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
         Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
+        Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getranL4)),
         Commands.parallel(
           Commands.runOnce(() -> m_claw.runVoltage(7)),
           new SetLevel(Level.TOPALGAEGRAB, m_coralMaster, m_driverController, alignedToReef)));
 
         
       Command BottomAlgaeGrab = Commands.sequence(
+          Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored())),
           new SetLevel(Level.FOUR, m_coralMaster, m_driverController, alignedToReef).until(coralStored.negate()),
           Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
+          Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getranL4)),
           Commands.parallel(
             Commands.runOnce(() -> m_claw.runVoltage(7)),
             new SetLevel(Level.BOTTOMALGAEGRAB, m_coralMaster, m_driverController, alignedToReef)));
@@ -324,7 +322,6 @@ public class RobotContainer {
   public void testInit() {
     m_blinkin.setColorNotCommand(0.67);
     m_arm.stopPid();
-    m_algaeIntake.stopPid();
     m_elevator.stopPID();
   }
 
@@ -340,9 +337,6 @@ public class RobotContainer {
     return m_climber;
   }
 
-  public AlgaeIntake getAlgaeIntake() {
-    return m_algaeIntake;
-  }
 
 
   public void disabledPeriodic() {

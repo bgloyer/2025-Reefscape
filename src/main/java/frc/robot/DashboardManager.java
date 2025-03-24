@@ -21,7 +21,6 @@ public class DashboardManager extends SubsystemBase {
         zeroChooser.addOption("Arm", "Arm");
         zeroChooser.addOption("Claw", "Claw");
         zeroChooser.addOption("Elevator", "Elevator");
-        zeroChooser.addOption("Algae Intake", "Algae Intake");
         SmartDashboard.putBoolean("Intake Coral In the Way Override", intakeCoralInTheWayOverride);
         SmartDashboard.putBoolean("Use Manual Scoring", useManualScoring);
         SmartDashboard.putBoolean("Toggle Idle Mode", false);
