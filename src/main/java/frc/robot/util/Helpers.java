@@ -5,8 +5,8 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Drive.VisionConstants;
-import frc.robot.Drive.DriveAutomation.AligningConstants;
+import frc.robot.subsystems.Drive.VisionConstants;
+import frc.robot.subsystems.Drive.DriveAutomation.AligningConstants;
 
 public class Helpers {
 

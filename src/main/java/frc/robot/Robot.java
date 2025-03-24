@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import frc.robot.Drive.VisionConstants;
+import frc.robot.subsystems.Drive.VisionConstants;
 import frc.robot.util.Helpers;
 import frc.robot.util.LimelightHelpers;
 
