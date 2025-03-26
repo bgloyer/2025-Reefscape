@@ -72,7 +72,7 @@ public final class DriveConstants {
     public static final double DriveToNetP = 1;
     public static final double DriveToNetI = 0;
     public static final double DriveToNetD = 0;
-    public static final double CoralGroundIntakeDistance = 0;
+    public static final double CoralGroundIntakeDistance = 1;
 
   }
 

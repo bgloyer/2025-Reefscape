@@ -164,6 +164,7 @@ private Direction oldScoringSide = Direction.RIGHT;
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Coral Distance", 1 / Helpers.tan(28 - LimelightHelpers.getTY(VisionConstants.ElevatorLimelightName)));
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Reef Distance m", Helpers.tyToDistance(VisionConstants.ReefLightLightName));
     SmartDashboard.putNumber("Reef X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName)));

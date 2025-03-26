@@ -6,7 +6,9 @@ package frc.robot.subsystems.Drive.DriveAutomation;
 
 import static frc.robot.util.Helpers.tyToDistance;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Drive.DriveConstants;
@@ -19,8 +21,9 @@ import frc.robot.util.LimelightHelpers;
 public class DriveToCoral extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem m_robotDrive;
-  private PIDController distancePid = new PIDController(0, 0, 0);
+  private PIDController distancePid = new PIDController(0.1, 0, 0);
   private PIDController turnPid = new PIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD);
+  private double offset;
 
   /**
    * Creates a new ExampleCommand.
@@ -38,15 +41,19 @@ public class DriveToCoral extends Command {
   public void initialize() {
     distancePid.setSetpoint(DriveConstants.CoralGroundIntakeDistance);
     turnPid.setSetpoint(0);
+    offset = m_robotDrive.getHeading() - LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (LimelightHelpers.getTV(VisionConstants.ElevatorLimelightName)) {
-      m_robotDrive.drive(distancePid.calculate(Helpers.tan(LimelightHelpers.getTY(VisionConstants.ElevatorLimelightName) - 28)), 0, turnPid.calculate(LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName)), false);
+      offset = m_robotDrive.getHeading() - LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName);
+      double distToCoral = 1 / Helpers.tan(28 - LimelightHelpers.getTY(VisionConstants.ElevatorLimelightName));
+      double driveOutput = -distancePid.calculate(distToCoral);
+      m_robotDrive.drive(MathUtil.clamp(-0.1, driveOutput, 0.1),0, turnPid.calculate(LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName)), false);
     } else {
-      m_robotDrive.drive(0, 0, 0, false);
+      m_robotDrive.drive(0, 0, turnPid.calculate(m_robotDrive.getHeading() - offset), false);
     }
   }
 
