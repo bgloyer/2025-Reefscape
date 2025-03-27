@@ -9,7 +9,9 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Configs;
 import frc.robot.util.Helpers;
@@ -21,6 +23,7 @@ public class Flooral extends SubsystemBase {
     private final SparkClosedLoopController m_pivotController;
     private final SparkAbsoluteEncoder m_encoder;
     private final DigitalInput m_beamBreak;
+    private double targetAngle;
 
     public Flooral() {
         m_beamBreak = new DigitalInput(FlooralConstants.BeamBreakChannel);
@@ -28,17 +31,20 @@ public class Flooral extends SubsystemBase {
         m_pivotMotor.configure(Configs.FlooralConfig.pivotConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         m_sideMotor = new SparkFlex(FlooralConstants.SideId, MotorType.kBrushless);
         m_topMotor = new SparkFlex(FlooralConstants.TopId, MotorType.kBrushless);
+        m_topMotor.configure(Configs.FlooralConfig.topConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_sideMotor.configure(Configs.FlooralConfig.sideConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_pivotController = m_pivotMotor.getClosedLoopController();
         m_encoder = m_pivotMotor.getAbsoluteEncoder();
-
+        targetAngle = 0;
     }
 
-    public void setVoltage(double volts) {
-        m_sideMotor.setVoltage(volts);
-        m_topMotor.setVoltage(volts * FlooralConstants.SideToTopMotorRatio);
+    public void setVoltage(double sideVolts, double topVolts) {
+        m_sideMotor.setVoltage(sideVolts);
+        m_topMotor.setVoltage(topVolts);
     }
 
     public void setAngle(double angle) {
+        targetAngle = angle;
         m_pivotController.setReference(angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, calcFeedForward());
     }
 
@@ -47,11 +53,20 @@ public class Flooral extends SubsystemBase {
     }
 
     public void setIntake() {
-        setVoltage(FlooralConstants.IntakeVoltage);
+        setVoltage(FlooralConstants.SideVoltage, FlooralConstants.TopVoltage);
         setAngle(FlooralConstants.IntakeAngle);
     }
 
     public boolean coralStored() {
         return m_beamBreak.get();
+    }
+
+    public boolean onTarget() {
+        return MathUtil.isNear(targetAngle, m_encoder.getPosition(), 5);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Flooral Angle", m_encoder.getPosition());
     }
 }

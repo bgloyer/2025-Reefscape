@@ -153,28 +153,30 @@ public class RobotContainer {
     m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));
 
     Command intakeCoral = Commands.sequence(
-      Commands.runOnce(() -> m_flooral.setIntake(), m_flooral),
-      Commands.waitUntil(m_flooral::coralStored),
-      Commands.runOnce(() -> m_flooral.setVoltage(0)),
-      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle))
+      Commands.runOnce(() -> m_flooral.setIntake(), m_flooral)
+      // Commands.waitUntil(m_flooral::coralStored),
+      // Commands.runOnce(() -> m_flooral.setVoltage(0,0)),
+      // Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle))
     );
-
+    
     Command handOff = Commands.sequence(
       Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster),
       Commands.waitUntil(m_coralMaster::onTarget),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral),
+      Commands.waitUntil(m_flooral::onTarget),
       Commands.runOnce(() -> m_claw.runIntake()),
-      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage), m_flooral),
+      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, 0), m_flooral),
       Commands.waitUntil(coralStored),
       Commands.runOnce(() -> m_claw.stopIntake()),
-      Commands.runOnce(() -> m_flooral.setVoltage(0)),
+      Commands.runOnce(() -> m_flooral.setVoltage(0,0)),
       Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
     );
 
 
-    m_driverController.leftTrigger(0.4).and(flooralStored.negate()).onTrue(intakeCoral);
-    m_driverController.leftTrigger(0.4).onFalse(Commands.runOnce(() -> m_flooral.setVoltage(0)).alongWith(
-      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle))));
-    m_driverController.leftBumper().and(flooralStored).and(coralStored.negate()).onTrue(handOff);
+    m_driverController.leftTrigger(0.4).onTrue(intakeCoral);
+    m_driverController.leftTrigger(0.4).onFalse(Commands.runOnce(() -> m_flooral.setVoltage(0,0), m_flooral).alongWith(
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore))));
+    m_driverController.leftBumper().onTrue(handOff);
     
     // ------------------- James ----------------------------
     m_mechController.leftBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));

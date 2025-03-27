@@ -178,8 +178,12 @@ public final class Configs {
                         .pid(FlooralConstants.kP, FlooralConstants.kI, FlooralConstants.kD)
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
                 pivotConfig.idleMode(IdleMode.kBrake);
-                pivotConfig.absoluteEncoder.positionConversionFactor(360);
-                
+                pivotConfig.absoluteEncoder
+                        .positionConversionFactor(360)
+                        .inverted(true);
+                sideConfig.idleMode(IdleMode.kBrake);
+                topConfig.smartCurrentLimit(50);
+                topConfig.secondaryCurrentLimit(50);
         }
 }
 
