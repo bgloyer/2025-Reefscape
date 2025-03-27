@@ -117,9 +117,8 @@ public class Claw extends TorSubsystemBase {
 
     public boolean frontLaserTriggered() {
         return (m_frontLaser.getMeasurement() != null) && (m_frontLaser.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) && getDistance() < 100;
-
     }
-
+                                    
     @Override
     public void periodic() {
         positionSlewRateLimiting();

@@ -8,6 +8,13 @@ public class FlooralConstants {
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double IntakeVoltage = -6;
     public static final double kG = 0; 
+    
+    public static final double IntakeAngle = 120;
+    public static final double HandoffAngle = 5;
+    public static final int BeamBreakChannel = 0;
+    public static final double HandoffVoltage = 3;
+    public static final double IntakeVoltage = -6;
+    public static final double HardStopOffset = 0;
+
 }

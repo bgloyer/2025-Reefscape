@@ -23,7 +23,8 @@ public enum Level {
     OFFSETBOTTOMALGAEGRAB(ElevatorConstants.OffsetBotAlgGrab, ArmConstants.OffsetBotAlgGrab, WristConstants.OffsetBotAlgGrab, false), 
     BOTTOMALGAEROLL(ElevatorConstants.BottomDealgRoll, ArmConstants.BottomDealgRoll, WristConstants.BottomAlgaeRoll, true),
     OFFSETBOTTOMALGAEROLL(ElevatorConstants.OffsetBotAlgRoll, ArmConstants.OffsetBotAlgRoll, WristConstants.OffsetBotAlgRoll, true),
-    GROUNDALGAE(ElevatorConstants.Store, ArmConstants.GroundAlgae, WristConstants.AlgaeStore, false);
+    GROUNDALGAE(ElevatorConstants.Store, ArmConstants.GroundAlgae, WristConstants.AlgaeStore, false),
+    FLOORALHANDOFF(ElevatorConstants.FlooralHandOff, ArmConstants.FlooralHandOff, WristConstants.FlooralHandOff, false);
 
     public double elevatorHeight;
     public double armAngle;

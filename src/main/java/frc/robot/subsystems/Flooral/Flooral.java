@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Configs;
 import frc.robot.util.Helpers;
@@ -19,8 +20,10 @@ public class Flooral extends SubsystemBase {
     private final SparkFlex m_sideMotor;
     private final SparkClosedLoopController m_pivotController;
     private final SparkAbsoluteEncoder m_encoder;
+    private final DigitalInput m_beamBreak;
 
     public Flooral() {
+        m_beamBreak = new DigitalInput(FlooralConstants.BeamBreakChannel);
         m_pivotMotor = new SparkFlex(FlooralConstants.PivotId, MotorType.kBrushless);
         m_pivotMotor.configure(Configs.FlooralConfig.pivotConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         m_sideMotor = new SparkFlex(FlooralConstants.SideId, MotorType.kBrushless);
@@ -40,6 +43,15 @@ public class Flooral extends SubsystemBase {
     }
 
     private double calcFeedForward() {
-        return FlooralConstants.kG * Helpers.sin(m_encoder.getPosition());
+        return FlooralConstants.kG * Helpers.sin(m_encoder.getPosition() - FlooralConstants.HardStopOffset);
+    }
+
+    public void setIntake() {
+        setVoltage(FlooralConstants.IntakeVoltage);
+        setAngle(FlooralConstants.IntakeAngle);
+    }
+
+    public boolean coralStored() {
+        return m_beamBreak.get();
     }
 }
