@@ -26,6 +26,8 @@ import frc.robot.subsystems.Drive.DriveAutomation.DriveToCoral;
 import frc.robot.subsystems.Drive.DriveAutomation.AlignToReef.Direction;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
+import frc.robot.subsystems.Flooral.Flooral;
+import frc.robot.subsystems.Flooral.FlooralConstants;
 import frc.robot.util.Helpers;
 import frc.robot.util.Level;
 import frc.robot.util.LimelightHelpers;
@@ -60,6 +62,7 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Elevator m_elevator = new Elevator();
   private final CoralMaster m_coralMaster = new CoralMaster(m_arm, m_elevator, m_claw);
+  private final Flooral m_flooral = new Flooral();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_driverController);
   private final Climber m_climber = new Climber();
   private final Blinkin m_blinkin = new Blinkin();
@@ -164,6 +167,9 @@ public class RobotContainer {
       // Reset gyro
       m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
       m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));
+
+      m_driverController.leftTrigger(0.4).onTrue(Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.IntakeVoltage)));
+      m_driverController.leftTrigger(0.4).onFalse(Commands.runOnce(() -> m_flooral.setVoltage(0)));
       
       // ------------------- James ----------------------------
       m_mechController.leftBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));

@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -12,6 +15,7 @@ import frc.robot.subsystems.Claw.ClawConstants.CoralIntakeConstants;
 import frc.robot.subsystems.Claw.ClawConstants.WristConstants;
 import frc.robot.subsystems.Climber.ClimbConstants;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
+import frc.robot.subsystems.Flooral.FlooralConstants;
 import frc.robot.subsystems.SwerveModule.ModuleConstants;
 
 public final class Configs {
@@ -75,9 +79,9 @@ public final class Configs {
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
                     talonConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-                    talonConfig.CurrentLimits.StatorCurrentLimit = 80;
+                    talonConfig.CurrentLimits.StatorCurrentLimit = 120;
 
-                    talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+                    talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
                     double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
                     / ModuleConstants.kDrivingMotorReduction;
@@ -163,5 +167,20 @@ public final class Configs {
                 motorConfig.absoluteEncoder.positionConversionFactor(360);
         }
     }
+
+    public static final class FlooralConfig {
+        public static final SparkFlexConfig pivotConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig sideConfig = new SparkFlexConfig();
+        public static final SparkFlexConfig topConfig = new SparkFlexConfig();
+
+        static {
+                pivotConfig.closedLoop
+                        .pid(FlooralConstants.kP, FlooralConstants.kI, FlooralConstants.kD)
+                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+                pivotConfig.idleMode(IdleMode.kBrake);
+                pivotConfig.absoluteEncoder.positionConversionFactor(360);
+                
+        }
+}
 
 }

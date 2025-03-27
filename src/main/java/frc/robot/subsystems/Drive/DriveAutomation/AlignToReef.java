@@ -68,6 +68,7 @@ public class AlignToReef extends Command {
     SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
   }
 
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -97,6 +98,7 @@ public class AlignToReef extends Command {
       if(Math.abs(betterModulus(m_robotDrive.getHeading(), 360) - m_turnPID.getGoal().position) < 5) {
         xOutput = m_xController.calculate(xInput);
       } 
+      SmartDashboard.putNumber("Reef Align Y Output", yOutput);
       m_robotDrive.drive(yOutput, xOutput, turnOutput, false);
       // m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
       boolean aligned = m_xController.atSetpoint() && m_yController.atGoal() && m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1;
