@@ -269,6 +269,7 @@ public class RobotContainer {
 
   public void autoInit() {
     // m_robotDrive.drive(0, 0.1, 0, false);
+    m_flooral.setAngle(27);
     Helpers.isAuto = true;
     m_robotDrive.useVision = true;
     m_blinkin.setColor(BlinkinConstants.Red);
@@ -282,6 +283,7 @@ public class RobotContainer {
   }
   
   public void teleopInit() {
+    m_flooral.setAngle(27);
     m_robotDrive.useVision = true;
     Helpers.isAuto = false;
     m_blinkin.setColor(BlinkinConstants.Red);
