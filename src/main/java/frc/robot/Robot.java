@@ -94,7 +94,6 @@ public class Robot extends TimedRobot {
      LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 1);
      m_robotContainer.disabledInit();
      CommandScheduler.getInstance().enable();
-     new PathPlannerAuto("ZOom").ignoringDisable(true).schedule();
   }
 
   @Override
