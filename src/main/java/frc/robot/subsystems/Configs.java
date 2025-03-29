@@ -184,13 +184,13 @@ public final class Configs {
                         .positionConversionFactor(360)
                         .inverted(true);
 
-                topConfig.idleMode(IdleMode.kCoast);
+                topConfig.idleMode(IdleMode.kBrake);
                 topConfig.smartCurrentLimit(50);
                 topConfig.secondaryCurrentLimit(50);
 
                 sideConfig.idleMode(IdleMode.kBrake);
-                sideConfig.smartCurrentLimit(50);
-                sideConfig.secondaryCurrentLimit(50);
+                sideConfig.smartCurrentLimit(80);
+                sideConfig.secondaryCurrentLimit(80);
         }
 }
 

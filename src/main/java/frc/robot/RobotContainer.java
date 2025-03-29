@@ -11,9 +11,12 @@ import frc.robot.subsystems.Arm.ArmConstants;
 import frc.robot.subsystems.Blinkin.Blinkin;
 import frc.robot.subsystems.Blinkin.BlinkinConstants;
 import frc.robot.subsystems.Claw.Claw;
+import frc.robot.subsystems.Claw.ClawConstants;
+import frc.robot.subsystems.Claw.ClawConstants.CoralIntakeConstants;
 import frc.robot.subsystems.Claw.ClawConstants.WristConstants;
 import frc.robot.subsystems.Climber.ClimbConstants;
 import frc.robot.subsystems.Climber.Climber;
+import frc.robot.subsystems.Configs.ClawConfig;
 import frc.robot.subsystems.CoralMaster.CoralMaster;
 import frc.robot.subsystems.CoralMaster.SetLevel;
 import frc.robot.subsystems.CoralMaster.SetStore;
@@ -160,27 +163,32 @@ public class RobotContainer {
     //   Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore))
     // );
     
-    // Intake Coral from Floor
-    m_driverController.leftTrigger(0.4).whileFalse(m_flooral.intakeCoralSequence());
-    m_driverController.leftTrigger(0.4).onFalse(m_flooral.stopMotor().alongWith(Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore))));
-
     Command handOff = Commands.sequence(
       Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster),
       Commands.waitUntil(m_coralMaster::onTarget),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral),
       Commands.waitUntil(m_flooral::onTarget),
-      Commands.runOnce(() -> m_claw.runIntake()),
-      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, 0), m_flooral),
+      Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage)),
+      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, 3), m_flooral),
       Commands.waitUntil(coralStored),
       Commands.runOnce(() -> m_claw.stopIntake()),
       m_flooral.stopMotor(),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.StationAngle)),
       Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
     );
 
+    // Intake Coral from Floor
+    m_driverController.leftTrigger(0.4).whileTrue(m_flooral.intakeCoralSequence());
+    m_driverController.leftTrigger(0.4).onFalse(Commands.sequence(
+      m_flooral.stopMotor(),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore)),
+      handOff.onlyIf(coralStored.negate())));
+
+    
 
       
     // Flooral handoff
-    m_driverController.leftBumper().onTrue(handOff.onlyIf(coralStored.negate()));
+    m_driverController.leftBumper().onTrue(handOff);
     
     // ------------------- James ----------------------------
     m_mechController.leftBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));

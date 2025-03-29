@@ -72,18 +72,20 @@ public class Flooral extends SubsystemBase {
     }
 
     public Command intakeCoralSequence() {
-        return Commands.sequence(
-            runOnce(() -> setIntake()),
-            Commands.waitUntil(this::coralStored),
-            runOnce(() -> {
-                stopMotor();
-                setAngle(FlooralConstants.CoralStore);
-            }));
+        return runOnce(() -> setIntake());
+        // return Commands.sequence(
+            // runOnce(() -> setIntake()),
+            // Commands.waitUntil(this::coralStored),
+            // runOnce(() -> {
+            //     stopMotor();
+            //     setAngle(FlooralConstants.CoralStore);
+            // }));
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Flooral Angle", m_encoder.getPosition());
+        SmartDashboard.putNumber("Side Motor Current", m_sideMotor.getOutputCurrent());
         SmartDashboard.putBoolean("Flooral stored", coralStored());
     }
 }
