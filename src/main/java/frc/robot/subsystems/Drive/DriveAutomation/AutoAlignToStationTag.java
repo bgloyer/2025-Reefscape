@@ -21,6 +21,8 @@ import frc.robot.subsystems.CoralMaster.CoralMaster;
 import frc.robot.subsystems.Drive.DriveConstants;
 import frc.robot.subsystems.Drive.DriveSubsystem;
 import frc.robot.subsystems.Drive.VisionConstants;
+import frc.robot.subsystems.Flooral.Flooral;
+import frc.robot.subsystems.Flooral.FlooralConstants;
 
 import static frc.robot.util.Helpers.tyToDistance;
 
@@ -36,6 +38,7 @@ public class AutoAlignToStationTag extends Command {
   private final String limelightName = VisionConstants.ElevatorLimelightName;
   private final ProfiledPIDController m_turnPID;
   private final CoralMaster m_coralMaster;
+  private final Flooral m_flooral;
   private int count = 0;
 
   /**
@@ -43,8 +46,9 @@ public class AutoAlignToStationTag extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutoAlignToStationTag(DriveSubsystem subsystem, CoralMaster coralMaster) {
+  public AutoAlignToStationTag(DriveSubsystem subsystem, CoralMaster coralMaster, Flooral flooral) {
     m_robotDrive = subsystem;
+    m_flooral = flooral;
     m_xController = new PIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD);
     m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(4, 2));
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
@@ -60,10 +64,15 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void initialize() {
     count = 0;
-    if(DashboardManager.intakeCoralInTheWayOverride)
+    if(DashboardManager.intakeCoralInTheWayOverride) {
       m_coralMaster.setOneCoralAwayIntake();
-    else
+      m_flooral.setAngle(FlooralConstants.OneCoralAwayStationAngle);
+    }
+    else {
+      m_flooral.setAngle(FlooralConstants.StationAngle);
       m_coralMaster.setIntake();
+
+    }
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
     m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
     m_xController.reset();
@@ -109,6 +118,7 @@ public class AutoAlignToStationTag extends Command {
     } else {
       if (DashboardManager.intakeCoralInTheWayOverride) {
         m_coralMaster.setOneCoralAwayIntake();
+        m_flooral.setAngle(FlooralConstants.OneCoralAwayStationAngle);
       }
       m_robotDrive.driveWithController(turnOutput, true);
     }
@@ -133,7 +143,7 @@ public class AutoAlignToStationTag extends Command {
         return false;
       }
       boolean nearOneCoralAway = MathUtil.isNear(AligningConstants.IntakeOneCoralAwayDistance, tyToDistance(limelightName), 0.06);
-      boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.18; // I pulled these numbers out of my ass
+      boolean notMoving = Math.abs(yOutput) > 0.06 && Math.hypot(m_robotDrive.getSpeeds().vxMetersPerSecond, m_robotDrive.getSpeeds().vyMetersPerSecond) < 0.15; // I pulled these numbers out of my ass
       
       if(nearOneCoralAway && notMoving)
         count++;

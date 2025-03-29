@@ -12,6 +12,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Configs;
 import frc.robot.util.Helpers;
@@ -43,6 +45,10 @@ public class Flooral extends SubsystemBase {
         m_topMotor.setVoltage(topVolts);
     }
 
+    public Command stopMotor() {
+        return runOnce(() -> setVoltage(0, 0));
+    }
+
     public void setAngle(double angle) {
         targetAngle = angle;
         m_pivotController.setReference(angle, ControlType.kPosition, ClosedLoopSlot.kSlot0, calcFeedForward());
@@ -54,7 +60,7 @@ public class Flooral extends SubsystemBase {
 
     public void setIntake() {
         setVoltage(FlooralConstants.SideVoltage, FlooralConstants.TopVoltage);
-        setAngle(FlooralConstants.IntakeAngle);
+        setAngle(FlooralConstants.IntakeAngle); 
     }
 
     public boolean coralStored() {
@@ -65,8 +71,19 @@ public class Flooral extends SubsystemBase {
         return MathUtil.isNear(targetAngle, m_encoder.getPosition(), 5);
     }
 
+    public Command intakeCoralSequence() {
+        return Commands.sequence(
+            runOnce(() -> setIntake()),
+            Commands.waitUntil(this::coralStored),
+            runOnce(() -> {
+                stopMotor();
+                setAngle(FlooralConstants.CoralStore);
+            }));
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Flooral Angle", m_encoder.getPosition());
+        SmartDashboard.putBoolean("Flooral stored", coralStored());
     }
 }

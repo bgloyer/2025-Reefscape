@@ -113,11 +113,12 @@ public class RobotContainer {
 
     
     // Coral Intake
-    m_driverController.rightTrigger(0.4).whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
+    m_driverController.rightTrigger(0.4).whileTrue(new AutoAlignToStationTag(m_robotDrive, m_coralMaster, m_flooral));
     m_driverController.rightTrigger(0.4).onFalse(Commands.sequence(
       Commands.runOnce(() -> m_arm.setTargetAngle(ArmConstants.Store), m_arm),
       new WaitCommand(0.1),
-      Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_coralMaster)));
+      Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.Store), m_coralMaster),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral)));
       
     // Score
     m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive).alongWith(m_blinkin.setColor(BlinkinConstants.Black)));
@@ -152,13 +153,17 @@ public class RobotContainer {
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
     m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));
 
-    Command intakeCoral = Commands.sequence(
-      Commands.runOnce(() -> m_flooral.setIntake(), m_flooral)
-      // Commands.waitUntil(m_flooral::coralStored),
-      // Commands.runOnce(() -> m_flooral.setVoltage(0,0)),
-      // Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle))
-    );
+    // Command intakeCoral = Commands.sequence(
+    //   Commands.runOnce(() -> m_flooral.setIntake(), m_flooral),
+    //   Commands.waitUntil(m_flooral::coralStored),
+    //   Commands.runOnce(() -> m_flooral.stopMotor()),
+    //   Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore))
+    // );
     
+    // Intake Coral from Floor
+    m_driverController.leftTrigger(0.4).whileFalse(m_flooral.intakeCoralSequence());
+    m_driverController.leftTrigger(0.4).onFalse(m_flooral.stopMotor().alongWith(Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore))));
+
     Command handOff = Commands.sequence(
       Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster),
       Commands.waitUntil(m_coralMaster::onTarget),
@@ -168,15 +173,14 @@ public class RobotContainer {
       Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, 0), m_flooral),
       Commands.waitUntil(coralStored),
       Commands.runOnce(() -> m_claw.stopIntake()),
-      Commands.runOnce(() -> m_flooral.setVoltage(0,0)),
+      m_flooral.stopMotor(),
       Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
     );
 
 
-    m_driverController.leftTrigger(0.4).onTrue(intakeCoral);
-    m_driverController.leftTrigger(0.4).onFalse(Commands.runOnce(() -> m_flooral.setVoltage(0,0), m_flooral).alongWith(
-      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore))));
-    m_driverController.leftBumper().onTrue(handOff);
+      
+    // Flooral handoff
+    m_driverController.leftBumper().onTrue(handOff.onlyIf(coralStored.negate()));
     
     // ------------------- James ----------------------------
     m_mechController.leftBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
@@ -242,7 +246,7 @@ public class RobotContainer {
       
   }
   public void registerAutoCommands() {
-    NamedCommands.registerCommand("Auto Intake", new AutoAlignToStationTag(m_robotDrive, m_coralMaster));
+    NamedCommands.registerCommand("Auto Intake", new AutoAlignToStationTag(m_robotDrive, m_coralMaster, m_flooral));
     NamedCommands.registerCommand("Set Store", new AutoSetStore(m_coralMaster));
     NamedCommands.registerCommand("Ready Elevator L3", Commands.runOnce(() -> m_coralMaster.setState(Level.BOTTOMALGAEROLL)));
     NamedCommands.registerCommand("Ready Elevator L4", Commands.runOnce(() -> m_coralMaster.setState(ElevatorConstants.L4, ArmConstants.Store, WristConstants.L4)));
@@ -268,8 +272,6 @@ public class RobotContainer {
   }
 
   public void autoInit() {
-    // m_robotDrive.drive(0, 0.1, 0, false);
-    m_flooral.setAngle(27);
     Helpers.isAuto = true;
     m_robotDrive.useVision = true;
     m_blinkin.setColor(BlinkinConstants.Red);
@@ -283,7 +285,6 @@ public class RobotContainer {
   }
   
   public void teleopInit() {
-    m_flooral.setAngle(27);
     m_robotDrive.useVision = true;
     Helpers.isAuto = false;
     m_blinkin.setColor(BlinkinConstants.Red);

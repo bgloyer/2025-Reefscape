@@ -79,7 +79,7 @@ public final class Configs {
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
                     talonConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-                    talonConfig.CurrentLimits.StatorCurrentLimit = 120;
+                    talonConfig.CurrentLimits.StatorCurrentLimit = 80;
 
                     talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
@@ -176,14 +176,21 @@ public final class Configs {
         static {
                 pivotConfig.closedLoop
                         .pid(FlooralConstants.kP, FlooralConstants.kI, FlooralConstants.kD)
-                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+                        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                        .minOutput(-0.3)
+                        .maxOutput(0.3);
                 pivotConfig.idleMode(IdleMode.kBrake);
                 pivotConfig.absoluteEncoder
                         .positionConversionFactor(360)
                         .inverted(true);
-                sideConfig.idleMode(IdleMode.kBrake);
+
+                topConfig.idleMode(IdleMode.kCoast);
                 topConfig.smartCurrentLimit(50);
                 topConfig.secondaryCurrentLimit(50);
+
+                sideConfig.idleMode(IdleMode.kBrake);
+                sideConfig.smartCurrentLimit(50);
+                sideConfig.secondaryCurrentLimit(50);
         }
 }
 
