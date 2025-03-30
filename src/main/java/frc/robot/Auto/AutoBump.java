@@ -6,7 +6,6 @@ package frc.robot.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Drive.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */

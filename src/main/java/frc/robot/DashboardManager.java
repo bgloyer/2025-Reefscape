@@ -9,7 +9,6 @@ public class DashboardManager extends SubsystemBase {
     
     public static boolean intakeCoralInTheWayOverride = false;
     public static boolean useManualScoring = false;
-    private String zeroSelected;
     private final SendableChooser<String> zeroChooser;
     public final SendableChooser<TorSubsystemBase> idleModeChooser;
 

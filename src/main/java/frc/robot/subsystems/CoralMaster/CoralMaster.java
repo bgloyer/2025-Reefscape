@@ -4,13 +4,11 @@ import static frc.robot.util.Helpers.txToDistanceOffset;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Arm.Arm;
 import frc.robot.subsystems.Arm.ArmConstants;
 import frc.robot.subsystems.Claw.Claw;
 import frc.robot.subsystems.Claw.ClawConstants.WristConstants;
-import frc.robot.subsystems.Drive.Vision;
 import frc.robot.subsystems.Drive.VisionConstants;
 import frc.robot.subsystems.Drive.DriveAutomation.AligningConstants;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -121,7 +119,7 @@ public class CoralMaster extends SubsystemBase {
             public void setranL4(boolean value) {
                 ranL4 = value;
         }
-            public boolean getranL4() {
+            public boolean getRanL4() {
                 return ranL4;
             }
 
