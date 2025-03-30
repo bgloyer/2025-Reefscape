@@ -75,6 +75,7 @@ public class RobotContainer {
 
   public final Trigger coralStored = new Trigger(m_coralMaster::coralStored);
   public final Trigger flooralStored = new Trigger(m_flooral::coralStored);
+  public final Trigger flooralPivotAtStore = new Trigger(m_flooral::atStore);
   private final Trigger algaeStored = new Trigger(m_coralMaster::coralStored);
   private final Trigger readyToDealg = coralStored.negate().or(m_robotDrive::closeToReef);
   public final Trigger alignedToReef = new Trigger(m_robotDrive::alignedToReef);
@@ -111,6 +112,8 @@ public class RobotContainer {
   private void configureBindings() {
     coralStored.onTrue(m_blinkin.setColor(BlinkinConstants.White));
     coralStored.onFalse(m_blinkin.setColor(BlinkinConstants.Red));
+    flooralStored.and(m_flooral::getHoldingCoralState).and(coralStored.negate()).and(() -> m_elevator.getHeight() < 0.1).onTrue(handOff());
+
 
     // ------------------ Aidan ----------------------------
 
@@ -127,7 +130,7 @@ public class RobotContainer {
     m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive).alongWith(m_blinkin.setColor(BlinkinConstants.Black)));
       
     // Store everything
-    m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster));
+    m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster).alongWith(m_flooral.setStore()));
 
     // outtake
     m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runIntake(), () -> m_claw.stopIntake()));
@@ -147,48 +150,22 @@ public class RobotContainer {
     m_driverController.x().onTrue(netScore);      
     m_driverController.x().onTrue(m_blinkin.setColor(BlinkinConstants.AlgaeScore));
     
+    // Intake Coral from Floor
+    m_driverController.leftTrigger(0.4).whileTrue(flooralIntakeSequence());
+    m_driverController.leftTrigger(0.4).onFalse(Commands.either(
+      Commands.either(
+        Commands.runOnce(() -> m_flooral.setHoldingCoralState(true)), 
+        handOff(),  coralStored),
+      m_flooral.setStore(),
+      flooralStored));
+
     // toggle intake mode
     m_driverController.start().onTrue(Commands.runOnce(() -> m_coralMaster.toggleIntakeAutoAlign()));
-
-    m_driverController.back().whileTrue(new DriveToCoral(m_robotDrive));
 
     // Reset gyro
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
     m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));
 
-    // Command intakeCoral = Commands.sequence(
-    //   Commands.runOnce(() -> m_flooral.setIntake(), m_flooral),
-    //   Commands.waitUntil(m_flooral::coralStored),
-    //   Commands.runOnce(() -> m_flooral.stopMotor()),
-    //   Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore))
-    // );
-    
-    Command handOff = Commands.sequence(
-      Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster),
-      Commands.waitUntil(m_coralMaster::onTarget),
-      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral),
-      Commands.waitUntil(m_flooral::onTarget),
-      Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage)),
-      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, 3), m_flooral),
-      Commands.waitUntil(coralStored),
-      Commands.runOnce(() -> m_claw.stopIntake()),
-      m_flooral.stopMotor(),
-      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.StationAngle)),
-      Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
-    );
-
-    // Intake Coral from Floor
-    m_driverController.leftTrigger(0.4).whileTrue(m_flooral.intakeCoralSequence());
-    m_driverController.leftTrigger(0.4).onFalse(Commands.sequence(
-      m_flooral.stopMotor(),
-      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore)),
-      handOff.onlyIf(coralStored.negate())));
-
-    
-
-      
-    // Flooral handoff
-    m_driverController.leftBumper().onTrue(handOff);
     
     // ------------------- James ----------------------------
     m_mechController.leftBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
@@ -267,6 +244,32 @@ public class RobotContainer {
     NamedCommands.registerCommand("PositionCoral", Commands.none());
   }
   
+  public Command flooralIntakeSequence() {
+    return Commands.sequence(
+      Commands.runOnce(() -> m_flooral.setIntake(), m_flooral),
+      Commands.waitUntil(m_flooral::coralStored),
+      Commands.waitSeconds(0.2),
+      Commands.runOnce(() -> m_flooral.holdCoral()),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore)));
+  }
+
+  public Command handOff() {
+    return Commands.sequence(
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore), m_flooral),
+      Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster),
+      Commands.waitUntil(m_coralMaster::onTarget),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral),
+      Commands.waitUntil(m_flooral::onTarget),
+      Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage)),
+      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, FlooralConstants.HandoffVoltage), m_flooral),
+      Commands.waitUntil(m_claw::frontLaserTriggered),
+      Commands.runOnce(() -> m_claw.stopIntake()),
+      m_flooral.stopMotor(),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.StationAngle)),
+      Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster),
+      Commands.runOnce(() -> m_flooral.setHoldingCoralState(false))
+    );
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    */
@@ -289,6 +292,7 @@ public class RobotContainer {
     m_arm.resetSetpoint();
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
+    m_flooral.setStore();
     // LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
   }
   
@@ -343,6 +347,10 @@ public class RobotContainer {
 
   public Elevator getElevator() {
     return m_elevator;
+  }
+
+  public Flooral getFlooral() {
+    return m_flooral;
   }
 
 

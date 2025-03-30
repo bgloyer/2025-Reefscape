@@ -6,6 +6,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -187,10 +188,17 @@ public final class Configs {
                 topConfig.idleMode(IdleMode.kBrake);
                 topConfig.smartCurrentLimit(50);
                 topConfig.secondaryCurrentLimit(50);
-
+                topConfig.closedLoop
+                        .pid(FlooralConstants.HorizontalWheelkP, FlooralConstants.HorizontalWheelkI, FlooralConstants.HorizontalWheelkD)
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+                
+                
                 sideConfig.idleMode(IdleMode.kBrake);
                 sideConfig.smartCurrentLimit(80);
                 sideConfig.secondaryCurrentLimit(80);
+                sideConfig.closedLoop
+                        .pid(FlooralConstants.HorizontalWheelkP, FlooralConstants.HorizontalWheelkI, FlooralConstants.HorizontalWheelkD)
+                        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         }
 }
 

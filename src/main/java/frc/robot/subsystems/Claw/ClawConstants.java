@@ -41,7 +41,7 @@ public class ClawConstants {
         public static final double OffsetTopAlgGrab = 124.25;    
         public static final double OffsetBotAlgGrab = 124.25;
         public static final double OffsetBotAlgRoll = 120.27;
-        public static final double FlooralHandOff = 171.21;
+        public static final double FlooralHandOff = 166;
     }
 
     public final class CoralIntakeConstants {

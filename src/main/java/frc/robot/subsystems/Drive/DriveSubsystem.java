@@ -249,8 +249,8 @@ private ProfiledPIDController headingController = new ProfiledPIDController(Driv
    */
   public void driveWithController(boolean fieldRelative) {
     drive(
-        -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_driverController.getLeftY(), DriveConstants.kDriveDeadband) * 4.4 / 4.9,
+        -MathUtil.applyDeadband(m_driverController.getLeftX(), DriveConstants.kDriveDeadband) * 4.4 / 4.9,
         -MathUtil.applyDeadband(m_driverController.getRightX(), DriveConstants.kDriveDeadband),
         true);
   }

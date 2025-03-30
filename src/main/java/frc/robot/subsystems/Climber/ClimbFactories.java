@@ -8,23 +8,25 @@ public final class ClimbFactories {
     
     public static Command readyClimb(RobotContainer container) {
         return Commands.sequence(
-            Commands.runOnce(() -> container.getClaw().setTargetAngle(90)),
-            Commands.runOnce(() -> container.getArm().setTargetAngle(90), container.getArm()
-            ),
-            Commands.waitUntil(() ->container.getArm().onTarget()),
-            Commands.runOnce(() -> container.getClimber().setAngle(ClimbConstants.ReadyAngle)),
-            Commands.waitUntil(() -> container.getClimber().onTarget()),
-            Commands.runOnce(() -> container.getClaw().setTargetAngle(0)),
-            Commands.waitUntil(() -> container.getClaw().onTarget()),
-            Commands.runOnce(() -> container.getArm().setTargetAngle(110)),
-            Commands.waitUntil(() ->container.getArm().onTarget()));
+          Commands.runOnce(() -> container.getClaw().setTargetAngle(90)),
+          Commands.runOnce(() -> container.getArm().setTargetAngle(-98), container.getArm()),
+          Commands.waitUntil(() ->container.getArm().onTarget()),
+          Commands.runOnce(() -> container.getClimber().setAngle(ClimbConstants.ReadyAngle)),
+          Commands.waitUntil(() -> container.getClimber().onTarget()),
+          Commands.runOnce(() -> container.getFlooral().setAngle(0)),
+          Commands.runOnce(() -> container.getClaw().setTargetAngle(178)),
+          Commands.waitUntil(() -> container.getClaw().onTarget()),
+          Commands.runOnce(() -> container.getArm().setTargetAngle(-103)),
+          Commands.waitUntil(() ->container.getArm().onTarget()));
             
       }
     
 
       public static Command storeClimb(RobotContainer container) {
         return Commands.sequence(
-          Commands.runOnce(() -> container.getArm().setTargetAngle(90)),
+          container.getFlooral().setStore(),
+          Commands.runOnce(() -> container.getClaw().setTargetAngle(178)),
+          Commands.runOnce(() -> container.getArm().setTargetAngle(-98)),
           Commands.waitUntil(() ->container.getArm().onTarget()),
           Commands.runOnce(() -> container.getClaw().setTargetAngle(90)),
           Commands.waitUntil(() ->container.getClaw().onTarget()),

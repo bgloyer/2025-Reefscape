@@ -50,7 +50,7 @@ public class AutoAlignToStationTag extends Command {
     m_robotDrive = subsystem;
     m_flooral = flooral;
     m_xController = new PIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD);
-    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(4, 2));
+    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(2.5, 2));
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
     m_yController.setIZone(0.08);
