@@ -14,7 +14,6 @@ import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Configs.ClawConfig;
 import frc.robot.subsystems.TorSubsystemBase;
 import frc.robot.subsystems.Claw.ClawConstants.CoralIntakeConstants;

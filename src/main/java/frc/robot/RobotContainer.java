@@ -11,12 +11,10 @@ import frc.robot.subsystems.Arm.ArmConstants;
 import frc.robot.subsystems.Blinkin.Blinkin;
 import frc.robot.subsystems.Blinkin.BlinkinConstants;
 import frc.robot.subsystems.Claw.Claw;
-import frc.robot.subsystems.Claw.ClawConstants;
 import frc.robot.subsystems.Claw.ClawConstants.CoralIntakeConstants;
 import frc.robot.subsystems.Claw.ClawConstants.WristConstants;
 import frc.robot.subsystems.Climber.ClimbConstants;
 import frc.robot.subsystems.Climber.Climber;
-import frc.robot.subsystems.Configs.ClawConfig;
 import frc.robot.subsystems.CoralMaster.CoralMaster;
 import frc.robot.subsystems.CoralMaster.SetLevel;
 import frc.robot.subsystems.CoralMaster.SetStore;
@@ -25,7 +23,6 @@ import frc.robot.subsystems.Drive.VisionConstants;
 import frc.robot.subsystems.Drive.DriveAutomation.AlignToNet;
 import frc.robot.subsystems.Drive.DriveAutomation.AlignToReef;
 import frc.robot.subsystems.Drive.DriveAutomation.AutoAlignToStationTag;
-import frc.robot.subsystems.Drive.DriveAutomation.DriveToCoral;
 import frc.robot.subsystems.Drive.DriveAutomation.AlignToReef.Direction;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
@@ -41,17 +38,13 @@ import static frc.robot.subsystems.Climber.ClimbFactories.storeClimb;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -184,7 +177,7 @@ public class RobotContainer {
       Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored())),
       new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()),
       Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
-      Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getranL4)),
+      Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getRanL4)),
       Commands.parallel(
         Commands.runOnce(() -> m_claw.runVoltage(7)),
         new SetLevel(Level.TOPALGAEGRAB, m_coralMaster, alignedToReef)));
@@ -194,7 +187,7 @@ public class RobotContainer {
         Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored())),
         new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()),
         Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
-        Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getranL4)),
+        Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getRanL4)),
         Commands.parallel(
           Commands.runOnce(() -> m_claw.runVoltage(7)),
           new SetLevel(Level.BOTTOMALGAEGRAB, m_coralMaster, alignedToReef)));

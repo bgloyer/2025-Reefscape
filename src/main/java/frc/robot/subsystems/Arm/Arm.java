@@ -29,7 +29,6 @@ public class Arm extends TorSubsystemBase {
     private final TrapezoidProfile m_TrapezoidProfile = new TrapezoidProfile(new Constraints(ArmConstants.MaxVelocity, ArmConstants.MaxAcceleration));
     private State currentState = new State(0,0);
     private State targetState = new State(0,0);
-    private boolean stopPid;
     
         public Arm() {
             m_leftMotor = new SparkFlex(ArmConstants.LeftMotorId, MotorType.kBrushless);
@@ -85,7 +84,6 @@ public class Arm extends TorSubsystemBase {
         }
     
         public void stopPid() {
-            stopPid = true;
             m_controller.setReference(0, ControlType.kVoltage);
         }
 

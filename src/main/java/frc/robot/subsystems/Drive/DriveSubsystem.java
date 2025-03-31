@@ -35,7 +35,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Auto.AutoConstants;
-import frc.robot.subsystems.TorSubsystemBase;
 import frc.robot.subsystems.Drive.DriveAutomation.AligningConstants;
 import frc.robot.subsystems.Drive.DriveAutomation.AlignToReef.Direction;
 import frc.robot.subsystems.SwerveModule.KrakenSwerveModule;
@@ -453,7 +452,13 @@ private ProfiledPIDController headingController = new ProfiledPIDController(Driv
     } else {
       centerOfReef = AligningConstants.redCenterOfReef;
     }
-    double angle = getFlippedRotation(centerOfReef.minus(getPose().getTranslation()).getAngle()).getDegrees();
+    double secondsInFuture = 0.1;
+    Translation2d velocity = new Translation2d(getFieldRelSpeeds().vxMetersPerSecond * secondsInFuture, getFieldRelSpeeds().vyMetersPerSecond * secondsInFuture);
+    Translation2d position = getPose().getTranslation();
+    double angle = getFlippedRotation(centerOfReef.minus(position.plus(velocity)).getAngle()).getDegrees();
+
+
+    // double angle = getFlippedRotation(centerOfReef.minus(getPose().getTranslation()).getAngle()).getDegrees();
     return Math.round(angle / 60.0) * 60;
   }
   

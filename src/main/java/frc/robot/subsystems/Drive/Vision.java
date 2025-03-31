@@ -39,7 +39,6 @@ public class Vision {
             // stolen from 1678
             double xyStdDev = 4.3 * ((0.01 + (0.08 * Math.pow(mt2.avgTagDist, 2.0))) / mt2.tagCount);
 
-            SmartDashboard.putNumber("mt2 avg dist", mt2.avgTagDist);
             xyStdDev = Math.max(0.03, xyStdDev);
                         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev, xyStdDev, 9999999));
                         m_poseEstimator.addVisionMeasurement(
