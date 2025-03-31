@@ -47,8 +47,10 @@ public class Flooral extends SubsystemBase {
         }
 
         public void setVoltage(double sideVolts, double topVolts) {
-            m_sideMotor.setVoltage(sideVolts);
-            m_topMotor.setVoltage(topVolts);
+            // m_sideMotor.setVoltage(sideVolts);
+            // m_topMotor.setVoltage(topVolts);
+            m_sideMotor.getClosedLoopController().setReference(sideVolts, ControlType.kVoltage);
+            m_topMotor.getClosedLoopController().setReference(topVolts, ControlType.kVoltage);
         }
     
         public Command stopMotor() {
