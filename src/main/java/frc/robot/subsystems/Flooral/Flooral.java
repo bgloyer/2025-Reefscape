@@ -44,6 +44,7 @@ public class Flooral extends SubsystemBase {
             m_topEncoder = m_topMotor.getEncoder();
             m_sideEncoder = m_sideMotor.getEncoder();
             targetAngle = 0;
+            holdCoral();
         }
 
         public void setVoltage(double sideVolts, double topVolts) {
@@ -80,18 +81,6 @@ public class Flooral extends SubsystemBase {
             return MathUtil.isNear(targetAngle, m_encoder.getPosition(), 2);
         }
     
-        public Command intakeCoralSequence() {
-            // return runOnce(() -> setIntake());
-            return Commands.sequence(
-                runOnce(() -> setIntake()),
-                Commands.waitUntil(this::coralStored),
-                Commands.waitSeconds(0.1)
-                ).finallyDo(() -> {
-                    holdCoral();
-                    setAngle(FlooralConstants.CoralStore);
-                });
-        }
-    
         public void holdCoral() {
             m_sideMotor.getClosedLoopController().setReference(m_sideEncoder.getPosition(), ControlType.kPosition);
             m_topMotor.getClosedLoopController().setReference(m_topEncoder.getPosition(), ControlType.kPosition);
@@ -115,6 +104,8 @@ public class Flooral extends SubsystemBase {
     
     public void setHoldingCoralState(boolean value) {
             holdingCoral = value;
+            setAngle(FlooralConstants.CoralStore);
+            holdCoral();
     } 
 
     public boolean getHoldingCoralState() {

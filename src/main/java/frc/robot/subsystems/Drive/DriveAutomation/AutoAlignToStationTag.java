@@ -50,7 +50,7 @@ public class AutoAlignToStationTag extends Command {
     m_robotDrive = subsystem;
     m_flooral = flooral;
     m_xController = new PIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD);
-    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(2.5, 2));
+    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(1, 1.5));
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
     m_yController.setIZone(0.08);
@@ -89,7 +89,7 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void execute() {
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
-    if (m_coralMaster.useIntakeAutoAlign() && LimelightHelpers.getTV(limelightName) && tyToDistance(limelightName) < 1.7) {
+    if (m_coralMaster.useIntakeAutoAlign() && LimelightHelpers.getTV(limelightName) && tyToDistance(limelightName) < 1.9) {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = Math.abs(yDistanceFromTag) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;

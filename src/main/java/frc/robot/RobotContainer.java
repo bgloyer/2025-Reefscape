@@ -144,12 +144,12 @@ public class RobotContainer {
     m_driverController.x().onTrue(m_blinkin.setColor(BlinkinConstants.AlgaeScore));
     
     // Intake Coral from Floor
-    m_driverController.leftTrigger(0.4).whileTrue(flooralIntakeSequence());
+    m_driverController.leftTrigger(0.4).onTrue(flooralIntakeSequence());
     m_driverController.leftTrigger(0.4).onFalse(Commands.either(
       Commands.either(
         Commands.runOnce(() -> m_flooral.setHoldingCoralState(true)), 
         handOff(),  coralStored),
-      m_flooral.setStore(),
+      m_flooral.setStore().alongWith(Commands.runOnce(() -> m_coralMaster.setState(Level.STORE)).onlyIf(coralStored.negate())),
       flooralStored));
 
     // toggle intake mode
@@ -240,22 +240,24 @@ public class RobotContainer {
   public Command flooralIntakeSequence() {
     return Commands.sequence(
       Commands.runOnce(() -> m_flooral.setIntake(), m_flooral),
+      Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster).onlyIf(coralStored.negate()),
       Commands.waitUntil(m_flooral::coralStored),
-      Commands.waitSeconds(0.2),
+      Commands.waitSeconds(0.06),
       Commands.runOnce(() -> m_flooral.holdCoral()),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore)));
   }
 
   public Command handOff() {
     return Commands.sequence(
-      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore), m_flooral),
+      Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore)).onlyIf(flooralStored),
+      Commands.runOnce(() -> m_flooral.holdCoral()),
       Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster),
       Commands.waitUntil(m_coralMaster::onTarget),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral),
       Commands.waitUntil(m_flooral::onTarget),
       Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage)),
       Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, FlooralConstants.HandoffVoltage), m_flooral),
-      Commands.waitUntil(m_claw::frontLaserTriggered),
+      Commands.waitUntil(coralStored),
       Commands.runOnce(() -> m_claw.stopIntake()),
       m_flooral.stopMotor(),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.StationAngle)),

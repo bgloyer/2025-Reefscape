@@ -40,5 +40,5 @@ public class ArmConstants {
     public static final double OffsetTopAlgGrab = -40.58;    
     public static final double OffsetBotAlgGrab = -40.03;
     public static final double OffsetBotAlgRoll = -61.19;
-    public static final double FlooralHandOff = 0;
+    public static final double FlooralHandOff = 5;
 }

@@ -15,9 +15,9 @@ public class FlooralConstants {
     public static final double StationAngle = 28;
     public static final double OneCoralAwayStationAngle = 40;
     public static final int BeamBreakChannel = 3;
-    public static final double HandoffVoltage = 1.5;
+    public static final double HandoffVoltage = 6;
     public static final double CoralStore = 40;
-    public static final double SideVoltage = -6;
+    public static final double SideVoltage = -4; // -6
     public static final double HardStopOffset = 10;
     public static final double TopVoltage = -2;
     public static final double HorizontalWheelkP = 0.8;

@@ -62,7 +62,7 @@ public final class DriveConstants {
     
     public static double yTranslationkP = 0.7;
     public static double yTranslationkI = 0.5;
-    public static double yTranslationkD = 0.015;
+    public static double yTranslationkD = 0.019;
 
     public static double stationYTranslationkD = 0.06;
     

@@ -41,7 +41,7 @@ public class ClawConstants {
         public static final double OffsetTopAlgGrab = 124.25;    
         public static final double OffsetBotAlgGrab = 124.25;
         public static final double OffsetBotAlgRoll = 120.27;
-        public static final double FlooralHandOff = 166;
+        public static final double FlooralHandOff = 161;
     }
 
     public final class CoralIntakeConstants {
@@ -53,6 +53,6 @@ public class ClawConstants {
         public static final double ScoreVoltage = -6;
         public static final double OuttakeVoltage = 4;
         public static final double IntakeVelocityFF = 1.0 / AligningConstants.kNeoVortexkV / 12.0;
-        public static final double HandOffVoltage = -3;
+        public static final double HandOffVoltage = -4; // -3
     }
 }
