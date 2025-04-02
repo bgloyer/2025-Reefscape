@@ -193,6 +193,7 @@ public class RobotContainer {
 
     m_mechController.y().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()), new SetStore(m_coralMaster)));
 
+    m_mechController.leftStick().onTrue(Commands.runOnce(() -> m_elevator.setZero()));
     Command TopAlgaeGrab = Commands.sequence(
       Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored())),
       new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()),
@@ -277,7 +278,7 @@ public class RobotContainer {
       Commands.waitUntil(m_flooral::onTarget),
       Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage)),
       Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, FlooralConstants.HandoffVoltage), m_flooral),
-      Commands.waitUntil(coralStored),
+      Commands.waitUntil(m_claw::frontLaserTriggered),
       Commands.runOnce(() -> m_claw.stopIntake()),
       m_flooral.stopMotor(),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.StationAngle)),

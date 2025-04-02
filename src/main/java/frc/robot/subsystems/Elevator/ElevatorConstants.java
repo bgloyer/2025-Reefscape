@@ -21,7 +21,7 @@ public final class ElevatorConstants {
     // from block cad
     
     public static final double AlgaeStore = 0.37;
-    public static final double Store = 0.0;
+    public static final double Store = 0.01;
     // public static final double Station = Units.inchesToMeters(1) * 2;
     public static final double Station = 0.0354;
     public static final double StationOffset = 0.0668;
@@ -45,5 +45,5 @@ public final class ElevatorConstants {
     public static final double OffsetTopAlgGrab = 0.533;    
     public static final double OffsetBotAlgGrab = 0.12344;
     public static final double OffsetBotAlgRoll = 0.552;
-    public static final double FlooralHandOff = 0;
+    public static final double FlooralHandOff = 0.01;
 }

@@ -76,6 +76,8 @@ public class Elevator extends TorSubsystemBase {
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
             case THREE:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
+            case TWO:
+                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.1;
             case TOPALGAEGRAB:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
             default:
