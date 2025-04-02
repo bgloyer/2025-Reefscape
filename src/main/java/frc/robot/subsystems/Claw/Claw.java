@@ -89,8 +89,10 @@ public class Claw extends TorSubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        targetAngle = MathUtil.clamp(angle, WristConstants.MinAngle, WristConstants.MaxAngle); 
-        currentSetpoint = getAngle();
+        if(angle != targetAngle) {
+            targetAngle = MathUtil.clamp(angle, WristConstants.MinAngle, WristConstants.MaxAngle); 
+            currentSetpoint = getAngle();
+        }
     }
 
     private void positionSlewRateLimiting() {

@@ -192,7 +192,7 @@ private ProfiledPIDController headingController = new ProfiledPIDController(Driv
 
   private void smartDashboardPrints() {
     SmartDashboard.putBoolean("left side", onLeftSideOfField());
-    SmartDashboard.putNumber("Robot x Speed", getSpeeds().vxMetersPerSecond);
+    SmartDashboard.putNumber("Robot x field rel Speed", getFieldRelSpeeds().vxMetersPerSecond);
     SmartDashboard.putBoolean("Aligned to reef", alignedToReef());
     SmartDashboard.putData("Robot Field", m_field2d);
     SmartDashboard.putNumber("Odometry X", m_odometry.getEstimatedPosition().getX());

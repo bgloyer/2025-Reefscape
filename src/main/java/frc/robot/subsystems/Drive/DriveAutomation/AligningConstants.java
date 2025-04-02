@@ -39,5 +39,5 @@ public final class AligningConstants {
     public static final double IntakeOneCoralAwayDistance = 0.8607;//0.82;
     public static final double ReefOneCoralAwayDistance = 0.6408;//0.635;
     public static final double BlueNetXPosition = 5;
-    public static final double RedNetXPosition = 15;
+    public static final double RedNetXPosition = 10.567;
 }

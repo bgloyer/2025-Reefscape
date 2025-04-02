@@ -93,6 +93,7 @@ public class Flooral extends SubsystemBase {
             SmartDashboard.putBoolean("Flooral stored", coralStored());
             SmartDashboard.putBoolean("Flooral Pivot at store", atStore());
             SmartDashboard.putNumber("Flooral break beam raw input", m_beamBreak.getValue());
+            SmartDashboard.putBoolean("Holding Coral State", getHoldingCoralState());
         }
     
         public Command setStore() {

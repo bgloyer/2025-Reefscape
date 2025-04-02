@@ -40,6 +40,7 @@ public class AutoAlignToStationTag extends Command {
   private final CoralMaster m_coralMaster;
   private final Flooral m_flooral;
   private int count = 0;
+  private boolean hasSeenTag;
 
   /**
    * 
@@ -50,7 +51,7 @@ public class AutoAlignToStationTag extends Command {
     m_robotDrive = subsystem;
     m_flooral = flooral;
     m_xController = new PIDController(DriveConstants.xIntakeTranslationkP, DriveConstants.xIntakeTranslationkI, DriveConstants.xIntakeTranslationkD);
-    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(1, 1.5));
+    m_yController = new ProfiledPIDController(DriveConstants.yTranslationkP, DriveConstants.yTranslationkI, DriveConstants.yTranslationkD, new Constraints(2.5, 1.5));
     m_turnPID = new ProfiledPIDController(DriveConstants.TurnkP, DriveConstants.TurnkI, DriveConstants.TurnkD, new Constraints(DriveConstants.TurnMaxVelocity, DriveConstants.TurnMaxAccel));
     m_xController.setIZone(0.08); 
     m_yController.setIZone(0.08);
@@ -64,17 +65,17 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void initialize() {
     count = 0;
+    hasSeenTag = false;
     if(DashboardManager.intakeCoralInTheWayOverride) {
-      m_coralMaster.setOneCoralAwayIntake();
       m_flooral.setAngle(FlooralConstants.OneCoralAwayStationAngle);
+      m_coralMaster.setOneCoralAwayIntake();
     }
     else {
       m_flooral.setAngle(FlooralConstants.StationAngle);
       m_coralMaster.setIntake();
-
     }
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
-    m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
+    // m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
     m_xController.reset();
     m_yController.setGoal(AligningConstants.IntakeAlignDistance);
     m_yController.setTolerance(0.02);
@@ -89,6 +90,11 @@ public class AutoAlignToStationTag extends Command {
   @Override
   public void execute() {
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
+    if(!hasSeenTag && LimelightHelpers.getTV(limelightName) && tyToDistance(limelightName) < 1.9) {
+      m_yController.reset(new State(tyToDistance(limelightName), m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
+      hasSeenTag = true;
+    }
+
     if (m_coralMaster.useIntakeAutoAlign() && LimelightHelpers.getTV(limelightName) && tyToDistance(limelightName) < 1.9) {
       double yDistanceFromTag = tyToDistance(limelightName);
       double xInput = Math.abs(yDistanceFromTag) * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 

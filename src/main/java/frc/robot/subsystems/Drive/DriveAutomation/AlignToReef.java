@@ -30,6 +30,7 @@ public class AlignToReef extends Command {
   private final String limelightName = VisionConstants.ReefLightLightName;
   private final ProfiledPIDController m_turnPID;
   public int count = 0;
+  private boolean hasSeenTag = false;
   public enum Direction {
     LEFT, RIGHT, MIDDLE
   }
@@ -56,13 +57,12 @@ public class AlignToReef extends Command {
   @Override
   public void initialize() {
     count = 0;
+    hasSeenTag = false;
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
     m_turnPID.setTolerance(1.5);
     m_turnPID.setGoal(m_robotDrive.getAngleToReef());
     m_yController.setTolerance(0.025);
     m_xController.setTolerance(AligningConstants.ReefAlignTolerance);
-    m_yController.reset(tyToDistance(limelightName)); // yes y and x are flipped
-    m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped 
     m_xController.reset();
     m_yController.setGoal(0.522);//0.515 // one coral away: 0.62
     SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
@@ -72,7 +72,6 @@ public class AlignToReef extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
     switch (m_robotDrive.scoringSide) {
       case LEFT:
         m_xController.setSetpoint(AligningConstants.LeftReefOffset); // mid 0.2165 
@@ -83,6 +82,10 @@ public class AlignToReef extends Command {
         case MIDDLE:
         m_xController.setSetpoint(AligningConstants.MiddleReefOffset);
       }
+    if(!hasSeenTag && LimelightHelpers.getTV(limelightName)) {
+      m_yController.reset(new State(tyToDistance(limelightName), -m_robotDrive.getSpeeds().vxMetersPerSecond)); // yes y and x are flipped
+      hasSeenTag = true;
+    }
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
     if (LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = tyToDistance(limelightName);
@@ -103,7 +106,7 @@ public class AlignToReef extends Command {
       // m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
       boolean aligned = m_xController.atSetpoint() && m_yController.atGoal() && m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1;
       m_robotDrive.setAlignedToReef(aligned);
-      m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 0.7);
+      m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 1.2); //0.7
       if(!Helpers.isOneCoralAway && !Helpers.isAuto)
         Helpers.isOneCoralAway = coralInTheWay(yOutput);
       SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);

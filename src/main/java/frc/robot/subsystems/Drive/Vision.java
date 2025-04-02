@@ -4,7 +4,6 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.LimelightHelpers;
 
 public class Vision {

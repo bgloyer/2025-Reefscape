@@ -155,6 +155,22 @@ public class RobotContainer {
     // toggle intake mode
     m_driverController.start().onTrue(Commands.runOnce(() -> m_coralMaster.toggleIntakeAutoAlign()));
 
+    Command groundIntake = Commands.sequence(
+      Commands.runOnce(() -> m_coralMaster.setState(Level.GROUNDALGAE), m_coralMaster),
+      Commands.runOnce(() -> m_claw.runVoltage(7)));
+
+    Command storeAlgae = Commands.sequence(
+      Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.AlgaeStore), m_elevator),
+      Commands.waitUntil(m_elevator::onTarget),
+      Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
+      m_blinkin.setColor(BlinkinConstants.AlgaeHold));
+
+    m_driverController.y().whileTrue(groundIntake);
+    m_driverController.y().onFalse(Commands.either(
+      storeAlgae,
+      (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
+      algaeStored));
+
     // Reset gyro
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
     m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));
