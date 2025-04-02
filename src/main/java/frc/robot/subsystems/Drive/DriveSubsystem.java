@@ -452,7 +452,7 @@ private ProfiledPIDController headingController = new ProfiledPIDController(Driv
     } else {
       centerOfReef = AligningConstants.redCenterOfReef;
     }
-    double secondsInFuture = 0.1;
+    double secondsInFuture = 0.1 * (Helpers.isBlue ? 1 : -1);
     Translation2d velocity = new Translation2d(getFieldRelSpeeds().vxMetersPerSecond * secondsInFuture, getFieldRelSpeeds().vyMetersPerSecond * secondsInFuture);
     Translation2d position = getPose().getTranslation();
     double angle = getFlippedRotation(centerOfReef.minus(position.plus(velocity)).getAngle()).getDegrees();

@@ -127,6 +127,7 @@ public class RobotContainer {
 
     // outtake
     m_driverController.a().whileTrue(Commands.startEnd(() -> m_claw.runIntake(), () -> m_claw.stopIntake()));
+    m_driverController.y().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-CoralIntakeConstants.IntakeVoltage), () -> m_claw.stopIntake()));
     
     //net score
     Command netScore = Commands.sequence(
@@ -140,7 +141,7 @@ public class RobotContainer {
       Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
       );
       
-    m_driverController.x().onTrue(netScore);      
+    m_driverController.x().whileTrue(netScore);      
     m_driverController.x().onTrue(m_blinkin.setColor(BlinkinConstants.AlgaeScore));
     
     // Intake Coral from Floor
@@ -160,13 +161,16 @@ public class RobotContainer {
       Commands.runOnce(() -> m_claw.runVoltage(7)));
 
     Command storeAlgae = Commands.sequence(
-      Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.AlgaeStore), m_elevator),
-      Commands.waitUntil(m_elevator::onTarget),
-      Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
+      Commands.runOnce(() -> m_elevator.setTarget(0.25), m_elevator),
+      // Commands.waitUntil(m_elevator::onTarget),
+      // Commands.runOnce(() -> m_claw.runVoltage(-8)),
+      // Commands.waitSeconds(0.3),
+      // Commands.runOnce(() -> m_claw.runVoltage(-8)),
+      // Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
       m_blinkin.setColor(BlinkinConstants.AlgaeHold));
 
-    m_driverController.y().whileTrue(groundIntake);
-    m_driverController.y().onFalse(Commands.either(
+    m_driverController.leftBumper().whileTrue(groundIntake);
+    m_driverController.leftBumper().onFalse(Commands.either(
       storeAlgae,
       (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
       algaeStored));
@@ -181,7 +185,7 @@ public class RobotContainer {
     m_mechController.rightBumper().whileTrue(Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
 
     m_mechController.a().whileTrue(Commands.runOnce(() -> m_coralMaster.setState(Level.ONE)));
-    m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(10), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(Commands.waitSeconds(0.4)).andThen(new SetStore(m_coralMaster)));
+    m_mechController.a().onFalse(Commands.startEnd(() -> m_claw.runVoltage(6), () -> m_claw.stopIntake()).until(coralStored.negate()).andThen(Commands.waitSeconds(0.4)).andThen(new SetStore(m_coralMaster)));
 
     m_mechController.x().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.TWO, m_coralMaster, alignedToReef).until(coralStored.negate()), new SetLevel(Level.STORE, m_coralMaster, alignedToReef)));
 

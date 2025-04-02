@@ -78,7 +78,7 @@ public class Flooral extends SubsystemBase {
         }
     
         public boolean onTarget() {
-            return MathUtil.isNear(targetAngle, m_encoder.getPosition(), 2);
+            return MathUtil.isNear(targetAngle, m_encoder.getPosition(), 3.5);
         }
     
         public void holdCoral() {
