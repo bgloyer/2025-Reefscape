@@ -70,6 +70,7 @@ public class CoralMaster extends SubsystemBase {
         
             public void setStore() {
                 setState(ElevatorConstants.Store, ArmConstants.Store, WristConstants.Store);
+                m_claw.stopIntake();
             }
         
             public void runIntake() {

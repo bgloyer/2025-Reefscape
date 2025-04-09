@@ -11,6 +11,7 @@ import frc.robot.subsystems.Arm.ArmConstants;
 import frc.robot.subsystems.Blinkin.Blinkin;
 import frc.robot.subsystems.Blinkin.BlinkinConstants;
 import frc.robot.subsystems.Claw.Claw;
+import frc.robot.subsystems.Claw.ClawConstants;
 import frc.robot.subsystems.Claw.ClawConstants.CoralIntakeConstants;
 import frc.robot.subsystems.Claw.ClawConstants.WristConstants;
 import frc.robot.subsystems.Climber.ClimbConstants;
@@ -137,7 +138,6 @@ public class RobotContainer {
       Commands.runOnce(() -> m_claw.runVoltage(-8), m_claw),
       Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.AlgaeNetFlick)),
       Commands.waitUntil(m_claw::onTarget),
-      Commands.runOnce(() -> m_claw.runVoltage(0)),
       Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
       );
       
@@ -158,16 +158,17 @@ public class RobotContainer {
 
     Command groundIntake = Commands.sequence(
       Commands.runOnce(() -> m_coralMaster.setState(Level.GROUNDALGAE), m_coralMaster),
-      Commands.runOnce(() -> m_claw.runVoltage(7)));
+      Commands.runOnce(() -> m_claw.runVoltage(9.5)));
+
 
     Command storeAlgae = Commands.sequence(
-      Commands.runOnce(() -> m_elevator.setTarget(0.25), m_elevator),
-      // Commands.waitUntil(m_elevator::onTarget),
-      // Commands.runOnce(() -> m_claw.runVoltage(-8)),
-      // Commands.waitSeconds(0.3),
-      // Commands.runOnce(() -> m_claw.runVoltage(-8)),
-      // Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
-      m_blinkin.setColor(BlinkinConstants.AlgaeHold));
+        Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.AlgaeStore), m_elevator),
+        Commands.waitUntil(m_elevator::onTarget),
+        Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
+        m_blinkin.setColor(BlinkinConstants.AlgaeHold));
+  
+    Command processorAlgae = Commands.sequence(
+      Commands.runOnce(() -> m_elevator.setTarget(0.25), m_elevator));
 
     m_driverController.leftBumper().whileTrue(groundIntake);
     m_driverController.leftBumper().onFalse(Commands.either(
@@ -175,6 +176,9 @@ public class RobotContainer {
       (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
       algaeStored));
 
+
+    m_driverController.y().onTrue(Commands.runOnce(() -> m_coralMaster.setState(0.2, ArmConstants.GroundAlgae, WristConstants.GroundAlgae)));
+    m_driverController.y().onFalse(Commands.runOnce(() -> m_claw.runVoltage(-5)));
     // Reset gyro
     m_driverController.povUp().onTrue(Commands.runOnce(() -> m_robotDrive.zeroHeading()));
     m_driverController.povUp().onFalse(Commands.runOnce(() -> LimelightHelpers.SetIMUMode(VisionConstants.ReefLightLightName, 2)));
@@ -195,7 +199,7 @@ public class RobotContainer {
 
     m_mechController.leftStick().onTrue(Commands.runOnce(() -> m_elevator.setZero()));
     Command TopAlgaeGrab = Commands.sequence(
-      Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored())),
+      Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored()), m_coralMaster),
       new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()),
       Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
       Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getRanL4)),
@@ -205,7 +209,7 @@ public class RobotContainer {
 
       
     Command BottomAlgaeGrab = Commands.sequence(
-        Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored())),
+        Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored()), m_coralMaster),
         new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()),
         Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)),
         Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getRanL4)),
@@ -276,8 +280,8 @@ public class RobotContainer {
       Commands.waitUntil(m_coralMaster::onTarget),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral),
       Commands.waitUntil(m_flooral::onTarget),
-      Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage)),
-      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.HandoffVoltage, FlooralConstants.HandoffVoltage), m_flooral),
+      Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage), m_claw),
+      Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.SideHandoffVoltage, FlooralConstants.TopHandoffVoltage), m_flooral),
       Commands.waitUntil(m_claw::frontLaserTriggered),
       Commands.runOnce(() -> m_claw.stopIntake()),
       m_flooral.stopMotor(),
