@@ -64,7 +64,7 @@ public class AlignToReef extends Command {
     m_yController.setTolerance(0.025);
     m_xController.setTolerance(AligningConstants.ReefAlignTolerance);
     m_xController.reset();
-    m_yController.setGoal(0.522);//0.515 // one coral away: 0.62
+    m_yController.setGoal(0.518);//0.522 // one coral away: 0.62
     SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
   }
 

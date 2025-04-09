@@ -131,17 +131,17 @@ public class RobotContainer {
     
     //net score
     Command netScore = Commands.sequence(
-      new AlignToNet(m_robotDrive),
+      // new AlignToNet(m_robotDrive),
       Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster), 
       Commands.waitUntil(atNetHeight),
-      Commands.runOnce(() -> m_claw.runVoltage(-8)),
+      Commands.runOnce(() -> m_claw.runVoltage(-8), m_claw),
       Commands.runOnce(() -> m_claw.setTargetAngle(WristConstants.AlgaeNetFlick)),
       Commands.waitUntil(m_claw::onTarget),
       Commands.runOnce(() -> m_claw.runVoltage(0)),
       Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster)
       );
       
-    m_driverController.x().whileTrue(netScore);      
+    m_driverController.x().onTrue(netScore);      
     m_driverController.x().onTrue(m_blinkin.setColor(BlinkinConstants.AlgaeScore));
     
     // Intake Coral from Floor

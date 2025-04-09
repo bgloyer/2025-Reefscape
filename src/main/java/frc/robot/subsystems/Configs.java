@@ -29,7 +29,7 @@ public final class Configs {
             double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
 
             drivingConfig
-                    .idleMode(IdleMode.kCoast)
+                    .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(50);
             drivingConfig.encoder
                     .positionConversionFactor(drivingFactor) // meters
@@ -79,7 +79,7 @@ public final class Configs {
                     talonConfig.CurrentLimits.StatorCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.StatorCurrentLimit = 80;
 
-                    talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+                    talonConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
                     double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
                     / ModuleConstants.kDrivingMotorReduction;
