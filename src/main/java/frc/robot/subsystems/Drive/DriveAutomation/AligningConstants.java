@@ -35,11 +35,12 @@ public final class AligningConstants {
     public static final double MiddleReefOffset = 0.022;//0.036;
 
     public static final double ReefAlignTolerance = 0.025;
+    public static final double ReefAlignDistance = 0.526;
     public static final double IntakeRightAlignOffset = 0.0818;//0.0675;
     public static final double IntakeLeftAlignOffset = 0.079;//0.076; 
     public static final double IntakeAlignDistance = 0.667;//0.75;
     public static final double IntakeOneCoralAwayDistance = 0.777;//0.8607;
-    public static final double ReefOneCoralAwayDistance = 0.638;//0.6408;
+    public static final double ReefOneCoralAwayDistance = 0.646;//0.638;
     public static final double BlueNetXPosition = 7.7032;//7.835 is too close to net;
     public static final double RedNetXPosition = 9.665;
     public static final double ClimbPosition = 0;

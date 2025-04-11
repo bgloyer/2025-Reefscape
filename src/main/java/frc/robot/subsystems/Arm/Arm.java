@@ -60,7 +60,7 @@ public class Arm extends TorSubsystemBase {
         }
     
         public boolean onTarget() {
-            return Math.abs(m_encoder.getPosition() - targetState.position) < ArmConstants.Tolerance;
+            return Math.abs(currentState.position - targetState.position) < ArmConstants.Tolerance;
         }
     
         public void setZero() {

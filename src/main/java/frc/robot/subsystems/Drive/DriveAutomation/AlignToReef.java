@@ -61,10 +61,10 @@ public class AlignToReef extends Command {
     m_turnPID.reset(new State(m_robotDrive.getHeading(), -m_robotDrive.getTurnRate()));
     m_turnPID.setTolerance(1.5);
     m_turnPID.setGoal(m_robotDrive.getAngleToReef());
-    m_yController.setTolerance(0.025);
+    m_yController.setTolerance(0.1); // 0.025
     m_xController.setTolerance(AligningConstants.ReefAlignTolerance);
     m_xController.reset();
-    m_yController.setGoal(0.518);//0.522 // one coral away: 0.62
+    m_yController.setGoal(AligningConstants.ReefAlignDistance);//0.518 CVR Value//0.522 // one coral away: 0.62
     SmartDashboard.putBoolean("coral in way", Helpers.isOneCoralAway);
   }
 
@@ -92,7 +92,7 @@ public class AlignToReef extends Command {
       double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
       double xOutput = 0;
       double yOutput = -(m_yController.calculate(yDistanceFromTag) + m_yController.getSetpoint().velocity / DriveConstants.kMaxSpeedMetersPerSecond);
-      if (m_yController.atGoal()) {
+      if (hiAlexIDidntNameThis()) {
         yOutput = 0;
       }
       if (m_turnPID.atGoal()) {
@@ -104,7 +104,10 @@ public class AlignToReef extends Command {
       SmartDashboard.putNumber("Reef Align Y Output", yOutput);
       m_robotDrive.drive(yOutput, xOutput, turnOutput, false);
       // m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
-      boolean aligned = m_xController.atSetpoint() && m_yController.atGoal() && m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1;
+      SmartDashboard.putBoolean("Reef X Aligned", m_xController.atSetpoint());
+      SmartDashboard.putBoolean("Reef Y Aligned", hiAlexIDidntNameThis());
+      SmartDashboard.putBoolean("Reef Velocity Aligned", m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1);
+      boolean aligned = m_xController.atSetpoint() && hiAlexIDidntNameThis() && m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1;
       m_robotDrive.setAlignedToReef(aligned);
       m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 1.2); //0.7
       if(!Helpers.isOneCoralAway && !Helpers.isAuto)
@@ -147,4 +150,8 @@ public class AlignToReef extends Command {
     return false;
   }
 
+
+  private boolean hiAlexIDidntNameThis() {
+    return MathUtil.isNear(Helpers.isOneCoralAway ? AligningConstants.ReefOneCoralAwayDistance : AligningConstants.ReefAlignDistance, tyToDistance(limelightName), 0.025);
+  }
 }

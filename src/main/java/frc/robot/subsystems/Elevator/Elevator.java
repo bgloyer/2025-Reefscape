@@ -63,7 +63,7 @@ public class Elevator extends TorSubsystemBase {
     }
     
     public boolean onTarget() {
-        return Math.abs(m_encoder.getPosition() - targetState.position) < ElevatorConstants.Tolerance;
+        return Math.abs(currentState.position - targetState.position) < ElevatorConstants.Tolerance;
     }    
     
     public boolean almostAtStore() {
@@ -73,7 +73,7 @@ public class Elevator extends TorSubsystemBase {
     public boolean approachingHeight(Level level) {
         switch (level) {
             case FOUR:
-                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55;
+                return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55; //0.55
             case THREE:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.4;
             case TWO:
