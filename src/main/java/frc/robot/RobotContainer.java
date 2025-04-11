@@ -312,7 +312,7 @@ public class RobotContainer {
     m_arm.resetSetpoint();
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
-    m_flooral.setStore();
+    m_flooral.setAngle(FlooralConstants.StationAngle);
     // LimelightHelpers.SetIMUMode(VisionConstants.LightLightName, 2);
   }
   

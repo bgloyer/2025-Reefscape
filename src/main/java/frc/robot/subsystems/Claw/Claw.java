@@ -128,6 +128,8 @@ public class Claw extends TorSubsystemBase {
         SmartDashboard.putBoolean("Front Coral Stored", frontLaserTriggered());
         SmartDashboard.putBoolean("Back Coral Stored", backLaserTriggered());
         SmartDashboard.putNumber("BackLaserCan Distance", getDistance());
+        SmartDashboard.putBoolean("Claw on target", onTarget());
+
     }
 
     @Override

@@ -19,8 +19,6 @@ public class SetLevel extends SequentialCommandGroup {
                 Commands.runOnce(() -> coralMaster.setState(level.withOffset().elevatorHeight, level.withOffset().wristAngle), coralMaster).onlyIf(RobotModeTriggers.teleop()),
                 Commands.waitUntil(() -> coralMaster.getElevator().approachingHeight(level)),
                 Commands.run(() -> coralMaster.setState(level.withOffset()), coralMaster).until(alignedToReef.and(coralMaster::onTarget)),
-                // Commands.runOnce(() -> coralMaster.getArm().setTargetAngle(level.withOffset().armAngle), coralMaster.getArm()),
-                // Commands.waitUntil(alignedToReef.and(coralMaster::onTarget)),
                 new Score(coralMaster).onlyIf(() -> level.isReefScoringPosition)
             );
     }

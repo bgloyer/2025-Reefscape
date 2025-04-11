@@ -95,6 +95,8 @@ public class Elevator extends TorSubsystemBase {
         SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Elevator vel", m_encoder.getVelocity());
         SmartDashboard.putNumber("Elevator Current", m_leftMotor.getOutputCurrent());
+        SmartDashboard.putBoolean("Elevator on target", onTarget());
+
     }
 
     public void setZero() {
