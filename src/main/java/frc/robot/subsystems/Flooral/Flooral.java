@@ -94,6 +94,9 @@ public class Flooral extends SubsystemBase {
             SmartDashboard.putBoolean("Flooral Pivot at store", atStore());
             SmartDashboard.putNumber("Flooral break beam raw input", m_beamBreak.getValue());
             SmartDashboard.putBoolean("Holding Coral State", getHoldingCoralState());
+            if (atIntakePosition()) {
+                m_pivotController.setReference(0, ControlType.kVoltage);
+            }
         }
     
         public Command setStore() {
@@ -117,4 +120,7 @@ public class Flooral extends SubsystemBase {
         return MathUtil.isNear(FlooralConstants.CoralStore, m_encoder.getPosition(), 5);
     }
 
+    public boolean atIntakePosition() {
+        return MathUtil.isNear(FlooralConstants.IntakeAngle, m_encoder.getPosition(), 20) && targetAngle == FlooralConstants.IntakeAngle;
+    }
 }

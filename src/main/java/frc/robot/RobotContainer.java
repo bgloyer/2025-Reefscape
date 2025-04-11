@@ -104,8 +104,6 @@ public class RobotContainer {
      * Use this method to define your trigger->command mappings
      */
   private void configureBindings() {
-    coralStored.onTrue(m_blinkin.setColor(BlinkinConstants.White));
-    coralStored.onFalse(m_blinkin.setColor(BlinkinConstants.Red));
     flooralStored.and(m_flooral::getHoldingCoralState).and(coralStored.negate()).and(() -> m_elevator.getHeight() < 0.1).onTrue(handOff());
 
 
@@ -121,7 +119,7 @@ public class RobotContainer {
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral)));
       
     // Score
-    m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive).alongWith(m_blinkin.setColor(BlinkinConstants.Black)));
+    m_driverController.rightBumper().whileTrue(new AlignToReef(m_robotDrive));
       
     // Store everything
     m_driverController.b().onTrue(Commands.runOnce(() -> m_coralMaster.setStore(), m_coralMaster).alongWith(m_flooral.setStore()));
@@ -142,10 +140,9 @@ public class RobotContainer {
       );
       
     m_driverController.x().onTrue(netScore);      
-    m_driverController.x().onTrue(m_blinkin.setColor(BlinkinConstants.AlgaeScore));
     
     // Intake Coral from Floor
-    m_driverController.leftTrigger(0.4).onTrue(flooralIntakeSequence());
+    m_driverController.leftTrigger(0.4).onTrue(flooralIntakeSequence().onlyIf(flooralStored.negate()));
     m_driverController.leftTrigger(0.4).onFalse(Commands.either(
       Commands.either(
         Commands.runOnce(() -> m_flooral.setHoldingCoralState(true)), 
@@ -164,9 +161,7 @@ public class RobotContainer {
     Command storeAlgae = Commands.sequence(
         Commands.runOnce(() -> m_elevator.setTarget(ElevatorConstants.AlgaeStore), m_elevator),
         Commands.waitUntil(m_elevator::onTarget),
-        Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
-        m_blinkin.setColor(BlinkinConstants.AlgaeHold));
-  
+        Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster));  
     Command processorAlgae = Commands.sequence(
       Commands.runOnce(() -> m_elevator.setTarget(0.25), m_elevator));
 
@@ -229,7 +224,7 @@ public class RobotContainer {
     
     //Dealgae and store   
     m_mechController.povUp().and(readyToDealg).whileTrue(Commands.either(TopAlgaeGrab, BottomAlgaeGrab, isTopDealgae));
-    m_mechController.povUp().onFalse(Commands.either(Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster).alongWith(m_blinkin.setColor(BlinkinConstants.AlgaeHold)), 
+    m_mechController.povUp().onFalse(Commands.either(Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE), m_coralMaster),
       (Commands.runOnce(() -> m_coralMaster.setStore()).alongWith(Commands.runOnce(() -> m_claw.stopIntake()))), 
       algaeStored));
 
@@ -243,7 +238,6 @@ public class RobotContainer {
     m_mechController.start().onTrue(climb(this));
     
     m_mechController.rightStick().onTrue(storeClimb(this));
-    m_mechController.rightTrigger(0.3).whileTrue(Commands.run(() -> m_blinkin.setRandom()));
 
       
       
@@ -305,7 +299,6 @@ public class RobotContainer {
   public void autoInit() {
     Helpers.isAuto = true;
     m_robotDrive.useVision = true;
-    m_blinkin.setColor(BlinkinConstants.Red);
     if(m_climber.getAngle() < 30) {
       m_climber.setAngle(ClimbConstants.StoreAngle);
     }
@@ -319,7 +312,6 @@ public class RobotContainer {
   public void teleopInit() {
     m_robotDrive.useVision = true;
     Helpers.isAuto = false;
-    m_blinkin.setColor(BlinkinConstants.Red);
     m_arm.resetSetpoint();
     m_elevator.resetSetpoint();
     m_claw.resetSetpoint();
@@ -375,7 +367,7 @@ public class RobotContainer {
 
 
   public void testInit() {
-    m_blinkin.setColorNotCommand(0.67);
+    m_blinkin.setColor(0.67);
     m_arm.stopPid();
     m_elevator.stopPID();
   }
@@ -412,5 +404,15 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Toggle Idle Mode", false);
       }
     }
+  }
+
+
+  public void teleopPeriodic() {
+    if(m_flooral.coralStored())
+      m_blinkin.setColor(BlinkinConstants.White);
+    else if (m_coralMaster.coralStored())
+      m_blinkin.setColor(BlinkinConstants.Black);
+    else
+      m_blinkin.setColor(BlinkinConstants.Red);
   }
 }

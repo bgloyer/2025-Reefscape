@@ -11,15 +11,7 @@ public class Blinkin extends SubsystemBase{
         m_Blinkin = new Spark(BlinkinConstants.BlinkinPwmPort);
     }
 
-    public void setColorNotCommand(double value) {
+    public void setColor(double value) {
         m_Blinkin.set(value);
-    }
-
-    public Command setColor(double value) {
-        return runOnce(() -> m_Blinkin.set(value));
-    }
-
-    public void setRandom() {
-        setColorNotCommand(Math.round((Math.random() * 100.0)) / 100.0);
     }
 }

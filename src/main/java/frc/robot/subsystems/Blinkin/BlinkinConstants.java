@@ -5,7 +5,7 @@ public final class BlinkinConstants {
     public static final int BlinkinPwmPort = 0; 
     public static final double Red = 0.61;    
     public static final double White = 0.93;    
-    public static final double Black = 0.99;    
+    public static final double Black = 0.99;     
     public static final double Blue = 0.87; 
     public static final double Green = 0.77;
     public static final double Rainbow = -0.99;
@@ -16,4 +16,5 @@ public final class BlinkinConstants {
     public static final double Pink = 0.57; 
     public static final double AlgaeHold = 0.45;
     public static final double AlgaeScore = 0.41;
+    public static final double FlashWhite = -0.21;
 }

@@ -75,7 +75,7 @@ public final class Configs {
                     talonConfig.Slot0.kV = 12 / ModuleConstants.kKrakenDriveFreeSpeedRps;
     
                     talonConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-                    talonConfig.CurrentLimits.SupplyCurrentLimit = 50;
+                    talonConfig.CurrentLimits.SupplyCurrentLimit = 80;
                     talonConfig.CurrentLimits.StatorCurrentLimitEnable = true;
                     talonConfig.CurrentLimits.StatorCurrentLimit = 80;
 
@@ -177,7 +177,7 @@ public final class Configs {
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                         .minOutput(-0.3)
                         .maxOutput(0.3);
-                pivotConfig.idleMode(IdleMode.kBrake);
+                pivotConfig.idleMode(IdleMode.kCoast);
                 pivotConfig.absoluteEncoder
                         .positionConversionFactor(360)
                         .inverted(true);

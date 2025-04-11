@@ -171,7 +171,7 @@ private ProfiledPIDController headingController = new ProfiledPIDController(Driv
     SmartDashboard.putNumber("Coral Distance", 1 / Helpers.tan(28 - LimelightHelpers.getTY(VisionConstants.ElevatorLimelightName)));
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Reef Distance m", Helpers.tyToDistance(VisionConstants.ReefLightLightName));
-    SmartDashboard.putNumber("Reef X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName)));
+    SmartDashboard.putNumber("corrected Reef X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ReefLightLightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ReefLightLightName) - (getHeading() - getAngleToReef())));
     SmartDashboard.putNumber("Station Distance m", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName));
     SmartDashboard.putNumber("Station X Offset Distance m ", Helpers.tyToDistance(VisionConstants.ElevatorLimelightName) * Helpers.tan(LimelightHelpers.getTX(VisionConstants.ElevatorLimelightName)));
     m_odometry.update(

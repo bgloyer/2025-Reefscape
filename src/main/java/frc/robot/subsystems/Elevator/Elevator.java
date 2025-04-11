@@ -17,7 +17,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Level;
 import frc.robot.subsystems.TorSubsystemBase;
 import frc.robot.subsystems.Configs.ElevatorConfig;
@@ -71,7 +70,7 @@ public class Elevator extends TorSubsystemBase {
     }
 
     public boolean approachingHeight(Level level) {
-        switch (level) {
+        switch (level.withOffset()) {
             case FOUR:
                 return Math.abs(m_encoder.getPosition() - targetState.position) < 0.55; //0.55
             case THREE:

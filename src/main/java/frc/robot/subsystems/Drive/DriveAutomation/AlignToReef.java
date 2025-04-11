@@ -89,7 +89,7 @@ public class AlignToReef extends Command {
     double turnOutput = m_turnPID.calculate(betterModulus(m_robotDrive.getHeading(), 360));
     if (LimelightHelpers.getTV(limelightName)) {
       double yDistanceFromTag = tyToDistance(limelightName);
-      double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName)); // makes align to tag work when not against the wall? 
+      double xInput = yDistanceFromTag * tan(LimelightHelpers.getTX(limelightName) - (m_robotDrive.getHeading() - m_robotDrive.getAngleToReef())); // makes align to tag work when not against the wall? 
       double xOutput = 0;
       double yOutput = -(m_yController.calculate(yDistanceFromTag) + m_yController.getSetpoint().velocity / DriveConstants.kMaxSpeedMetersPerSecond);
       if (hiAlexIDidntNameThis()) {
@@ -98,9 +98,7 @@ public class AlignToReef extends Command {
       if (m_turnPID.atGoal()) {
         turnOutput = 0;
       }
-      if(Math.abs(betterModulus(m_robotDrive.getHeading(), 360) - m_turnPID.getGoal().position) < 5) {
-        xOutput = m_xController.calculate(xInput);
-      } 
+      xOutput = m_xController.calculate(xInput);
       SmartDashboard.putNumber("Reef Align Y Output", yOutput);
       m_robotDrive.drive(yOutput, xOutput, turnOutput, false);
       // m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
