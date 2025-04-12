@@ -14,7 +14,7 @@ public class ClawConstants {
         public static final double Tolerance = 5;
         public static final double SlewRate = 5.5;
         // from block cad - degrees
-        public static final double AlgaeStore = 124.25;
+        public static final double AlgaeStore = 128; //124.25
         public static final double AlgaeNetFlick = 90;
         public static final double Initial = 0;
         public static final double Store = 90;

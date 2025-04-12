@@ -84,19 +84,19 @@ public class Flooral extends SubsystemBase {
         public void holdCoral() {
             m_sideMotor.getClosedLoopController().setReference(m_sideEncoder.getPosition(), ControlType.kPosition);
             m_topMotor.getClosedLoopController().setReference(m_topEncoder.getPosition(), ControlType.kPosition);
+            System.out.println(m_sideEncoder.getPosition());
         }
     
         @Override
         public void periodic() {
             SmartDashboard.putNumber("Flooral Angle", m_encoder.getPosition());
+            SmartDashboard.putNumber("Flooral Wheel Position", m_sideEncoder.getPosition());
             SmartDashboard.putNumber("Side Motor Current", m_sideMotor.getOutputCurrent());
             SmartDashboard.putBoolean("Flooral stored", coralStored());
             SmartDashboard.putBoolean("Flooral Pivot at store", atStore());
             SmartDashboard.putNumber("Flooral break beam raw input", m_beamBreak.getValue());
             SmartDashboard.putBoolean("Holding Coral State", getHoldingCoralState());
-            if (atIntakePosition()) {
-                m_pivotController.setReference(0, ControlType.kVoltage);
-            }
+
         }
     
         public Command setStore() {
@@ -118,9 +118,5 @@ public class Flooral extends SubsystemBase {
 
     public boolean atStore() {
         return MathUtil.isNear(FlooralConstants.CoralStore, m_encoder.getPosition(), 5);
-    }
-
-    public boolean atIntakePosition() {
-        return MathUtil.isNear(FlooralConstants.IntakeAngle, m_encoder.getPosition(), 0.000001) && targetAngle == FlooralConstants.IntakeAngle;
     }
 }
