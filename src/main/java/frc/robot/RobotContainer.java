@@ -261,7 +261,7 @@ public class RobotContainer {
       Commands.runOnce(() -> m_flooral.setIntake(), m_flooral),
       Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster).onlyIf(coralStored.negate()),
       Commands.waitUntil(m_flooral::coralStored),
-      Commands.waitSeconds(0.06),
+      Commands.waitSeconds(0.1),
       Commands.runOnce(() -> m_flooral.holdCoral()),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.CoralStore)));
   }
@@ -274,6 +274,7 @@ public class RobotContainer {
       Commands.waitUntil(m_coralMaster::onTarget),
       Commands.runOnce(() -> m_flooral.setAngle(FlooralConstants.HandoffAngle), m_flooral),
       Commands.waitUntil(m_flooral::onTarget),
+      Commands.waitSeconds(0.1),
       Commands.runOnce(() -> m_claw.runVoltage(CoralIntakeConstants.HandOffVoltage), m_claw),
       Commands.runOnce(() -> m_flooral.setVoltage(FlooralConstants.SideHandoffVoltage, FlooralConstants.TopHandoffVoltage), m_flooral),
       Commands.waitUntil(m_claw::frontLaserTriggered),

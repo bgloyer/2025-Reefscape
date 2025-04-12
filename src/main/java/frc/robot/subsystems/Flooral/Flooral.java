@@ -121,6 +121,6 @@ public class Flooral extends SubsystemBase {
     }
 
     public boolean atIntakePosition() {
-        return MathUtil.isNear(FlooralConstants.IntakeAngle, m_encoder.getPosition(), 20) && targetAngle == FlooralConstants.IntakeAngle;
+        return MathUtil.isNear(FlooralConstants.IntakeAngle, m_encoder.getPosition(), 0.000001) && targetAngle == FlooralConstants.IntakeAngle;
     }
 }

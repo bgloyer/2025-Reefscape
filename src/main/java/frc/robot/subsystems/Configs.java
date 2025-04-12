@@ -177,7 +177,7 @@ public final class Configs {
                         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                         .minOutput(-0.3)
                         .maxOutput(0.3);
-                pivotConfig.idleMode(IdleMode.kCoast);
+                pivotConfig.idleMode(IdleMode.kBrake);
                 pivotConfig.absoluteEncoder
                         .positionConversionFactor(360)
                         .inverted(true);
@@ -192,7 +192,7 @@ public final class Configs {
                 
                 sideConfig.idleMode(IdleMode.kBrake);
                 sideConfig.smartCurrentLimit(80);
-                sideConfig.secondaryCurrentLimit(80);
+                sideConfig.secondaryCurrentLimit(85);
                 sideConfig.closedLoop
                         .pid(FlooralConstants.HorizontalWheelkP, FlooralConstants.HorizontalWheelkI, FlooralConstants.HorizontalWheelkD)
                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);

@@ -150,6 +150,6 @@ public class AlignToReef extends Command {
 
 
   private boolean hiAlexIDidntNameThis() {
-    return MathUtil.isNear(Helpers.isOneCoralAway ? AligningConstants.ReefOneCoralAwayDistance : AligningConstants.ReefAlignDistance, tyToDistance(limelightName), 0.025);
+    return MathUtil.isNear(Helpers.isOneCoralAway ? AligningConstants.ReefOneCoralAwayDistance : AligningConstants.ReefAlignDistance, tyToDistance(limelightName), 0.02);
   }
 }
