@@ -69,6 +69,9 @@ public class Elevator extends TorSubsystemBase {
         return Math.abs(m_encoder.getPosition() - targetState.position) < ElevatorConstants.NotTippable;
     }
 
+    public boolean canDriveAwayFromNet() {
+        return Math.abs(m_encoder.getPosition() - ElevatorConstants.Store) < 0.5;
+    }
     public boolean approachingHeight(Level level) {
         switch (level.withOffset()) {
             case FOUR:

@@ -37,6 +37,8 @@ import static frc.robot.subsystems.Climber.ClimbFactories.climb;
 import static frc.robot.subsystems.Climber.ClimbFactories.readyClimb;
 import static frc.robot.subsystems.Climber.ClimbFactories.storeClimb;
 
+import org.opencv.dnn.Net;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
@@ -77,7 +79,7 @@ public class RobotContainer {
   private final Trigger isTopDealgae = new Trigger(m_robotDrive::isTopDealgae);
   private final Trigger atNetHeight = new Trigger(m_elevator::atNetHeight);
   private final Trigger readyToStartScoreSequence = new Trigger(m_robotDrive::closeToReef).or(m_dashboardManager::getUseManualScoring); // idk what to name this
-
+  private Command netScore;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
@@ -129,8 +131,8 @@ public class RobotContainer {
     m_driverController.y().whileTrue(Commands.startEnd(() -> m_claw.runVoltage(-CoralIntakeConstants.IntakeVoltage), () -> m_claw.stopIntake()));
     
     //net score
-    Command netScore = Commands.sequence(
-      // new AlignToNet(m_robotDrive),
+    netScore = Commands.sequence(
+      Commands.runOnce(() -> m_robotDrive.setAlignedToReef(false)),
       Commands.runOnce(() -> m_coralMaster.setState(Level.NET), m_coralMaster), 
       Commands.waitUntil(atNetHeight),
       Commands.runOnce(() -> m_claw.runVoltage(-8), m_claw),
@@ -193,6 +195,7 @@ public class RobotContainer {
     m_mechController.y().and(readyToStartScoreSequence).onTrue(Commands.sequence(new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()), new SetStore(m_coralMaster)));
 
     m_mechController.leftStick().onTrue(Commands.runOnce(() -> m_elevator.setZero()));
+
     Command TopAlgaeGrab = Commands.sequence(
       Commands.runOnce(() -> m_coralMaster.setranL4(m_coralMaster.coralStored()), m_coralMaster),
       new SetLevel(Level.FOUR, m_coralMaster, alignedToReef).until(coralStored.negate()),
@@ -243,6 +246,10 @@ public class RobotContainer {
       
   }
   public void registerAutoCommands() {
+    NamedCommands.registerCommand("Top Algae Grab", Commands.parallel(new AlignToReef(m_robotDrive), autoAlgaeGrab(Level.TOPALGAEGRAB)));
+    NamedCommands.registerCommand("Algae Store", Commands.runOnce(() -> m_coralMaster.setState(Level.ALGAESTORE)));
+    NamedCommands.registerCommand("Bottom Algae Grab", Commands.parallel(new AlignToReef(m_robotDrive), autoAlgaeGrab(Level.BOTTOMALGAEGRAB)));
+    NamedCommands.registerCommand("Score Net", netScore.until(coralStored.negate().and(m_elevator::canDriveAwayFromNet)));
     NamedCommands.registerCommand("Auto Intake", new AutoAlignToStationTag(m_robotDrive, m_coralMaster, m_flooral));
     NamedCommands.registerCommand("Set Store", new AutoSetStore(m_coralMaster));
     NamedCommands.registerCommand("Ready Elevator L3", Commands.runOnce(() -> m_coralMaster.setState(Level.BOTTOMALGAEROLL)));
@@ -252,12 +259,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Score L4", Commands.parallel(new AlignToReef(m_robotDrive), new SetLevel(Level.FOUR, m_coralMaster, alignedToReef)).until(coralStored.negate()));
     NamedCommands.registerCommand("Set Left", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.LEFT)));
     NamedCommands.registerCommand("Set Right", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.RIGHT)));
-    // NamedCommands.registerCommand("PositionCoral", new PositionCoral(m_claw).andThen(() -> m_claw.stopIntake()));
+    NamedCommands.registerCommand("Set Middle", Commands.runOnce(() -> m_robotDrive.setScoringSide(Direction.MIDDLE)));
     NamedCommands.registerCommand("PositionCoral", Commands.none());
   }
   
   public Command flooralIntakeSequence() {
     return Commands.sequence(
+      Commands.runOnce(() -> m_robotDrive.setAlignedToReef(false)),
       Commands.runOnce(() -> m_flooral.setIntake(), m_flooral),
       Commands.runOnce(() -> m_coralMaster.setState(Level.FLOORALHANDOFF), m_coralMaster).onlyIf(coralStored.negate()),
       Commands.waitUntil(m_flooral::coralStored),
@@ -285,6 +293,15 @@ public class RobotContainer {
       Commands.runOnce(() -> m_flooral.setHoldingCoralState(false))
     );
   }
+
+  private Command autoAlgaeGrab(Level topOrBottom) {
+    return Commands.sequence(
+      Commands.waitUntil(alignedToMiddle.or(m_coralMaster::getRanL4)),
+      Commands.runOnce(() -> m_claw.runVoltage(7)),
+      new SetLevel(topOrBottom, m_coralMaster, alignedToReef),
+      Commands.waitUntil(algaeStored));
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    */

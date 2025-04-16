@@ -99,12 +99,7 @@ public class AlignToReef extends Command {
         turnOutput = 0;
       }
       xOutput = m_xController.calculate(xInput);
-      SmartDashboard.putNumber("Reef Align Y Output", yOutput);
       m_robotDrive.drive(yOutput, xOutput, turnOutput, false);
-      // m_robotDrive.drive(Math.min(yOutput, 0.3), Math.min(xOutput, 0.3), turnOutput, false);
-      SmartDashboard.putBoolean("Reef X Aligned", m_xController.atSetpoint());
-      SmartDashboard.putBoolean("Reef Y Aligned", hiAlexIDidntNameThis());
-      SmartDashboard.putBoolean("Reef Velocity Aligned", m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1);
       boolean aligned = m_xController.atSetpoint() && hiAlexIDidntNameThis() && m_robotDrive.getSpeeds().vyMetersPerSecond < 0.1;
       m_robotDrive.setAlignedToReef(aligned);
       m_robotDrive.setCloseToReef(Math.abs(yDistanceFromTag - m_yController.getGoal().position) < 1.2); //0.7
